@@ -35,7 +35,7 @@ public class Entity_Shot implements Serializable {
     /**
      * 图像对象
      */
-    private Entity_Image image;
+    private Entity_Image images;
     /**
      * 总浏览数
      */
@@ -156,12 +156,12 @@ public class Entity_Shot implements Serializable {
         this.height = height;
     }
 
-    public Entity_Image getImage() {
-        return image;
+    public Entity_Image getImages() {
+        return images;
     }
 
-    public void setImage(Entity_Image image) {
-        this.image = image;
+    public void setImages(Entity_Image images) {
+        this.images = images;
     }
 
     public int getViews_count() {
@@ -314,5 +314,36 @@ public class Entity_Shot implements Serializable {
 
     public void setTeam(Entity_Team team) {
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity_Shot{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", images=" + images +
+                ", views_count=" + views_count +
+                ", likes_count=" + likes_count +
+                ", comments_count=" + comments_count +
+                ", attachments_count=" + attachments_count +
+                ", rebounds_count=" + rebounds_count +
+                ", buckets_count=" + buckets_count +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                ", html_url='" + html_url + '\'' +
+                ", attachments_url='" + attachments_url + '\'' +
+                ", buckets_url='" + buckets_url + '\'' +
+                ", comments_url='" + comments_url + '\'' +
+                ", likes_url='" + likes_url + '\'' +
+                ", projects_url='" + projects_url + '\'' +
+                ", rebounds_url='" + rebounds_url + '\'' +
+                ", animated=" + animated +
+                ", tags=" + tags +
+                ", user=" + user +
+                ", team=" + team +
+                '}';
     }
 }

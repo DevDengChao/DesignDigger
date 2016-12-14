@@ -37,4 +37,11 @@ public class Entity_Links implements Serializable {
     public Entity_Links() {
     }
 
+    @Override
+    public String toString() {
+        return "Entity_Links{" +
+                "web='" + web + '\'' +
+                ", twitter='" + twitter + '\'' +
+                '}';
+    }
 }

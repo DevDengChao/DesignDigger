@@ -47,4 +47,13 @@ public class Entity_Image implements Serializable {
     public void setTeaser(String teaser) {
         this.teaser = teaser;
     }
+
+    @Override
+    public String toString() {
+        return "Entity_Image{" +
+                "hidpi='" + hidpi + '\'' +
+                ", normal='" + normal + '\'' +
+                ", teaser='" + teaser + '\'' +
+                '}';
+    }
 }

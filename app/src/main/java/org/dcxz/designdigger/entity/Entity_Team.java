@@ -302,4 +302,39 @@ public class Entity_Team implements Serializable {
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
     }
+
+    @Override
+    public String toString() {
+        return "Entity_Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", html_url='" + html_url + '\'' +
+                ", avatar_url='" + avatar_url + '\'' +
+                ", bio='" + bio + '\'' +
+                ", location='" + location + '\'' +
+                ", links=" + links +
+                ", buckets_count=" + buckets_count +
+                ", comments_received_count=" + comments_received_count +
+                ", followers_count=" + followers_count +
+                ", followings_count=" + followings_count +
+                ", likes_count=" + likes_count +
+                ", likes_received_count=" + likes_received_count +
+                ", members_count=" + members_count +
+                ", projects_count=" + projects_count +
+                ", rebounds_received_count=" + rebounds_received_count +
+                ", shots_count=" + shots_count +
+                ", can_upload_shot=" + can_upload_shot +
+                ", type='" + type + '\'' +
+                ", pro=" + pro +
+                ", buckets_url='" + buckets_url + '\'' +
+                ", followers_url='" + followers_url + '\'' +
+                ", following_url='" + following_url + '\'' +
+                ", likes_url='" + likes_url + '\'' +
+                ", members_url='" + members_url + '\'' +
+                ", shots_url='" + shots_url + '\'' +
+                ", team_shots_url='" + team_shots_url + '\'' +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                '}';
+    }
 }
