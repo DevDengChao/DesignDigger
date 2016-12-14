@@ -8,28 +8,12 @@
         android:id="@+id/firstLaunch_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <LinearLayout
+    <pers.medusa.circleindicator.widget.CircleIndicator
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/indicator"
 
-        <ImageView
-            android:id="@+id/firstLaunch_indicator1"
-            style="@style/FirstLaunchIndicator"
-            android:src="@drawable/first_launch_indicator" />
+        />
 
-        <ImageView
-            android:id="@+id/firstLaunch_indicator2"
-            style="@style/FirstLaunchIndicator"
-            android:src="@drawable/first_launch_indicator" />
-
-        <ImageView
-            android:id="@+id/firstLaunch_indicator3"
-            style="@style/FirstLaunchIndicator"
-            android:src="@drawable/first_launch_indicator" />
-    </LinearLayout>
 </RelativeLayout>

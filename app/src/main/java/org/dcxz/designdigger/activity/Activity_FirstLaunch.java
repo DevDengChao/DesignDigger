@@ -11,6 +11,10 @@ import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.util.Util_SP_Manager;
 
+import java.util.List;
+
+import pers.medusa.circleindicator.widget.CircleIndicator;
+
 /**
  * 首次启动应用时进入的介绍页面
  * <br/>
@@ -25,7 +29,8 @@ public class Activity_FirstLaunch extends Framework_Activity {
      * ViewPager容器
      */
     private ViewPager viewPager;
-
+    private CircleIndicator circleIndicator;
+    private List<View> viewList;
     /**
      * ViewPager中的内容
      */
@@ -54,28 +59,13 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initView() {
-        Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
-        if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {
-            handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
-        }
-        manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
-        indicators = new ImageView[count];
-        indicators[0] = (ImageView) findViewById(R.id.firstLaunch_indicator1);
-        indicators[0].setSelected(true);
-        indicators[1] = (ImageView) findViewById(R.id.firstLaunch_indicator2);
-        indicators[2] = (ImageView) findViewById(R.id.firstLaunch_indicator3);
-        viewPager = (ViewPager) findViewById(R.id.firstLaunch_viewPager);
+
     }
 
     @Override
     protected void initData() {
         // TODO: 2016/12/13 需要准备素材图像
-        content = new ImageView[count];
-        for (int i = 0; i < count; i++) {
-            content[i] = new ImageView(this);
-            content[i].setImageResource(R.mipmap.ic_launcher);
-            content[i].setScaleType(ImageView.ScaleType.FIT_XY);
-        }
+
     }
 
     @Override
