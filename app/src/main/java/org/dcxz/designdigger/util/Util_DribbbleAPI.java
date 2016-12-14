@@ -13,9 +13,13 @@ public class Util_DribbbleAPI {
     public static final String END_POINT = "https://api.dribbble.com/v1";
 
     /**
-     * APIShot请求接入点,直接访问会获得popular,shots,now条件下的第一个对象.
+     * APIShot请求接入点,直接访问会获得popular,shots,now条件下的第一页的12个对象.
      */
     public static final String END_POINT_SHOTS = END_POINT + "/shots";
+    /**
+     * APIShot请求接入点,直接访问会获得popular,shots,now条件下的特定页的12个对象.
+     */
+    public static final String END_POINT_SHOTS_PAGE = END_POINT_SHOTS + "/?page=";
 
     /**
      * APP注册时获取的静态链接口令
