@@ -7,6 +7,8 @@ import android.os.Bundle;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
 
+import pers.medusa.circleindicator.widget.CircleIndicator;
+
 public class Activity_Main extends Framework_Activity {
 
     @Override
