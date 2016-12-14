@@ -1,10 +1,13 @@
 package org.dcxz.designdigger;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -38,14 +41,30 @@ public class App extends Application {
     }
 
     /**
-     * 通过DribbbleAPI进行请求
+     * 通过DribbbleAPI进行字符串请求
      *
      * @param url           目标地址
      * @param listener      响应成功监听器
      * @param errorListener 响应失败监听器
      */
-    public static void request(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+    public static void stringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         queue.add(new StringRequest(url, listener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return header;
+            }
+        });
+    }
+
+    /**
+     * 通过DribbbleAPI进行图像请求(原尺寸);
+     *
+     * @param url           目标地址
+     * @param listener      响应成功监听器
+     * @param errorListener 响应失败监听器
+     */
+    public static void imageRequest(String url, Response.Listener<Bitmap> listener, Response.ErrorListener errorListener) {
+        queue.add(new ImageRequest(url, listener, 0, 0, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.ARGB_8888, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
