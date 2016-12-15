@@ -1,5 +1,6 @@
 package org.dcxz.designdigger.framework;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,11 +16,14 @@ import android.widget.Toast;
  */
 
 public abstract class Framework_Fragment extends Fragment {
-
+    /**
+     * Framework_Fragment持有的Activity对象
+     */
+    protected Activity activity;
     /**
      * Framework_Fragment持有的Framework_Handler对象,为子类提供消息机制接口
      */
-    private Framework_Handler handler;
+    protected Framework_Handler handler;
     /**
      * Framework_Fragment持有的Toast对象,为子类提供消息弹出接口
      */
@@ -33,7 +37,7 @@ public abstract class Framework_Fragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        activity = getActivity();
         handler = new Framework_Handler(this);
         toast = new Toast(context);
         toast.setDuration(Toast.LENGTH_SHORT);
