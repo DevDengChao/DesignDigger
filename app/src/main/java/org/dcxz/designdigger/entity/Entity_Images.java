@@ -6,7 +6,7 @@ import java.io.Serializable;
  * <br/>
  * Created by DC on 2016/12/13.<br/>
  */
-public class Entity_Image implements Serializable {
+public class Entity_Images implements Serializable {
     public static final long serialVersionUID = 0L;
     /**
      * 高清图像地址
@@ -21,7 +21,7 @@ public class Entity_Image implements Serializable {
      */
     private String teaser;
 
-    public Entity_Image() {
+    public Entity_Images() {
     }
 
     public String getHidpi() {
@@ -50,7 +50,7 @@ public class Entity_Image implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity_Image{" +
+        return "Entity_Images{" +
                 "hidpi='" + hidpi + '\'' +
                 ", normal='" + normal + '\'' +
                 ", teaser='" + teaser + '\'' +

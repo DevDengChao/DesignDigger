@@ -12,35 +12,31 @@ import java.io.Serializable;
 public abstract class Framework_Activity extends AppCompatActivity {
 
     /**
+     * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
+     */
+    protected static final String SERIALIZABLE = "SERIALIZABLE";
+    /**
+     * {@link #startActivity(Class, String)}存取数据时,用到的关键字
+     */
+    protected static final String STATE = "STATE";
+    /**
      * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
      */
     protected Framework_Handler handler;
-
     /**
      * Framework_Activity持有的Toast对象,为子类提供消息弹出接口
      */
     private Toast toast;
 
-    /**
-     * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
-     */
-    protected static final String SERIALIZABLE = "SERIALIZABLE";
-
-    /**
-     * {@link #startActivity(Class, String)}存取数据时,用到的关键字
-     */
-    protected static final String STATE = "STATE";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         handler = new Framework_Handler(this);
         toast = new Toast(this);
         toast.setDuration(Toast.LENGTH_SHORT);
 
         setContentView(setContentViewImp());
-
         initView();
         initData();
         initAdapter();
@@ -88,6 +84,16 @@ public abstract class Framework_Activity extends AppCompatActivity {
      */
     protected void toast(String msg) {
         toast.setText(msg);
+        toast.show();
+    }
+
+    /**
+     * Toast接口
+     *
+     * @param resID 待弹出的消息
+     */
+    protected void toast(int resID) {
+        toast.setText(resID);
         toast.show();
     }
 

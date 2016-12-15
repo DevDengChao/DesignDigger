@@ -35,7 +35,7 @@ public class Entity_Shot implements Serializable {
     /**
      * 图像对象
      */
-    private Entity_Image images;
+    private Entity_Images images;
     /**
      * 总浏览数
      */
@@ -156,11 +156,11 @@ public class Entity_Shot implements Serializable {
         this.height = height;
     }
 
-    public Entity_Image getImages() {
+    public Entity_Images getImages() {
         return images;
     }
 
-    public void setImages(Entity_Image images) {
+    public void setImages(Entity_Images images) {
         this.images = images;
     }
 

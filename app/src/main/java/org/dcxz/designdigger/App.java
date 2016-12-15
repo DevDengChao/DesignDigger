@@ -32,14 +32,6 @@ public class App extends Application {
      */
     private static HashMap<String, String> header;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        queue = Volley.newRequestQueue(this);
-        header = new HashMap<>();
-        header.put(Util_DribbbleAPI.AUTHORIZATION_KEY, Util_DribbbleAPI.AUTHORIZATION_VALUE);
-    }
-
     /**
      * 通过DribbbleAPI进行字符串请求
      *
@@ -49,6 +41,22 @@ public class App extends Application {
      */
     public static void stringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         queue.add(new StringRequest(url, listener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return header;
+            }
+        });
+    }
+
+    /**
+     * 通过DribbbleAPI进行字符串请求,获取指定页的Shots
+     *
+     * @param page          页码
+     * @param listener      响应成功监听器
+     * @param errorListener 响应失败监听器
+     */
+    public static void pageRequest(int page, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        queue.add(new StringRequest(Util_DribbbleAPI.END_POINT_SHOTS_PAGE + page, listener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
@@ -70,5 +78,13 @@ public class App extends Application {
                 return header;
             }
         });
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        queue = Volley.newRequestQueue(this);
+        header = new HashMap<>();
+        header.put(Util_DribbbleAPI.AUTHORIZATION_KEY, Util_DribbbleAPI.AUTHORIZATION_VALUE);
     }
 }
