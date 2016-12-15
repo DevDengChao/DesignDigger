@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import pers.medusa.circleindicator.widget.CircleIndicator;
@@ -35,8 +33,6 @@ public class Activity_FirstLaunch extends Framework_Activity {
      * ViewPager容器
      */
     private ViewPager viewPager;
-    private CircleIndicator circleIndicator;
-    private List<View> viewList;
     /**
      * ViewPager中的内容
      */
@@ -44,7 +40,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
     /**
      * 底部的指示器
      */
-    private ImageView indicators[];
+    private CircleIndicator circleIndicator;
     /**
      * 当前页面的数量
      */
@@ -57,6 +53,17 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initView() {
+        // TODO: 2016/12/15 调试完成后应当修正跳转逻辑
+        /*Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
+        if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {//不是第一次启动应用
+            Log.i(TAG, "initView: Not first launch");
+            handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
+        } else {//是第一次启动应用
+            Log.i(TAG, "initView: First launch");
+            manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
+            viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
+            circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
+        }*/
         viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
         circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
     }
@@ -64,12 +71,11 @@ public class Activity_FirstLaunch extends Framework_Activity {
     @Override
     protected void initData() {
         // TODO: 2016/12/13 需要准备素材图像
-        viewList = new ArrayList<>();
+        content = new ImageView[pageCount];
         Random random = new Random();
-        for (int i = 0; i < pageCount; i++) {//注意已有常量的字面意义
-            View view = new View(this);
-            view.setBackgroundColor(0xff000000 | random.nextInt(0x00ffffff));
-            viewList.add(view);
+        for (ImageView imageView : content) {
+            imageView = new ImageView(this);
+            imageView.setBackgroundColor(0xff000000 | random.nextInt(0x00ffffff));
         }
     }
 
@@ -77,34 +83,24 @@ public class Activity_FirstLaunch extends Framework_Activity {
     protected void initAdapter() {
         viewPager.setAdapter(new PagerAdapter() {
             @Override
-            public boolean isViewFromObject(View arg0, Object arg1) {
-                return arg0 == arg1;
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
             }
 
             @Override
             public int getCount() {
-                return viewList.size();
+                return content.length;
             }
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(viewList.get(position));
-            }
-
-            @Override
-            public int getItemPosition(Object object) {
-                return super.getItemPosition(object);
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return "title";
+                container.removeView(content[position]);
             }
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                container.addView(viewList.get(position));
-                return viewList.get(position);
+                container.addView(content[position]);
+                return content[position];
             }
 
         });

@@ -32,6 +32,14 @@ public class App extends Application {
      */
     private static HashMap<String, String> header;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        queue = Volley.newRequestQueue(this);
+        header = new HashMap<>();
+        header.put(Util_DribbbleAPI.AUTHORIZATION_KEY, Util_DribbbleAPI.AUTHORIZATION_VALUE);
+    }
+
     /**
      * 通过DribbbleAPI进行字符串请求
      *
@@ -78,13 +86,5 @@ public class App extends Application {
                 return header;
             }
         });
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        queue = Volley.newRequestQueue(this);
-        header = new HashMap<>();
-        header.put(Util_DribbbleAPI.AUTHORIZATION_KEY, Util_DribbbleAPI.AUTHORIZATION_VALUE);
     }
 }

@@ -12,21 +12,24 @@ import java.io.Serializable;
 public abstract class Framework_Activity extends AppCompatActivity {
 
     /**
-     * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
-     */
-    protected static final String SERIALIZABLE = "SERIALIZABLE";
-    /**
-     * {@link #startActivity(Class, String)}存取数据时,用到的关键字
-     */
-    protected static final String STATE = "STATE";
-    /**
      * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
      */
     protected Framework_Handler handler;
+
     /**
      * Framework_Activity持有的Toast对象,为子类提供消息弹出接口
      */
     private Toast toast;
+
+    /**
+     * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
+     */
+    protected static final String SERIALIZABLE = "SERIALIZABLE";
+
+    /**
+     * {@link #startActivity(Class, String)}存取数据时,用到的关键字
+     */
+    protected static final String STATE = "STATE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
