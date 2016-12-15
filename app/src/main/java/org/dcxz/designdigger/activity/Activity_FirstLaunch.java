@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
 
-import java.util.Random;
-
 import pers.medusa.circleindicator.widget.CircleIndicator;
 
 /**
@@ -72,10 +70,10 @@ public class Activity_FirstLaunch extends Framework_Activity {
     protected void initData() {
         // TODO: 2016/12/13 需要准备素材图像
         content = new ImageView[pageCount];
-        Random random = new Random();
-        for (ImageView imageView : content) {
-            imageView = new ImageView(this);
-            imageView.setBackgroundColor(0xff000000 | random.nextInt(0x00ffffff));
+        for (int i = 0; i < pageCount; i++) {
+            content[i] = new ImageView(this);
+            content[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
+            content[i].setImageResource(R.mipmap.ic_launcher);
         }
     }
 
@@ -89,7 +87,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
             @Override
             public int getCount() {
-                return content.length;
+                return pageCount;
             }
 
             @Override
