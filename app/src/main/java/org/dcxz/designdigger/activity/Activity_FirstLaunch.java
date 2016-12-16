@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.adapter.Adapter_FirstLaunch;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.util.Util_SP_Manager;
 import org.dcxz.designdigger.view.cricle_indicator.CircleIndicator;
+
+import java.util.ArrayList;
 
 /**
  * 首次启动应用时进入的介绍页面
@@ -35,7 +38,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
     /**
      * ViewPager中的内容
      */
-    private ImageView content[];
+    private ArrayList<ImageView> content;
     /**
      * 底部的指示器
      */
@@ -55,51 +58,43 @@ public class Activity_FirstLaunch extends Framework_Activity {
         Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
         if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {//不是第一次启动应用
             Log.i(TAG, "initView: Not first launch");
+            /*
+             * 由于这四个初始化方法均在onCreate()中执行,因此
+             * 在此处试图触发finish()也必须等到onCreate()结束.
+             * 这导致了Flag以下的代码必须执行,否则就会在initAdapter()中
+             * 触发NullPointerException:viewPager.
+             */
             handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
         } else {//是第一次启动应用
             Log.i(TAG, "initView: First launch");
             manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
-            viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
-            circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
         }
+        //=====Flag=====
+        viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
+        circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
     }
 
     @Override
     protected void initData() {
+        content = new ArrayList<>();
         // TODO: 2016/12/13 需要准备素材图像
-        content = new ImageView[pageCount];
+        int resID[] = new int[]{
+                R.mipmap.ic_launcher,
+                R.mipmap.ic_launcher,
+                R.mipmap.ic_launcher
+        };
+        ImageView imageView;
         for (int i = 0; i < pageCount; i++) {
-            content[i] = new ImageView(this);
-            content[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-            content[i].setImageResource(R.mipmap.ic_launcher);
+            imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setImageResource(resID[i]);
+            content.add(imageView);
         }
     }
 
     @Override
     protected void initAdapter() {
-        viewPager.setAdapter(new PagerAdapter() {
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public int getCount() {
-                return pageCount;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(content[position]);
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                container.addView(content[position]);
-                return content[position];
-            }
-
-        });
+        viewPager.setAdapter(new Adapter_FirstLaunch<>(content));
         circleIndicator.setViewPager(viewPager);
     }
 
