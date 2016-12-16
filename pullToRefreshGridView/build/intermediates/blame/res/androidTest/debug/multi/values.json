@@ -1,0 +1,64 @@
+[
+    {
+        "outputFile": "D:\\DengChao_CreatedAt20160715\\AndroidStudio_Workspace\\DesignDigger\\pullToRefreshGridView\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 71,
+                    "endOffset": 122
+                },
+                "from": {
+                    "file": "D:\\DengChao_CreatedAt20160715\\AndroidStudio_Workspace\\DesignDigger\\pullToRefreshGridView\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 71,
+                        "endOffset": 122
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 127,
+                    "endColumn": 69,
+                    "endOffset": 192
+                },
+                "from": {
+                    "file": "D:\\DengChao_CreatedAt20160715\\AndroidStudio_Workspace\\DesignDigger\\pullToRefreshGridView\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 127,
+                        "endColumn": 69,
+                        "endOffset": 192
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 197,
+                    "endColumn": 77,
+                    "endOffset": 270
+                },
+                "from": {
+                    "file": "D:\\DengChao_CreatedAt20160715\\AndroidStudio_Workspace\\DesignDigger\\pullToRefreshGridView\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 197,
+                        "endColumn": 77,
+                        "endOffset": 270
+                    }
+                }
+            }
+        ]
+    }
+]

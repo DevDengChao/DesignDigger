@@ -1,42 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="500dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        tools:ignore="ScrollViewSize">
 
-        <ExpandableListView
-            android:id="@+id/fragment_main_elv_popular"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/default_4" />
 
-        <ExpandableListView
-            android:id="@+id/fragment_main_elv_type"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/default_5" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-        <ExpandableListView
-            android:id="@+id/fragment_main_elv_time"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            <ExpandableListView
+                android:id="@+id/fragment_main_elv_popular"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/default_4" />
+
+            <ExpandableListView
+                android:id="@+id/fragment_main_elv_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/default_5" />
+
+            <ExpandableListView
+                android:id="@+id/fragment_main_elv_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/default_4" />
+
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/fragment_main_gv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/default_4" />
+            android:background="@color/default_6"
+            tools:ignore="NestedScrolling" />
 
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/fragment_main_lv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/default_6" />
-
-</LinearLayout>
+</ScrollView>
