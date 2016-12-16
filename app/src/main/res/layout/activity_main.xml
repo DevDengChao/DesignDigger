@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mxn.soul.flowingdrawer_core.LeftDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/main_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    <!--主页内容-->
     <fragment
-        android:id="@+id/main_fragment"
+        android:id="@+id/main_fragment_main"
         android:name="org.dcxz.designdigger.fragment.Fragment_Main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_main" />
-</LinearLayout>
+    <!--侧面菜单-->
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clipChildren="false">
+
+        <com.mxn.soul.flowingdrawer_core.FlowingView
+            android:id="@+id/main_flowingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment
+            android:id="@+id/main_fragment_menu"
+            android:name="org.dcxz.designdigger.fragment.Fragment_Menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_menu" />
+    </RelativeLayout>
+</com.mxn.soul.flowingdrawer_core.LeftDrawerLayout>

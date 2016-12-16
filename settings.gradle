@@ -1,2 +1,2 @@
-include ':app', 'CircleIndicator-master'
+include ':app', 'CircleIndicator-master', ':flowingdrawer-core'
 include ':pullToRefreshGridView'

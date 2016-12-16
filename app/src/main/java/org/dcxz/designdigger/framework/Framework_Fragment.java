@@ -92,7 +92,17 @@ public abstract class Framework_Fragment extends Fragment {
      * @param msg 待弹出的消息
      */
     protected void toast(String msg) {
-        toast.setText(msg);
+        toast = Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    /**
+     * Toast接口
+     *
+     * @param resID 待弹出的消息
+     */
+    protected void toast(int resID) {
+        toast = Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
