@@ -3,13 +3,14 @@ package org.dcxz.designdigger.activity;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
-
+import org.dcxz.designdigger.util.Util_SP_Manager;
 import org.dcxz.designdigger.view.cricle_indicator.CircleIndicator;
 
 /**
@@ -51,8 +52,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initView() {
-        // TODO: 2016/12/15 调试完成后应当修正跳转逻辑
-        /*Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
+        Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
         if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {//不是第一次启动应用
             Log.i(TAG, "initView: Not first launch");
             handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
@@ -61,9 +61,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
             manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
             viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
             circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
-        }*/
-        viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
-        circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
+        }
     }
 
     @Override
