@@ -1,7 +1,6 @@
-package pers.medusa.circleindicator.widget.holder;
+package org.dcxz.designdigger.view.cricle_indicator;
 
 import android.graphics.Paint;
-import android.graphics.RadialGradient;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
@@ -9,6 +8,7 @@ import android.graphics.drawable.shapes.Shape;
  * A data structure that holds a Shape and various properties that can be used to define
  * how the shape is drawn.
  */
+@SuppressWarnings("WeakerAccess")
 public class ShapeHolder {
     private float x = 0, y = 0;//圆的x、y坐标
     private ShapeDrawable shape;
@@ -16,36 +16,40 @@ public class ShapeHolder {
     private float alpha = 1f;
     private Paint paint;
 
-    public void setPaint(Paint value) {
-        paint = value;
+    public ShapeHolder(ShapeDrawable s) {
+        shape = s;
     }
 
     public Paint getPaint() {
         return paint;
     }
 
-    public void setX(float value) {
-        x = value;
+    public void setPaint(Paint value) {
+        paint = value;
     }
 
     public float getX() {
         return x;
     }
 
-    public void setY(float value) {
-        y = value;
+    public void setX(float value) {
+        x = value;
     }
 
     public float getY() {
         return y;
     }
 
-    public void setShape(ShapeDrawable value) {
-        shape = value;
+    public void setY(float value) {
+        y = value;
     }
 
     public ShapeDrawable getShape() {
         return shape;
+    }
+
+    public void setShape(ShapeDrawable value) {
+        shape = value;
     }
 
     public int getColor() {
@@ -80,10 +84,8 @@ public class ShapeHolder {
         Shape s = shape.getShape();
         s.resize(s.getWidth(), height);
     }
-    public void resizeShape(final float width,final float height){
-        shape.getShape().resize(width,height);
-    }
-    public ShapeHolder(ShapeDrawable s) {
-        shape = s;
+
+    public void resizeShape(final float width, final float height) {
+        shape.getShape().resize(width, height);
     }
 }

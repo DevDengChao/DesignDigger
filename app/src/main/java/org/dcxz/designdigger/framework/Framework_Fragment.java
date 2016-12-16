@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+
 /**
  * <br/>
  * Created by DC on 2016/12/12.<br/>
@@ -39,8 +40,6 @@ public abstract class Framework_Fragment extends Fragment {
         super.onAttach(context);
         activity = getActivity();
         handler = new Framework_Handler(this);
-        toast = new Toast(context);
-        toast.setDuration(Toast.LENGTH_SHORT);
 
         initView(context);
         initData(context);
@@ -96,7 +95,17 @@ public abstract class Framework_Fragment extends Fragment {
      * @param msg 待弹出的消息
      */
     protected void toast(String msg) {
-        toast.setText(msg);
+        toast = Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    /**
+     * Toast接口
+     *
+     * @param resID 待弹出的消息
+     */
+    protected void toast(int resID) {
+        toast = Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT);
         toast.show();
     }
 }

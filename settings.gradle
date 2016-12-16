@@ -1,1 +1,1 @@
-include ':app', 'CircleIndicator-master'
+include ':app'

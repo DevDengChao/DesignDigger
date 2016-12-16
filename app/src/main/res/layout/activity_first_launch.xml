@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <pers.medusa.circleindicator.widget.CircleIndicator
+    <org.dcxz.designdigger.view.cricle_indicator.CircleIndicator
         android:id="@+id/firstLaunch_indicator"
         android:layout_width="match_parent"
         android:layout_height="40dp"
