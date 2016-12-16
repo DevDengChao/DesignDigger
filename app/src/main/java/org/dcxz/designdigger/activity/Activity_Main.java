@@ -11,7 +11,7 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
-        return R.layout.activity_main;
+        return R.layout.activity_main_reforge;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -23,6 +23,9 @@ public class Activity_Main extends Framework_Activity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
+
+        //https://github.com/mxn21/FlowingDrawer
+
     }
 
     @Override

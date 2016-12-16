@@ -5,7 +5,6 @@ import android.os.Message;
 import android.widget.ExpandableListView;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.activity.Activity_Main;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 
 /**
