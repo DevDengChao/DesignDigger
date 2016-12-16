@@ -40,6 +40,8 @@ public class Activity_Slash extends Framework_Activity {
 
     @Override
     protected void initData() {
+        //不论是否成功获取数据均应当在2500ms后跳转
+        handler.sendEmptyMessageDelayed(TO_MAIN_ACTIVITY, 2500);
         App.pageRequest(
                 1,
                 new Response.Listener<String>() {
