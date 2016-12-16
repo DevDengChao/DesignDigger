@@ -36,8 +36,6 @@ public abstract class Framework_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         handler = new Framework_Handler(this);
-        toast = new Toast(this);
-        toast.setDuration(Toast.LENGTH_SHORT);
 
         setContentView(setContentViewImp());
         initView();
@@ -86,7 +84,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param msg 待弹出的消息
      */
     protected void toast(String msg) {
-        toast.setText(msg);
+        toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         toast.show();
     }
 
@@ -96,7 +94,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
-        toast.setText(resID);
+        toast = Toast.makeText(this, resID, Toast.LENGTH_SHORT);
         toast.show();
     }
 
