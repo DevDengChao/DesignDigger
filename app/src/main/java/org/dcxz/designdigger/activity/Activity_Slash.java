@@ -31,6 +31,9 @@ public class Activity_Slash extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
         return R.layout.activity_slash;
     }
 
@@ -48,14 +51,15 @@ public class Activity_Slash extends Framework_Activity {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "onResponse: cache created");
-                        handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
+                        // handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         toast(R.string.connect_error);
                         Log.i(TAG, "onErrorResponse: connect error");
-                        handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
+                        error.printStackTrace();
+                        //  handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
                     }
                 });
     }
