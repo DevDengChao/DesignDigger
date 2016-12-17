@@ -25,7 +25,10 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
      * 实例所持有的数据集合
      */
     protected ArrayList<T> data;
-    private LayoutInflater inflater;
+    /**
+     * 布局充填器
+     */
+    protected LayoutInflater inflater;
 
     /**
      * @param context 用于初始化{@link #inflater}的上下文
