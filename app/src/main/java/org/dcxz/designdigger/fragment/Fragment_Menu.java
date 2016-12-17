@@ -1,13 +1,13 @@
 package org.dcxz.designdigger.fragment;
 
-import android.app.Activity;
-import android.os.Message;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.view.ViewGroup;
+
+import com.mxn.soul.flowingdrawer_core.MenuFragment;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.framework.Framework_Fragment;
 
 /**
  * <br/>
@@ -17,41 +17,9 @@ import org.dcxz.designdigger.framework.Framework_Fragment;
  * </pre>
  */
 
-public class Fragment_Menu extends Framework_Fragment {
-    private ImageView avatar;
-
+public class Fragment_Menu extends MenuFragment {
     @Override
-    protected int setContentViewImp() {
-        return R.layout.fragment_menu;
-    }
-
-    @Override
-    protected void initView(Activity activity) {
-        avatar = (ImageView) activity.findViewById(R.id.menu_avatar);
-    }
-
-    @Override
-    protected void initData(Activity activity) {
-
-    }
-
-    @Override
-    protected void initAdapter(Activity activity) {
-
-    }
-
-    @Override
-    protected void initListener(final Activity activity) {
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(activity, "avatar", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void handleMessageImp(Message msg) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return setupReveal(inflater.inflate(R.layout.fragment_menu, container, false));
     }
 }
