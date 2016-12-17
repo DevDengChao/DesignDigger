@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mxn.soul.flowingdrawer_core.MenuFragment;
+import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
 
 import org.dcxz.designdigger.R;
 

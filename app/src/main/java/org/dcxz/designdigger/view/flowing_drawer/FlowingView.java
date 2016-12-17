@@ -1,18 +1,17 @@
-package com.mxn.soul.flowingdrawer_core;
+package org.dcxz.designdigger.view.flowing_drawer;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ValueAnimator;
-
 
 
 public class FlowingView extends View {
@@ -24,18 +23,18 @@ public class FlowingView extends View {
     private int currentPointY = 0;
     private int topY;
     private int bottomY;
-    private int downspeed = 1;
-    private boolean isupping = false;
+    private int downSpeed = 1;
+    private boolean isUpping = false;
 
     private int autoUppingX;
 
     private boolean showContent = true;
 
-    private MenuFragment mMenuFragment ;
+    private MenuFragment mMenuFragment;
 
-    private double per = 0 ;
+    private double per = 0;
 
-    private int rightMargin ;
+    private int rightMargin;
 
     public enum Status {
         NONE,
@@ -63,7 +62,7 @@ public class FlowingView extends View {
     private void init() {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(getResources().getColor(R.color.paint_color));
+        mPaint.setColor(Color.WHITE);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -86,7 +85,7 @@ public class FlowingView extends View {
             currentPointX = (int) x;
             currentPointY = (int) y;
         } else if (mStatus == Status.STATUS_DOWN) {
-            downspeed = (int) Math.abs(x - currentPointX);
+            downSpeed = (int) Math.abs(x - currentPointX);
             currentPointX = (int) x;
             currentPointY = (int) y;
         }
@@ -108,8 +107,8 @@ public class FlowingView extends View {
         valueAnimator.addListener(new FlowingAnimationListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                    isupping = false;
-                    showContent = true;
+                isUpping = false;
+                showContent = true;
             }
         });
         valueAnimator.setDuration(500);
@@ -124,14 +123,18 @@ public class FlowingView extends View {
                 break;
             case STATUS_SMOOTH_UP:
                 mPath.moveTo(autoUppingX, 0);
-                mPath.quadTo(currentPointX, currentPointY, autoUppingX, getHeight());
+                mPath.quadTo(
+                        currentPointX,
+                        currentPointY,
+                        autoUppingX,
+                        getHeight());
                 mPath.lineTo(0, getHeight());
                 mPath.lineTo(0, 0);
                 mPath.lineTo(autoUppingX, 0);
                 canvas.drawPath(mPath, mPaint);
                 break;
             case STATUS_UP:
-                if (isupping) return;
+                if (isUpping) return;
                 if (currentPointY - getHeight() / 2 >= 0) {
                     topY = (int) (currentPointY - 1.5 * currentPointX * getHeight() / getWidth()) - currentPointY / 2 +
                             getHeight() / 4;
@@ -142,25 +145,37 @@ public class FlowingView extends View {
                             currentPointY / 2 + getHeight() / 4;
                 }
                 mPath.moveTo(getWidth() - currentPointX, topY);
-                mPath.cubicTo(getWidth() - currentPointX, currentPointY / 4 + 3 * topY / 4, getWidth(), 3 * currentPointY / 4
-                                + topY / 4,
+                mPath.cubicTo(
+                        getWidth() - currentPointX,
+                        currentPointY / 4 + 3 * topY / 4,
+                        getWidth(), 3 * currentPointY / 4 + topY / 4,
                         getWidth()
                         , currentPointY);
-                mPath.cubicTo(getWidth(), 5 * currentPointY / 4 - topY / 4, getWidth() - currentPointX,
-                        7 * currentPointY / 4 - 3 * topY / 4, getWidth() - currentPointX, bottomY);
+                mPath.cubicTo(
+                        getWidth(), 5 * currentPointY / 4 - topY / 4,
+                        getWidth() - currentPointX,
+                        7 * currentPointY / 4 - 3 * topY / 4,
+                        getWidth() - currentPointX, bottomY);
                 mPath.lineTo(getWidth() - currentPointX, topY);
                 canvas.drawPath(mPath, mPaint);
                 break;
             case STATUS_DOWN:
-                topY = topY - downspeed;
-                bottomY = bottomY + downspeed;
+                topY = topY - downSpeed;
+                bottomY = bottomY + downSpeed;
                 mPath.moveTo(getWidth() - currentPointX, topY);
-                mPath.cubicTo(getWidth() - currentPointX, currentPointY / 4 + 3 * topY / 4, getWidth(), 3 * currentPointY / 4
-                                + topY / 4,
+                mPath.cubicTo(
+                        getWidth() - currentPointX,
+                        currentPointY / 4 + 3 * topY / 4,
+                        getWidth(),
+                        3 * currentPointY / 4 + topY / 4,
                         getWidth()
                         , currentPointY);
-                mPath.cubicTo(getWidth(), 5 * currentPointY / 4 - topY / 4, getWidth() - currentPointX,
-                        7 * currentPointY / 4 - 3 * topY / 4, getWidth() - currentPointX, bottomY);
+                mPath.cubicTo(
+                        getWidth(),
+                        5 * currentPointY / 4 - topY / 4,
+                        getWidth() - currentPointX,
+                        7 * currentPointY / 4 - 3 * topY / 4,
+                        getWidth() - currentPointX, bottomY);
                 mPath.lineTo(getWidth() - currentPointX, topY);
                 canvas.drawPath(mPath, mPaint);
                 break;
@@ -176,54 +191,55 @@ public class FlowingView extends View {
 
     public void autoUpping(float x) {
         mStatus = Status.STATUS_SMOOTH_UP;
-        isupping = true;
+        isUpping = true;
         final int w = getWidth();
-        if(per == 1 && x !=w){
-            autoUppingX = w ;
+        if (per == 1 && x != w) {
+            autoUppingX = w;
             currentPointX = w + 100;
             invalidate();
-            return ;
-        }else{
-             per = (2 * x - w) / w;
-            autoUppingX = (int) (0.25 * w * per + 0.75 * w);
+            return;
+        } else {
+            per = (2 * x - w) / w;
+            autoUppingX = (int) (0.25 * w * per + 0.75 * w);//回收菜单时使用凹陷曲线
             currentPointX = (int) (100 * per + w);
         }
 
-        if(per > 0.8){
+        if (per > 0.8) {
             if (showContent) {
                 showContent = false;
-                mMenuFragment.show(currentPointY) ;
+                mMenuFragment.show(currentPointY);
             }
         }
         invalidate();
-        if (per == 1){
+        if (per == 1) {
             downing();
         }
 
     }
 
-    public boolean isupping() {
-        return isupping;
+    public boolean isUpping() {
+        return isUpping;
     }
+
     public void resetContent() {
-        showContent = true ;
-        isupping  = false ;
+        showContent = true;
+        isUpping = false;
         mMenuFragment.hideView();
     }
 
-    public void resetStatus(){
-        per = 0 ;
-        mStatus = Status.NONE ;
-        isupping = false ;
+    public void resetStatus() {
+        per = 0;
+        mStatus = Status.NONE;
+        isUpping = false;
     }
 
 
-    public void setMenuFragment(MenuFragment mMenuFragment ){
-        this.mMenuFragment = mMenuFragment ;
+    public void setMenuFragment(MenuFragment mMenuFragment) {
+        this.mMenuFragment = mMenuFragment;
     }
 
-    public void setRightMargin(int rightMargin){
-        this.rightMargin = rightMargin ;
+    public void setRightMargin(int rightMargin) {
+        this.rightMargin = rightMargin;
     }
 
 }

@@ -1,7 +1,7 @@
-package com.mxn.soul.flowingdrawer_core;
+package org.dcxz.designdigger.view.flowing_drawer;
 
 
-import com.nineoldandroids.animation.Animator;
+import android.animation.Animator;
 
 public class FlowingAnimationListener implements Animator.AnimatorListener {
 

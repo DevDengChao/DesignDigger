@@ -3,8 +3,8 @@ package org.dcxz.designdigger.activity;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 
-import com.mxn.soul.flowingdrawer_core.FlowingView;
-import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
+import org.dcxz.designdigger.view.flowing_drawer.FlowingView;
+import org.dcxz.designdigger.view.flowing_drawer.LeftDrawerLayout;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.fragment.Fragment_Menu;

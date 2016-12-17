@@ -1,4 +1,4 @@
-package com.mxn.soul.flowingdrawer_core;
+package org.dcxz.designdigger.view.flowing_drawer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

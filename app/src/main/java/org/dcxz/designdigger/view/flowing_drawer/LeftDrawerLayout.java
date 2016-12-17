@@ -1,4 +1,4 @@
-package com.mxn.soul.flowingdrawer_core;
+package org.dcxz.designdigger.view.flowing_drawer;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -121,7 +121,7 @@ public class LeftDrawerLayout extends ViewGroup {
                     return;
                 }
 
-                if (mFlowingView.isupping()) {
+                if (mFlowingView.isUpping()) {
                     if (rightX == 0) {
                         mFlowingView.resetStatus();
                         releasing = false;
@@ -257,7 +257,7 @@ public class LeftDrawerLayout extends ViewGroup {
 
     public void closeDrawer() {
         View menuView = mLeftMenuView;
-        mLeftMenuOnScrren = 0.f;
+        mLeftMenuOnScrren = 0.0f;
         pointY = getHeight() / 2;
         releasing = true;
         mFlowingView.resetContent();
