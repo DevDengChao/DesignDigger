@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="popularity">
+        <item>Popular</item>
+        <item>Most Viewed</item>
+        <item>Most Commented</item>
+    </string-array>
+    <string-array name="type">
+        <item>Shots</item>
+        <item>Debuts</item>
+        <item>Team Shots</item>
+        <item>Playoffs</item>
+        <item>Rebounds</item>
+        <item>Animated GIFs</item>
+        <item>Attached Shots</item>
+    </string-array>
+    <string-array name="timeLine">
+        <item>This Week</item>
+        <item>This Month</item>
+        <item>This Year</item>
+        <item>All Time</item>
+    </string-array>
+</resources>

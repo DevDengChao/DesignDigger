@@ -37,10 +37,10 @@ public abstract class Framework_Fragment extends Fragment {
         handler = new Framework_Handler(this);
 
         Activity activity = getActivity();
-        initView(activity);
-        initData(activity);
-        initAdapter(activity);
-        initListener(activity);
+        initView(activity, context);
+        initData(activity, context);
+        initAdapter(activity, context);
+        initListener(activity, context);
     }
 
     /**
@@ -54,29 +54,33 @@ public abstract class Framework_Fragment extends Fragment {
      * 捕捉布局中已有的控件
      *
      * @param activity 当前活动
+     * @param context
      */
-    protected abstract void initView(Activity activity);
+    protected abstract void initView(Activity activity, Context context);
 
     /**
      * 收集数据
      *
      * @param activity 当前活动
+     * @param context
      */
-    protected abstract void initData(Activity activity);
+    protected abstract void initData(Activity activity, Context context);
 
     /**
      * 初始化适配器
      *
      * @param activity 当前活动
+     * @param context
      */
-    protected abstract void initAdapter(Activity activity);
+    protected abstract void initAdapter(Activity activity, Context context);
 
     /**
      * 为控件添加时间监听
      *
      * @param activity 当前活动
+     * @param context
      */
-    protected abstract void initListener(Activity activity);
+    protected abstract void initListener(Activity activity, Context context);
 
     /**
      * 消息机制接口,处理由{@link #handler}发送的消息
