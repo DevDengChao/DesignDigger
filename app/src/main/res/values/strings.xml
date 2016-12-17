@@ -2,18 +2,4 @@
     <string name="app_name">Design Digger</string>
     <string name="connect_error">Connection Error</string>
     <string name="menu_settings">Settings</string>
-    <string name="Filter1_popular">Popular</string>
-    <string name="Filter1_mostViewed">Most Viewed</string>
-    <string name="Filter1_mostCommented">Most Commented</string>
-    <string name="Filter2_shots">Shots</string>
-    <string name="Filter2_debuts">Debuts</string>
-    <string name="Filter2_teamShots">Team Shots</string>
-    <string name="Filter2_playoffs">Playoffs</string>
-    <string name="Filter2_rebounds">Rebounds</string>
-    <string name="Filter2_animatedGIFs">Animated GIFs</string>
-    <string name="Filter2_attachedShots">Attached Shots</string>
-    <string name="Filter3_thisWeek">This Week</string>
-    <string name="Filter3_thisMonth">This Month</string>
-    <string name="Filter3_thisYear">This Year</string>
-    <string name="Filter3_allTime">All Time</string>
 </resources>

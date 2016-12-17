@@ -217,7 +217,8 @@ public class Entity_Shot implements Serializable {
     }
 
     public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+        //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+        this.created_at = created_at.replace("T", " ").replace("Z", "");
     }
 
     public String getUpdated_at() {
@@ -225,7 +226,8 @@ public class Entity_Shot implements Serializable {
     }
 
     public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+        //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+        this.updated_at = updated_at.replace("T", " ").replace("Z", "");
     }
 
     public String getHtml_url() {

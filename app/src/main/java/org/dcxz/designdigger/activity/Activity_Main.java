@@ -9,7 +9,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.adapter.Adapter_Main;
+import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.fragment.Fragment_Menu;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.framework.Framework_Adapter;
@@ -47,7 +55,12 @@ public class Activity_Main extends Framework_Activity {
      * 展示内容用的GridView
      */
     private GridView gridView;
-    private ArrayList<Integer> content;
+    /**
+     * GridView中的内容
+     */
+    private ArrayList<Entity_Shot> content;
+
+    private Framework_Adapter<Entity_Shot> adapter;
 
     @Override
     protected int setContentViewImp() {
@@ -90,16 +103,36 @@ public class Activity_Main extends Framework_Activity {
 
     private void initGridView() {
         gridView = (GridView) findViewById(R.id.main_gridView);
-        gridView.setNumColumns(2);
+        gridView.setNumColumns(1);
     }
 
     @Override
     protected void initData() {
         // TODO: 2016/12/17 初始化数据
         content = new ArrayList<>();
-        content.add(R.mipmap.ic_launcher);
-        content.add(R.mipmap.ic_launcher);
-        content.add(R.mipmap.ic_launcher);
+        adapter = new Adapter_Main(this, content);
+        App.pageRequest(
+                1,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        content = new Gson().fromJson(response, new TypeToken<ArrayList<Entity_Shot>>() {
+                        }.getType());
+                        for (Entity_Shot shot : content) {
+                            //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+                            shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
+                        }
+                        adapter.setData(content);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: 2016/12/17 优化失败响应
+                        toast(R.string.connect_error);
+                    }
+                }
+        );
     }
 
     @Override
@@ -107,31 +140,7 @@ public class Activity_Main extends Framework_Activity {
         spinner_popularity.setAdapter(ArrayAdapter.createFromResource(this, R.array.popularity, android.R.layout.simple_spinner_item));
         spinner_type.setAdapter(ArrayAdapter.createFromResource(this, R.array.type, android.R.layout.simple_spinner_item));
         spinner_timeLine.setAdapter(ArrayAdapter.createFromResource(this, R.array.timeLine, android.R.layout.simple_spinner_item));
-
-        gridView.setAdapter(
-                new Framework_Adapter<Integer>(this, content) {
-                    @Override
-                    protected View getViewImp(int position, View convertView, ViewGroup parent) {
-                        ViewHolder holder;
-                        if (convertView == null) {
-                            convertView = new ImageView(Activity_Main.this);
-                            holder = new ViewHolder((ImageView) convertView);
-                            convertView.setTag(holder);
-                        } else {
-                            holder = (ViewHolder) convertView.getTag();
-                        }
-                        holder.imageView.setImageResource(data.get(position));
-                        return convertView;
-                    }
-
-                    class ViewHolder {
-                        ImageView imageView;
-
-                        ViewHolder(ImageView imageView) {
-                            this.imageView = imageView;
-                        }
-                    }
-                });
+        gridView.setAdapter(adapter);
     }
 
     @Override

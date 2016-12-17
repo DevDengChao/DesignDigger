@@ -44,7 +44,7 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
      *
      * @param newData 新的数据集合
      */
-    protected void setData(ArrayList<T> newData) {
+    public void setData(ArrayList<T> newData) {
         data = newData;
         notifyDataSetChanged();
     }
@@ -54,7 +54,7 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
      *
      * @param newData 将要添加的数据
      */
-    protected void addDataToTop(ArrayList<T> newData) {
+    public void addDataToTop(ArrayList<T> newData) {
         data.addAll(0, newData);
         notifyDataSetChanged();
     }
@@ -64,7 +64,7 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
      *
      * @param newData 将要添加的数据
      */
-    protected void addDataToBottom(ArrayList<T> newData) {
+    public void addDataToBottom(ArrayList<T> newData) {
         data.addAll(newData);
         notifyDataSetChanged();
     }
