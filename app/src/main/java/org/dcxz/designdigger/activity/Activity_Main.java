@@ -69,7 +69,7 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initView() {
-        // TODO: 2016/12/17 测试Fragment与Spinner的兼容性
+        // TODO: 2016/12/17 将主要业务逻辑移植到Fragment中去
         initActionBar();
         initFlowingDrawer();
         initSpinner();
