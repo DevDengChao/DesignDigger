@@ -28,19 +28,14 @@ public abstract class Framework_Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(setContentViewImp(), container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+        View view = inflater.inflate(setContentViewImp(), container, false);
         handler = new Framework_Handler(this);
-
         Activity activity = getActivity();
-        initView(activity, context);
-        initData(activity, context);
-        initAdapter(activity, context);
-        initListener(activity, context);
+        initView(activity, view);
+        initData(activity);
+        initAdapter(activity);
+        initListener(activity);
+        return view;
     }
 
     /**
@@ -54,33 +49,30 @@ public abstract class Framework_Fragment extends Fragment {
      * 捕捉布局中已有的控件
      *
      * @param activity 当前活动
-     * @param context
+     * @param view     将要显示的控件
      */
-    protected abstract void initView(Activity activity, Context context);
+    protected abstract void initView(Activity activity, View view);
 
     /**
      * 收集数据
      *
      * @param activity 当前活动
-     * @param context
      */
-    protected abstract void initData(Activity activity, Context context);
+    protected abstract void initData(Activity activity);
 
     /**
      * 初始化适配器
      *
      * @param activity 当前活动
-     * @param context
      */
-    protected abstract void initAdapter(Activity activity, Context context);
+    protected abstract void initAdapter(Activity activity);
 
     /**
      * 为控件添加时间监听
      *
      * @param activity 当前活动
-     * @param context
      */
-    protected abstract void initListener(Activity activity, Context context);
+    protected abstract void initListener(Activity activity);
 
     /**
      * 消息机制接口,处理由{@link #handler}发送的消息

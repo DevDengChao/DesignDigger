@@ -3,14 +3,12 @@ package org.dcxz.designdigger.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
@@ -79,15 +77,16 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
                     }
                 }, null);
         if (temp.getRebounds_count() == 0) {// TODO: 2016/12/18 资源与逻辑
-            holder
-                    .rebound.setVisibility(View.INVISIBLE);
+            holder.rebound.setVisibility(View.INVISIBLE);
         } else {
             holder.rebound.setVisibility(View.VISIBLE);
+            holder.attachment.setText(temp.getRebounds_count() + "");
         }
         if (temp.getAttachments_count() == 0) {
             holder.attachment.setVisibility(View.INVISIBLE);
         } else {
             holder.attachment.setVisibility(View.VISIBLE);
+            holder.attachment.setText(temp.getAttachments_count() + "");
         }
         holder.view.setText(temp.getViews_count() + "");// 1 -> "1"
         holder.comment.setText(temp.getComments_count() + "");

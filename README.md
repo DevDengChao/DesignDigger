@@ -22,3 +22,4 @@
 - Gson
 - FlipView
 - FlowingView
+- CircleImageView
