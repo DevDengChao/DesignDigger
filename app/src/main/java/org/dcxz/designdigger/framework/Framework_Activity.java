@@ -38,6 +38,10 @@ public abstract class Framework_Activity extends Activity {
         handler = new Framework_Handler(this);
 
         setContentView(setContentViewImp());
+    }
+
+    @Override
+    public void onContentChanged() {
         initView();
         initData();
         initAdapter();

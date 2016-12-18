@@ -58,18 +58,10 @@ public class Activity_FirstLaunch extends Framework_Activity {
         Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
         if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {//不是第一次启动应用
             Log.i(TAG, "initView: Not first launch");
-            /*
-             * 由于这四个初始化方法均在onCreate()中执行,因此
-             * 在此处试图触发finish()也必须等到onCreate()结束.
-             * 这导致了Flag以下的代码必须执行,否则就会在initAdapter()中
-             * 触发NullPointerException:viewPager.
-             */
             handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
-        } else {//是第一次启动应用
-            Log.i(TAG, "initView: First launch");
-            manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
-        }
-        //=====Flag=====
+        }//是第一次启动应用
+        Log.i(TAG, "initView: First launch");
+        manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
         viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
         circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
     }
