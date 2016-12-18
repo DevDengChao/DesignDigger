@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -24,27 +24,39 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/item_userName"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:gravity="center_vertical"
-                android:text="User Name" />
 
             <TextView
                 android:id="@+id/item_title"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="title" />
-        </LinearLayout>
+                android:maxLines="1"
+                android:text="Title"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/item_time"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="2016/12/17" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_userName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="User Name"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/item_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="1960-01-01 00:00:00"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -58,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/item_content" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -67,43 +79,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         tools:ignore="RtlHardcoded">
 
-        <ImageView
+        <TextView
             android:id="@+id/item_rebound"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:drawableLeft="@mipmap/item_rebound"
+            android:text="  "
+            android:textAlignment="center" />
 
-        <ImageView
+        <TextView
             android:id="@+id/item_attachment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:drawableLeft="@mipmap/item_attachment"
+            android:text="  "
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/item_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/ic_launcher" />
+            android:drawableLeft="@mipmap/item_view"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/item_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/ic_launcher" />
+            android:drawableLeft="@mipmap/item_comment"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/item_like"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/ic_launcher" />
+            android:drawableLeft="@mipmap/item_like"
+            android:textAlignment="center" />
     </LinearLayout>
 </LinearLayout>

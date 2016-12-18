@@ -19,6 +19,8 @@ import org.dcxz.designdigger.framework.Framework_Adapter;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * <br/>
  * Created by DC on 2016/12/17.<br/>
@@ -64,6 +66,9 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
                     @Override
                     public void onResponse(Bitmap response) {
                         holder.avatar.setImageBitmap(response);
+                        //noinspection deprecation
+                        holder.avatar.setBorderColorResource(R.color.default_4);
+                        holder.avatar.setBorderWidth(2);
                     }
                 }, null);//忽略请求失败
         App.imageRequest(temp.getImages().getTeaser(),
@@ -96,11 +101,11 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
      * 静态内部类,避免引用
      */
     private static class ViewHolder {
-        ImageView avatar;
+        CircleImageView avatar;
         ImageView content;
 
-        ImageView rebound;
-        ImageView attachment;
+        TextView rebound;
+        TextView attachment;
 
         TextView view;
         TextView comment;
@@ -111,10 +116,10 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
         TextView time;
 
         ViewHolder(View convertView) {
-            avatar = (ImageView) convertView.findViewById(R.id.item_avatar);
+            avatar = (CircleImageView) convertView.findViewById(R.id.item_avatar);
             content = (ImageView) convertView.findViewById(R.id.item_content);
-            rebound = (ImageView) convertView.findViewById(R.id.item_rebound);
-            attachment = (ImageView) convertView.findViewById(R.id.item_attachment);
+            rebound = (TextView) convertView.findViewById(R.id.item_rebound);
+            attachment = (TextView) convertView.findViewById(R.id.item_attachment);
             view = (TextView) convertView.findViewById(R.id.item_view);
             comment = (TextView) convertView.findViewById(R.id.item_comment);
             like = (TextView) convertView.findViewById(R.id.item_like);
