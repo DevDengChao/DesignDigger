@@ -11,7 +11,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.dcxz.designdigger.util.Util_DribbbleAPI;
+import org.dcxz.designdigger.util.API;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class App extends Application {
         super.onCreate();
         queue = Volley.newRequestQueue(this);
         header = new HashMap<>();
-        header.put(Util_DribbbleAPI.AUTHORIZATION_KEY, Util_DribbbleAPI.AUTHORIZATION_VALUE);
+        header.put(API.AUTHORIZATION_KEY, API.AUTHORIZATION_VALUE);
     }
 
     /**
@@ -64,7 +64,7 @@ public class App extends Application {
      * @param errorListener 响应失败监听器
      */
     public static void pageRequest(int page, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        queue.add(new StringRequest(Util_DribbbleAPI.END_POINT_SHOTS_PAGE + page, listener, errorListener) {
+        queue.add(new StringRequest(API.END_POINT_SHOTS_PAGE + page, listener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;

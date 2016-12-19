@@ -1,7 +1,10 @@
 package org.dcxz.designdigger.activity;
 
 import android.app.ActionBar;
+import android.graphics.BitmapFactory;
 import android.os.Message;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -59,6 +62,7 @@ public class Activity_Main extends Framework_Activity {
     private ArrayList<Entity_Shot> content;
 
     private Framework_Adapter<Entity_Shot> adapter;
+    private static final String TAG = "Activity_Main";
 
     @Override
     protected int setContentViewImp() {

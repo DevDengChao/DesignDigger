@@ -50,6 +50,9 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
         return R.layout.activity_first_launch;
     }
 
