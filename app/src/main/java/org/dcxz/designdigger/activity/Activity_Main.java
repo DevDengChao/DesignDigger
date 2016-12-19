@@ -2,11 +2,9 @@ package org.dcxz.designdigger.activity;
 
 import android.app.ActionBar;
 import android.os.Message;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.android.volley.Response;
@@ -84,6 +82,12 @@ public class Activity_Main extends Framework_Activity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initFlowingDrawer() {
