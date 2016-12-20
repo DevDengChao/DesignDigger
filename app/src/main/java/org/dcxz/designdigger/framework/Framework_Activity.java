@@ -12,24 +12,21 @@ import java.io.Serializable;
 public abstract class Framework_Activity extends AppCompatActivity {
 
     /**
-     * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
-     */
-    protected Framework_Handler handler;
-
-    /**
-     * Framework_Activity持有的Toast对象,为子类提供消息弹出接口
-     */
-    private Toast toast;
-
-    /**
      * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
      */
     protected static final String SERIALIZABLE = "SERIALIZABLE";
-
     /**
      * {@link #startActivity(Class, String)}存取数据时,用到的关键字
      */
     protected static final String STATE = "STATE";
+    /**
+     * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
+     */
+    protected Framework_Handler handler;
+    /**
+     * Framework_Activity持有的Toast对象,为子类提供消息弹出接口
+     */
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,16 +100,17 @@ public abstract class Framework_Activity extends AppCompatActivity {
     }
 
     /**
-     * {@link #startActivity(Intent)}的包装方法
+     * {@link #startActivity(Intent)}的包装方法,自动finish();
      *
      * @param c 将要前往的Activity
      */
     protected void startActivity(Class<? extends Framework_Activity> c) {
         startActivity(new Intent(this, c));
+        finish();
     }
 
     /**
-     * {@link #startActivity(Intent)}的包装方法
+     * {@link #startActivity(Intent)}的包装方法,自动finish();
      *
      * @param c            将要前往的Activity
      * @param serializable 需要传递的Serializable对象
@@ -121,10 +119,11 @@ public abstract class Framework_Activity extends AppCompatActivity {
         Intent intent = new Intent(this, c);
         intent.putExtra(SERIALIZABLE, serializable);
         startActivity(intent);
+        finish();
     }
 
     /**
-     * {@link #startActivity(Intent)}的包装方法
+     * {@link #startActivity(Intent)}的包装方法,自动finish();
      *
      * @param c     将要前往的Activity
      * @param state 需要传递的状态信息
@@ -133,5 +132,6 @@ public abstract class Framework_Activity extends AppCompatActivity {
         Intent intent = new Intent(this, c);
         intent.putExtra(STATE, state);
         startActivity(intent);
+        finish();
     }
 }

@@ -4,7 +4,10 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.fragment.Fragment_Menu;
@@ -18,11 +21,16 @@ public class Activity_Main extends Framework_Activity {
     /**
      * 日志TAG
      */
+    @SuppressWarnings("unused")
     private static final String TAG = "Activity_Main";
     /**
      * 用于切换Fragment的ViewPager
      */
     private ViewPager viewPager;
+    /**
+     * 可用的Fragment
+     */
+    private Framework_Fragment[] fragments;
     /**
      * FlowingDrawer容器
      */
@@ -31,8 +39,10 @@ public class Activity_Main extends Framework_Activity {
      * 侧滑菜单
      */
     private Fragment_Menu menu;
-
-    private Framework_Fragment[] fragments;
+    /**
+     * 工具栏
+     */
+    private Toolbar toolbar;
 
     @Override
     protected int setContentViewImp() {
@@ -42,22 +52,24 @@ public class Activity_Main extends Framework_Activity {
     @Override
     protected void initView() {
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
+        initToolBar();
         initFlowingDrawer();
+    }
+
+    private void initToolBar() {
+        toolbar = (Toolbar) findViewById(R.id.activity_main_toolBar);
+        toolbar.setNavigationIcon(R.mipmap.dribbble_ball_mark);
+        setSupportActionBar(toolbar);
     }
 
     private void initFlowingDrawer() {
         //https://github.com/mxn21/FlowingDrawer
+        // TODO: 2016/12/21 drawerLayout事件监听
         drawerLayout = (LeftDrawerLayout) findViewById(R.id.main_drawerLayout);
         menu = new Fragment_Menu();
         getFragmentManager().beginTransaction().replace(R.id.main_menuContainer, menu).commit();
         drawerLayout.setFluidView((FlowingView) findViewById(R.id.flowingView));
         drawerLayout.setMenuFragment(menu);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // getMenuInflater().inflate(R.menu.actionbar_menu, menu);
-        return true;
     }
 
     @Override
@@ -83,7 +95,14 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initListener() {
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isShownMenu()) {
+                    drawerLayout.closeDrawer();
+                }
+            }
+        });
     }
 
     @Override

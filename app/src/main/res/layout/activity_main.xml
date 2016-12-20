@@ -6,11 +6,21 @@
     android:background="@color/default_2"
     android:clipChildren="false">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/activity_main_viewPager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_main_toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/activity_main_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
     <!--    menu    -->
     <RelativeLayout
         android:layout_width="280dp"

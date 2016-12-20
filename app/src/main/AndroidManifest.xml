@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.Activity_Slash" />
+        <activity android:name=".activity.Activity_Splash" />
         <activity
             android:name=".activity.Activity_Main"
             android:launchMode="singleTask" />

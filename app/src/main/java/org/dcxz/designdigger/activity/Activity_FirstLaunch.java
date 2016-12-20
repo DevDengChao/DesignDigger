@@ -1,11 +1,8 @@
 package org.dcxz.designdigger.activity;
 
 import android.os.Message;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.dcxz.designdigger.R;
@@ -50,9 +47,6 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
-        if (getActionBar() != null) {
-            getActionBar().hide();
-        }
         return R.layout.activity_first_launch;
     }
 
@@ -118,8 +112,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
     @Override
     public void handleMessageImp(Message msg) {
         if (msg.what == TO_SLASH_ACTIVITY) {
-            startActivity(Activity_Slash.class);//父类的包装方法
-            finish();
+            startActivity(Activity_Splash.class);//父类的包装方法
         }
     }
 }

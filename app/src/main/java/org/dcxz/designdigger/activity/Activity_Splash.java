@@ -18,11 +18,11 @@ import org.dcxz.designdigger.framework.Framework_Activity;
  * </pre>
  */
 
-public class Activity_Slash extends Framework_Activity {
+public class Activity_Splash extends Framework_Activity {
     /**
      * 日志Tag
      */
-    private static final String TAG = "Activity_Slash";
+    private static final String TAG = "Activity_Splash";
     /**
      * what:跳转至Activity_Main
      */
@@ -34,7 +34,7 @@ public class Activity_Slash extends Framework_Activity {
         if (getActionBar() != null) {
             getActionBar().hide();
         }
-        return R.layout.activity_slash;
+        return R.layout.activity_splash;
     }
 
     @Override
@@ -78,7 +78,6 @@ public class Activity_Slash extends Framework_Activity {
     public void handleMessageImp(Message msg) {
         if (msg.what == TO_MAIN_ACTIVITY) {
             startActivity(Activity_Main.class);
-            finish();
         }
     }
 }
