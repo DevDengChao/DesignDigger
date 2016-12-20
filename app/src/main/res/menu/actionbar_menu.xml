@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <!--虽然IDE建议使用app命名空间,但那样做反而无法达到预期的效果
     So,just ignore that error.-->
     <item
         android:id="@+id/actionBar_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:showAsAction="always"
-        android:title="Search" />
+        android:title="Search"
+        tools:ignore="AppCompatResource" />
 </menu>
