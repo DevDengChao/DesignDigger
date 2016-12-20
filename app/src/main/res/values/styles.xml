@@ -1,6 +1,6 @@
 <resources>
-    <!--<style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">-->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
+    <!--    Activity style start    -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
 
@@ -9,5 +9,17 @@
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_margin">8dp</item>
     </style>
+    <!--    Activity style end    -->
+    <!--    Fragment style start    -->
+    <style name="Fragment" parent="AppTheme" />
 
+    <style name="Fragment.Visitor" />
+
+    <style name="Fragment.Visitor.Spinner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!--    Fragment style end    -->
 </resources>

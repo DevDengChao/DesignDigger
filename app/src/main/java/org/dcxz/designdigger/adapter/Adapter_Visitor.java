@@ -24,15 +24,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by DC on 2016/12/17.<br/>
  */
 
-public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
+public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
 
-    private static final String TAG = "Adapter_Main";
+    private static final String TAG = "Adapter_Visitor";
 
     /**
      * @param context 用于初始化{@link #inflater}的上下文
      * @param data    将要被适配的数据集合
      */
-    public Adapter_Main(Context context, ArrayList<Entity_Shot> data) {
+    public Adapter_Visitor(Context context, ArrayList<Entity_Shot> data) {
         super(context, data);
     }
 

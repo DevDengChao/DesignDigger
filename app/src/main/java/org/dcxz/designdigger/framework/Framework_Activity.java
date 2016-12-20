@@ -1,15 +1,15 @@
 package org.dcxz.designdigger.framework;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.io.Serializable;
 
-public abstract class Framework_Activity extends Activity {
+public abstract class Framework_Activity extends AppCompatActivity {
 
     /**
      * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口

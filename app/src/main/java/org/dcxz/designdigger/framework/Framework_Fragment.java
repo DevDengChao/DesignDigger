@@ -1,10 +1,9 @@
 package org.dcxz.designdigger.framework;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +86,8 @@ public abstract class Framework_Fragment extends Fragment {
      * @param msg 待弹出的消息
      */
     protected void toast(String msg) {
-        toast = Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getActivity(),
+                msg, Toast.LENGTH_SHORT);
         toast.show();
     }
 
@@ -97,7 +97,8 @@ public abstract class Framework_Fragment extends Fragment {
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
-        toast = Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getActivity(),
+                resID, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
