@@ -23,6 +23,7 @@
         <activity
             android:name=".activity.Activity_Main"
             android:launchMode="singleTask" />
+        <activity android:name=".activity.Activity_Test" />
     </application>
 
 </manifest>
