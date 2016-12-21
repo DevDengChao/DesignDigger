@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.dcxz.designdigger.view.flowing_drawer.LeftDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,14 +34,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
-            android:id="@+id/main_menuContainer"
+        <fragment
+            android:id="@+id/main_menu"
+            android:name="org.dcxz.designdigger.fragment.Fragment_Menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="25dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="0dp" />
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="75dp"
+            tools:ignore="RtlHardcoded"
+            tools:layout="@layout/fragment_menu" />
     </RelativeLayout>
 
 </org.dcxz.designdigger.view.flowing_drawer.LeftDrawerLayout>

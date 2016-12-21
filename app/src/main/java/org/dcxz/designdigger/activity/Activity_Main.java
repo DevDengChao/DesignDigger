@@ -4,9 +4,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 
 import org.dcxz.designdigger.R;
@@ -66,8 +64,7 @@ public class Activity_Main extends Framework_Activity {
         //https://github.com/mxn21/FlowingDrawer
         // TODO: 2016/12/21 drawerLayout事件监听
         drawerLayout = (LeftDrawerLayout) findViewById(R.id.main_drawerLayout);
-        menu = new Fragment_Menu();
-        getFragmentManager().beginTransaction().replace(R.id.main_menuContainer, menu).commit();
+        menu = (Fragment_Menu) getFragmentManager().findFragmentById(R.id.main_menu);
         drawerLayout.setFluidView((FlowingView) findViewById(R.id.flowingView));
         drawerLayout.setMenuFragment(menu);
     }
@@ -98,9 +95,7 @@ public class Activity_Main extends Framework_Activity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (drawerLayout.isShownMenu()) {
-                    drawerLayout.closeDrawer();
-                }
+                drawerLayout.toggle();
             }
         });
     }
