@@ -36,7 +36,6 @@ public class Test {
         URL url = new URL(location);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setConnectTimeout(10000);
-        connection.setRequestProperty(API.AUTHORIZATION_KEY, API.AUTHORIZATION_VALUE);
         getResponse(connection);
     }
 
@@ -46,9 +45,8 @@ public class Test {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
-        //connection.setDoInput(true);
         connection.setConnectTimeout(10000);
-        connection.setRequestProperty(API.AUTHORIZATION_KEY, API.AUTHORIZATION_VALUE);
+        connection.setRequestProperty(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + API.Oauth2.ACCESS_TOKEN);
         PrintWriter writer = new PrintWriter(connection.getOutputStream());
         writer.print("login=XieEDeHeiShou&password=159357asD");
         writer.flush();
