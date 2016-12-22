@@ -110,22 +110,30 @@ public class API {
     /**
      * API接入点
      */
-    public static final String END_POINT = "https://api.dribbble.com/v1";
-    // TODO: 2016/12/22 规范接入点格式
-    /**
-     * APIShot请求接入点<br/>
-     * 直接访问会获得popular,shots,now条件下的第一页的12个对象.
-     */
-    public static final String END_POINT_SHOTS = END_POINT + "/shots";
+    public static class END_POINT {// TODO: 2016/12/22 规范接入点格式
+        /**
+         * 入口
+         */
+        public static final String ENTRY = "https://api.dribbble.com/v1";
+        /**
+         * 获取当前用户时使用的URL
+         */
+        public static final String USER = ENTRY + "/user";
+        /**
+         * 获取第一页Shots时使用的URL<br/>
+         * 直接访问会获得popular,shots,now条件下的第一页的12个对象.
+         */
+        public static final String SHOTS = ENTRY + "/shots";
+        /**
+         * 获取特定页Shots时使用的URL<br/>
+         * 直接访问会获得popular,shots,now条件下的特定页的12个对象.<br/>
+         * 需要配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
 
-    /**
-     * APIShot请求接入点<br/>
-     * 直接访问会获得popular,shots,now条件下的特定页的12个对象.<br/>
-     */
-    public static final String END_POINT_SHOTS_PAGE = END_POINT_SHOTS + "/?page=";
-
-    //"https://api.dribbble.com/v1/users/glebich/shots"请求指定用户的shots
-    //"https://api.dribbble.com/v1/user/followers"当前ACCESS_TOKEN持有者(23448678)的粉丝列表
-    //"https://api.dribbble.com/v1/user/following"当前ACCESS_TOKEN持有者的关注用户列表
-    //"https://api.dribbble.com/v1/user/following/shots"当前ACCESS_TOKEN持有者的关注用户的shots列表
+        //"https://api.dribbble.com/v1/users/glebich/shots"请求指定用户的shots
+        //"https://api.dribbble.com/v1/user/followers"当前ACCESS_TOKEN持有者(23448678)的粉丝列表
+        //"https://api.dribbble.com/v1/user/following"当前ACCESS_TOKEN持有者的关注用户列表
+        //"https://api.dribbble.com/v1/user/following/shots"当前ACCESS_TOKEN持有者的关注用户的shots列表
+    }
 }

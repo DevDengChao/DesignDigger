@@ -3,7 +3,9 @@ package org.dcxz.designdigger.activity;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.adapter.Adapter_FirstLaunch;
@@ -25,9 +27,13 @@ import java.util.ArrayList;
 public class Activity_FirstLaunch extends Framework_Activity {
     private static final String TAG = "Activity_FirstLaunch";
     /**
-     * what:跳转至Activity_Slash
+     * what:跳转至Activity_Splash
      */
-    private static final int TO_SLASH_ACTIVITY = 0;
+    private static final int TO_SPLASH_ACTIVITY = 0;
+    /**
+     * what:跳转至Activity_Login
+     */
+    private static final int TO_LOGIN_ACTIVITY = 1;
     /**
      * ViewPager容器
      */
@@ -45,6 +51,8 @@ public class Activity_FirstLaunch extends Framework_Activity {
      */
     private int pageCount = 3;
 
+    private TextView visit, signUp, signIn;
+
     @Override
     protected int setContentViewImp() {
         return R.layout.activity_first_launch;
@@ -53,15 +61,18 @@ public class Activity_FirstLaunch extends Framework_Activity {
     @Override
     protected void initView() {
         Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
-        if (manager.isFirstLaunch()) {//是第一次启动应用
+        if (manager.isFirstLaunch()) {
             Log.i(TAG, "initView: First launch");
             manager.setFirstLaunch(false);
-        } else {//不是第一次启动应用
+        } else {
             Log.i(TAG, "initView: Not first launch");
-            handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
+            handler.sendEmptyMessage(TO_SPLASH_ACTIVITY);
         }
         viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
         circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
+        visit = (TextView) findViewById(R.id.firstLaunch_visit);
+        signUp = (TextView) findViewById(R.id.firstLaunch_signUp);
+        signIn = (TextView) findViewById(R.id.firstLaunch_signIn);
     }
 
     @Override
@@ -90,30 +101,36 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initListener() {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        visit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            public void onClick(View v) {
+                handler.sendEmptyMessage(TO_SPLASH_ACTIVITY);
             }
-
+        });
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                if ((pageCount - 1) == position) {
-                    handler.sendEmptyMessageDelayed(TO_SLASH_ACTIVITY, 2000);
-                }
+            public void onClick(View v) {
+                handler.sendEmptyMessage(TO_LOGIN_ACTIVITY);
             }
-
+        });
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onClick(View v) {
+                toast("SIGN UP");
             }
         });
     }
 
     @Override
     public void handleMessageImp(Message msg) {
-        if (msg.what == TO_SLASH_ACTIVITY) {
-            startActivity(Activity_Splash.class);//父类的包装方法
+        switch (msg.what) {
+            case TO_SPLASH_ACTIVITY:
+                startActivity(Activity_Splash.class);//父类的包装方法
+                break;
+            case TO_LOGIN_ACTIVITY:
+                startActivity(Activity_Login.class);
+                break;
         }
+        finish();
     }
 }

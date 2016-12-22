@@ -3,6 +3,10 @@ package org.dcxz.designdigger.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+
+import org.dcxz.designdigger.entity.Entity_User;
+
 /**
  * SharedPreference管理工具
  * <br/>
@@ -27,6 +31,10 @@ public class Util_SP_Manager {
      * 动态口令
      */
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    /**
+     * 用户对象(Json)
+     */
+    private static final String USER = "USER";
 
     private Util_SP_Manager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
@@ -80,6 +88,31 @@ public class Util_SP_Manager {
     public boolean setAccessToken(String accessToken) {
         return preferences.edit().putString(ACCESS_TOKEN, accessToken).commit();
     }
+
+    /**
+     * 存入用户对象
+     *
+     * @param user 将要存入的用户对象
+     * @return 是否存入成功
+     */
+    public boolean setUser(String user) {
+        return preferences.edit().putString(USER, user).commit();
+    }
+
+    /**
+     * 获取用户对象
+     *
+     * @return 当前用户
+     */
+    public Entity_User getUser() {
+        String json = preferences.getString(USER, null);
+        if (json != null) {
+            return new Gson().fromJson(json, Entity_User.class);
+        }
+        return null;
+    }
+
+
 
     /**
      * 获取布尔值

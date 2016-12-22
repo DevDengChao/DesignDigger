@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.dcxz.designdigger.util.API;
+import org.dcxz.designdigger.util.Util_SP_Manager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,23 @@ public class App extends Application {
      */
     private static HashMap<String, String> header;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        queue = Volley.newRequestQueue(this);
+        header = new HashMap<>();
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + Util_SP_Manager.getInstance(this).getAccessToken());
+    }
+
+    /**
+     * 获取请求队列
+     *
+     * @return 当前应用持有的请求队列
+     */
+    public static RequestQueue getQueue() {
+        return queue;
+    }
+
     /**
      * 通过DribbbleAPI进行字符串请求
      *
@@ -48,6 +66,8 @@ public class App extends Application {
         });
     }
 
+    // TODO: 2016/12/22 规范请求方法
+
     /**
      * 通过DribbbleAPI进行字符串请求,获取指定页的Shots
      *
@@ -56,7 +76,7 @@ public class App extends Application {
      * @param errorListener 响应失败监听器
      */
     public static void pageRequest(int page, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        queue.add(new StringRequest(API.END_POINT_SHOTS_PAGE + page, listener, errorListener) {
+        queue.add(new StringRequest(String.format(API.END_POINT.SHOTS_PAGE, page + ""), listener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
@@ -67,12 +87,17 @@ public class App extends Application {
     /**
      * 通过DribbbleAPI进行图像请求(原尺寸);
      *
-     * @param url           目标地址
-     * @param listener      响应成功监听器
-     * @param errorListener 响应失败监听器
+     * @param url       目标地址
+     * @param imageView 将要设置图像的ImageView
      */
-    public static void imageRequest(String url, Response.Listener<Bitmap> listener, Response.ErrorListener errorListener) {
-        queue.add(new ImageRequest(url, listener, 0, 0, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.ARGB_8888, errorListener) {
+    public static void imageRequest(String url, final ImageView imageView) {
+        // TODO: 2016/12/22 定制图像大小
+        queue.add(new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                imageView.setImageBitmap(response);
+            }
+        }, 0, 0, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.ARGB_8888, null) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
@@ -80,11 +105,4 @@ public class App extends Application {
         });
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        queue = Volley.newRequestQueue(this);
-        header = new HashMap<>();
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + API.Oauth2.ACCESS_TOKEN);
-    }
 }

@@ -1,6 +1,11 @@
 package org.dcxz.designdigger.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.activity.Activity_Login;
+import org.dcxz.designdigger.util.API;
+import org.dcxz.designdigger.util.Util_SP_Manager;
 import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
 
 /**
@@ -21,9 +33,12 @@ import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
  */
 
 public class Fragment_Menu extends MenuFragment {
+    private Util_SP_Manager manager;
     private ImageView avatar;
-    private TextView signUp, signIn;
+    private TextView signUp, signIn, signOut;
     private TextView settings;
+    private AlertDialog dialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,10 +56,56 @@ public class Fragment_Menu extends MenuFragment {
         avatar = (ImageView) view.findViewById(R.id.menu_avatar);
         signUp = (TextView) view.findViewById(R.id.menu_signUp);
         signIn = (TextView) view.findViewById(R.id.menu_signIn);
+        signOut = (TextView) view.findViewById(R.id.menu_signOut);
         settings = (TextView) view.findViewById(R.id.menu_settings);
     }
 
     private void initData(Activity activity) {
+        manager = Util_SP_Manager.getInstance(activity);
+        String accessToken = manager.getAccessToken();
+        setSignOutVisible(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setPositiveButton("Sign out", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
+                setSignOutVisible(false);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        dialog = builder.create();
+    }
+
+    /**
+     * Sign in/Sign up 是否不可见,以及Sign out是否可见
+     *
+     * @param visibility true:Sign out 可见,其他不可见
+     */
+    private void setSignOutVisible(boolean visibility) {
+        if (visibility) {
+            signUp.setVisibility(View.INVISIBLE);
+            signIn.setVisibility(View.INVISIBLE);
+            signOut.setVisibility(View.VISIBLE);
+            App.stringRequest(
+                    "",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+        } else {
+            signUp.setVisibility(View.VISIBLE);
+            signIn.setVisibility(View.VISIBLE);
+            signOut.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initAdapter(Activity activity) {
@@ -66,7 +127,13 @@ public class Fragment_Menu extends MenuFragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, "Sign In", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(activity, Activity_Login.class));
+            }
+        });
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
@@ -75,5 +142,16 @@ public class Fragment_Menu extends MenuFragment {
                 Toast.makeText(activity, "Settings", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * 监听Activity_Login发送的登陆成功事件
+     */
+    private class LoginReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+// TODO: 2016/12/22 登录成功监听
+        }
     }
 }

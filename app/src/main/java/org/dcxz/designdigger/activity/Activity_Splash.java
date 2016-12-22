@@ -77,7 +77,8 @@ public class Activity_Splash extends Framework_Activity {
     @Override
     public void handleMessageImp(Message msg) {
         if (msg.what == TO_MAIN_ACTIVITY) {
-            startActivity(Activity_Test.class);
+            startActivity(Activity_Main.class);
+            finish();
         }
     }
 }

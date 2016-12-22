@@ -2,13 +2,10 @@ package org.dcxz.designdigger.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.Response;
 
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
@@ -59,23 +56,8 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
      */
     @SuppressLint("SetTextI18n")
     private void initView(final ViewHolder holder, Entity_Shot temp) {
-        App.imageRequest(temp.getUser().getAvatar_url(),
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        holder.avatar.setImageBitmap(response);
-                        //noinspection deprecation
-                        holder.avatar.setBorderColorResource(R.color.default_4);
-                        holder.avatar.setBorderWidth(2);
-                    }
-                }, null);//忽略请求失败
-        App.imageRequest(temp.getImages().getTeaser(),
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        holder.content.setImageBitmap(response);
-                    }
-                }, null);
+        App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar);
+        App.imageRequest(temp.getImages().getTeaser(), holder.content);
         if (temp.getRebounds_count() == 0) {// TODO: 2016/12/18 资源与逻辑
             holder.rebound.setVisibility(View.INVISIBLE);
         } else {
