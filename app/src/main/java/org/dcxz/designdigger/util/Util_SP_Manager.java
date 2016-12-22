@@ -22,7 +22,11 @@ public class Util_SP_Manager {
     /**
      * 是否第一次启动应用
      */
-    public static final String IS_NOT_FIRST_LAUNCH = "IS_NOT_FIRST_LAUNCH";
+    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+    /**
+     * 动态口令
+     */
+    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 
     private Util_SP_Manager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
@@ -40,6 +44,44 @@ public class Util_SP_Manager {
     }
 
     /**
+     * 是否第一次启动应用
+     *
+     * @return 是否第一次启动应用
+     */
+    public boolean isFirstLaunch() {
+        return preferences.getBoolean(IS_FIRST_LAUNCH, true);
+    }
+
+    /**
+     * 修改第一次启动应用的判定值
+     *
+     * @param firstLaunch 判定值
+     * @return 是否修改成功
+     */
+    public boolean setFirstLaunch(boolean firstLaunch) {
+        return preferences.edit().putBoolean(IS_FIRST_LAUNCH, firstLaunch).commit();
+    }
+
+    /**
+     * 获取动态口令
+     *
+     * @return 动态口令
+     */
+    public String getAccessToken() {
+        return preferences.getString(ACCESS_TOKEN, API.Oauth2.ACCESS_TOKEN_DEFAULT);
+    }
+
+    /**
+     * 存入动态口令
+     *
+     * @param accessToken 将要存入的值
+     * @return 是否存入成功
+     */
+    public boolean setAccessToken(String accessToken) {
+        return preferences.edit().putString(ACCESS_TOKEN, accessToken).commit();
+    }
+
+    /**
      * 获取布尔值
      *
      * @param key 关键字
@@ -50,14 +92,13 @@ public class Util_SP_Manager {
     }
 
     /**
-     * 插入布尔值
+     * 存入布尔值
      *
      * @param key  关键字
-     * @param flag 将要插入的值
-     * @return 是否插入成功
+     * @param flag 将要存入的值
+     * @return 是否存入成功
      */
     public boolean putBoolean(String key, boolean flag) {
         return preferences.edit().putBoolean(key, flag).commit();
     }
-
 }
