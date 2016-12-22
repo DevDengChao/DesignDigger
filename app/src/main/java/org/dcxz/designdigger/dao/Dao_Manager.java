@@ -1,28 +1,28 @@
-package org.dcxz.designdigger.util;
+package org.dcxz.designdigger.dao;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 
 import org.dcxz.designdigger.entity.Entity_User;
+import org.dcxz.designdigger.util.API;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
- * SharedPreference管理工具
+ * 基于SharedPreference与FileIO实现的数据管理器
  * <br/>
  * Created by OvO on 2016/12/13.<br/>
  * ChangeLog :
  * <pre>
  * </pre>
  */
-
-public class Util_SP_Manager {
-    /**
-     * 单例模式
-     */
-    private static Util_SP_Manager instance;
-
-    private static SharedPreferences preferences;
+public class Dao_Manager {
     /**
      * 是否第一次启动应用
      */
@@ -35,16 +35,30 @@ public class Util_SP_Manager {
      * 用户对象(Json)
      */
     private static final String USER = "USER";
+    /**
+     * 用户头像文件名
+     */
+    private static final String AVATAR = "AVATAR.PNG";
+    /**
+     * 单例模式
+     */
+    private static Dao_Manager instance;
+    private static SharedPreferences preferences;
+    /**
+     * 当前应用的文件目录
+     */
+    private static File fileDir;
 
-    private Util_SP_Manager(Context context) {
+    private Dao_Manager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
+        fileDir = context.getFilesDir();
     }
 
-    public static Util_SP_Manager getInstance(Context context) {
+    public static Dao_Manager getInstance(Context context) {
         if (instance == null) {
-            synchronized (Util_SP_Manager.class) {
+            synchronized (Dao_Manager.class) {
                 if (instance == null) {
-                    instance = new Util_SP_Manager(context);
+                    instance = new Dao_Manager(context);
                 }
             }
         }
@@ -112,7 +126,29 @@ public class Util_SP_Manager {
         return null;
     }
 
+    /**
+     * 将用户头像存入文件
+     *
+     * @param avatar 带储存的头像
+     * @return 是否成功存入文件
+     */
+    public boolean setAvatar(Bitmap avatar) {
+        try {
+            return avatar.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(new File(fileDir, AVATAR)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    /**
+     * 获取头像文件
+     *
+     * @return 头像
+     */
+    public Bitmap getAvatar() {
+        return BitmapFactory.decodeFile(new File(fileDir, AVATAR).getAbsolutePath());
+    }
 
     /**
      * 获取布尔值
