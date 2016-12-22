@@ -53,12 +53,12 @@ public class Activity_FirstLaunch extends Framework_Activity {
     @Override
     protected void initView() {
         Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
-        if (manager.getBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH)) {//不是第一次启动应用
+        if (manager.isFirstLaunch()) {//是第一次启动应用
+            Log.i(TAG, "initView: First launch");
+            manager.setFirstLaunch(false);
+        } else {//不是第一次启动应用
             Log.i(TAG, "initView: Not first launch");
             handler.sendEmptyMessage(TO_SLASH_ACTIVITY);
-        } else {//是第一次启动应用
-            Log.i(TAG, "initView: First launch");
-            manager.putBoolean(Util_SP_Manager.IS_NOT_FIRST_LAUNCH, true);
         }
         viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
         circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
