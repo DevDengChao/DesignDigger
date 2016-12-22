@@ -12,7 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.dcxz.designdigger.util.API;
-import org.dcxz.designdigger.util.Util_SP_Manager;
+import org.dcxz.designdigger.dao.Dao_Manager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,20 +33,12 @@ public class App extends Application {
      */
     private static HashMap<String, String> header;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        queue = Volley.newRequestQueue(this);
-        header = new HashMap<>();
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + Util_SP_Manager.getInstance(this).getAccessToken());
-    }
-
     /**
      * 获取请求队列
      *
      * @return 当前应用持有的请求队列
      */
-    public static RequestQueue getQueue() {
+    public static RequestQueue getQueue() {// TODO: 2016/12/22 findUsage
         return queue;
     }
 
@@ -66,8 +58,6 @@ public class App extends Application {
         });
     }
 
-    // TODO: 2016/12/22 规范请求方法
-
     /**
      * 通过DribbbleAPI进行字符串请求,获取指定页的Shots
      *
@@ -83,6 +73,8 @@ public class App extends Application {
             }
         });
     }
+
+    // TODO: 2016/12/22 规范请求方法
 
     /**
      * 通过DribbbleAPI进行图像请求(原尺寸);
@@ -103,6 +95,14 @@ public class App extends Application {
                 return header;
             }
         });
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        queue = Volley.newRequestQueue(this);
+        header = new HashMap<>();
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + Dao_Manager.getInstance(this).getAccessToken());
     }
 
 }

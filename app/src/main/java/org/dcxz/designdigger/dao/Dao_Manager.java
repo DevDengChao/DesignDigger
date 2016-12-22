@@ -147,7 +147,12 @@ public class Dao_Manager {
      * @return 头像
      */
     public Bitmap getAvatar() {
-        return BitmapFactory.decodeFile(new File(fileDir, AVATAR).getAbsolutePath());
+        File file = new File(fileDir, AVATAR);
+        if (file.exists()) {
+            return BitmapFactory.decodeFile(file.getAbsolutePath());
+        } else {
+            return null;
+        }
     }
 
     /**

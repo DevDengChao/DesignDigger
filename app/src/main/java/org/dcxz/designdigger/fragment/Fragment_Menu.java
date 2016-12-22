@@ -14,14 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.Activity_Login;
 import org.dcxz.designdigger.util.API;
-import org.dcxz.designdigger.util.Util_SP_Manager;
+import org.dcxz.designdigger.dao.Dao_Manager;
 import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
 
 /**
@@ -33,7 +29,7 @@ import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
  */
 
 public class Fragment_Menu extends MenuFragment {
-    private Util_SP_Manager manager;
+    private Dao_Manager manager;
     private ImageView avatar;
     private TextView signUp, signIn, signOut;
     private TextView settings;
@@ -60,17 +56,19 @@ public class Fragment_Menu extends MenuFragment {
         settings = (TextView) view.findViewById(R.id.menu_settings);
     }
 
-    private void initData(Activity activity) {
-        manager = Util_SP_Manager.getInstance(activity);
+    private void initData(final Activity activity) {
+        manager = Dao_Manager.getInstance(activity);
         String accessToken = manager.getAccessToken();
-        setSignOutVisible(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
+        setSignOutVisible(activity, !accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Sign out");
+        builder.setMessage("You are going to sign out");
         builder.setPositiveButton("Sign out", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-                setSignOutVisible(false);
+                setSignOutVisible(activity, false);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -80,31 +78,21 @@ public class Fragment_Menu extends MenuFragment {
     /**
      * Sign in/Sign up 是否不可见,以及Sign out是否可见
      *
+     * @param activity   用于初始化Dao_Manager
      * @param visibility true:Sign out 可见,其他不可见
      */
-    private void setSignOutVisible(boolean visibility) {
+    private void setSignOutVisible(Activity activity, boolean visibility) {
         if (visibility) {
             signUp.setVisibility(View.INVISIBLE);
             signIn.setVisibility(View.INVISIBLE);
             signOut.setVisibility(View.VISIBLE);
-            App.stringRequest(
-                    "",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    });
+            avatar.setImageBitmap(Dao_Manager.getInstance(activity).getAvatar());
         } else {
             signUp.setVisibility(View.VISIBLE);
             signIn.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.INVISIBLE);
+            avatar.setImageResource(R.mipmap.dribbble_ball_mark);
+            API.Oauth2.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);// TODO: 2016/12/23 注销再登录逻辑
         }
     }
 

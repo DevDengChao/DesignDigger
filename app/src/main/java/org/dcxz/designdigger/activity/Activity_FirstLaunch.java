@@ -10,7 +10,7 @@ import android.widget.TextView;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.adapter.Adapter_FirstLaunch;
 import org.dcxz.designdigger.framework.Framework_Activity;
-import org.dcxz.designdigger.util.Util_SP_Manager;
+import org.dcxz.designdigger.dao.Dao_Manager;
 import org.dcxz.designdigger.view.cricle_indicator.CircleIndicator;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initView() {
-        Util_SP_Manager manager = Util_SP_Manager.getInstance(this);
+        Dao_Manager manager = Dao_Manager.getInstance(this);
         if (manager.isFirstLaunch()) {
             Log.i(TAG, "initView: First launch");
             manager.setFirstLaunch(false);

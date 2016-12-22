@@ -13,15 +13,17 @@ import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.entity.Entity_AccessToken;
+import org.dcxz.designdigger.entity.Entity_User;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.util.API;
-import org.dcxz.designdigger.util.Util_SP_Manager;
+import org.dcxz.designdigger.dao.Dao_Manager;
 import org.json.JSONObject;
 
 /**
@@ -122,13 +124,24 @@ public class Activity_Login extends Framework_Activity {
      * @param access_token 链接口令
      */
     private void saveUser(String access_token) {
-        Util_SP_Manager.getInstance(this).setAccessToken(access_token);//登录成功,更新文件中的口令
+        Dao_Manager.getInstance(this).setAccessToken(access_token);//登录成功,更新文件中的口令
         API.Oauth2.setAccessToken(access_token);//登录成功,更新内存中的口令
         App.stringRequest(
                 API.END_POINT.USER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Dao_Manager.getInstance(Activity_Login.this).setUser(response);
+                        Entity_User user = new Gson().fromJson(response, Entity_User.class);
+                        Log.i(TAG, "onResponse: " + user.getId() + " " + user.getUsername());
+                        App.getQueue().add(new ImageRequest(user.getAvatar_url(), new Response.Listener<Bitmap>() {
+                            @Override
+                            public void onResponse(Bitmap response) {
+                                Log.i(TAG, "onResponse: save avatar "
+                                        + (Dao_Manager.getInstance(Activity_Login.this).setAvatar(response) ?
+                                        "success" : "failed"));
+                            }
+                        }, 0, 0, Bitmap.Config.ARGB_8888, null));
                         handler.sendEmptyMessage(TO_ACTIVITY_SPLASH);
                     }
                 },
