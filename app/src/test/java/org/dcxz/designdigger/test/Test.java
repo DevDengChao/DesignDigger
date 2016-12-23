@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -24,7 +25,7 @@ public class Test {
         String locations[] =
                 new String[]{
                         "https://api.dribbble.com/v1/simplebits",//get failed
-                        API.END_POINT_SHOTS_PAGE + 1,//get success
+                        String.format(API.EndPoint.SHOTS_PAGE, 1),//get success
                         "https://dribbble.com/oauth/authorize/?client_id=e8e27bfbaa6d35bfe58255c68957c70aecfb444b20fc8197bf1c5f9acc1181ce",//get success
                         "https://dribbble.com/oauth/authorize/?client_id=e8e27bfbaa6d35bfe58255c68957c70aecfb444b20fc8197bf1c5f9acc1181ce&redirect_uri=www.baidu.com",
                 };
@@ -68,5 +69,29 @@ public class Test {
         } else {
             System.out.println("test: " + connection.getResponseCode() + "\r\n" + connection.getResponseMessage());
         }
+    }
+
+    private enum E {
+        A("A"), B("B"), C("C");
+        private String value;
+
+        E(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
+
+    @org.junit.Test
+    public void testE() {
+        System.out.println(E.A);
+        ArrayList<String> arr = new ArrayList<>();
+        for (E e : E.values()) {
+            arr.add(e.toString());
+        }
+        System.out.println(arr);
     }
 }

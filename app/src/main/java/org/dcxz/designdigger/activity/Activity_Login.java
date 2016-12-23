@@ -156,7 +156,7 @@ public class Activity_Login extends Framework_Activity {
         API.Oauth2.setAccessToken(access_token);//登录成功,更新内存中的口令
         App.updateHeader();//登录成功,更新请求头中的口令
         App.stringRequest(
-                API.END_POINT.USER,
+                API.EndPoint.USER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

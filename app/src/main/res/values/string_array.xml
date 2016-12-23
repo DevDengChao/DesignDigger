@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="popularity">
-        <item>Popular</item>
-        <item>Most Viewed</item>
-        <item>Most Commented</item>
+    <string-array name="sort">
+        <item>@string/popular</item>
+        <item>@string/recent</item>
+        <item>@string/views</item>
+        <item>@string/comments</item>
     </string-array>
-    <string-array name="type">
-        <item>Shots</item>
-        <item>Debuts</item>
-        <item>Team Shots</item>
-        <item>Playoffs</item>
-        <item>Rebounds</item>
-        <item>Animated GIFs</item>
-        <item>Attached Shots</item>
+    <string-array name="list">
+        <item>@string/shots</item>
+        <item>@string/debuts</item>
+        <item>@string/teams</item>
+        <item>@string/playoffs</item>
+        <item>@string/rebounds</item>
+        <item>@string/animated_gifs</item>
+        <item>@string/attached_shots</item>
     </string-array>
-    <string-array name="timeLine">
+    <string-array name="timeFrame">
         <item>This Week</item>
         <item>This Month</item>
         <item>This Year</item>

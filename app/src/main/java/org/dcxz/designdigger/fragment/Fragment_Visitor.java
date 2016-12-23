@@ -5,6 +5,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.android.volley.Response;
@@ -18,8 +19,11 @@ import org.dcxz.designdigger.adapter.Adapter_Visitor;
 import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
 import org.dcxz.designdigger.framework.Framework_Fragment;
+import org.dcxz.designdigger.util.API;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /**
  * <br/>
@@ -27,28 +31,32 @@ import java.util.ArrayList;
  */
 
 public class Fragment_Visitor extends Framework_Fragment {
-
+    private ProgressBar progressBar;
     /**
      * 内容筛选,控制流行程度
      */
-    private Spinner spinner_popularity;
+    private Spinner spinner_sort;
     /**
      * 内容筛选,控制分类
      */
-    private Spinner spinner_type;
+    private Spinner spinner_list;
     /**
      * 内容筛选,控制时间范围
      */
-    private Spinner spinner_timeLine;
+    private Spinner spinner_timeFrame;
+    /**
+     * 由于显示在页面上的文本与实际需要填入url中的文本不一致,因此需要进行键值对映射
+     */
+    private HashMap<String, String> sort,list,timeFrame;
     /**
      * 展示内容用的GridView
      */
     private GridView gridView;
+
     /**
      * GridView中的内容
      */
     private ArrayList<Entity_Shot> content;
-
     private Framework_Adapter<Entity_Shot> adapter;
 
     @Override
@@ -58,16 +66,17 @@ public class Fragment_Visitor extends Framework_Fragment {
 
     @Override
     protected void initView(Activity activity, View view) {
-        spinner_popularity = (Spinner) view.findViewById(R.id.fragment_visitor_popular);
-        spinner_type = (Spinner) view.findViewById(R.id.fragment_visitor_type);
-        spinner_timeLine = (Spinner) view.findViewById(R.id.fragment_visitor_timeLine);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        spinner_sort = (Spinner) view.findViewById(R.id.fragment_visitor_sort);
+        spinner_list = (Spinner) view.findViewById(R.id.fragment_visitor_list);
+        spinner_timeFrame = (Spinner) view.findViewById(R.id.fragment_visitor_timeFrame);
         gridView = (GridView) view.findViewById(R.id.fragment_visitor_gridView);
         gridView.setNumColumns(1);
     }
 
     @Override
     protected void initData(Activity activity) {
-// TODO: 2016/12/17 初始化数据
+        initConvertMap();
         content = new ArrayList<>();
         adapter = new Adapter_Visitor(activity, content);
         App.pageRequest(
@@ -75,6 +84,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         content = new Gson().fromJson(response, new TypeToken<ArrayList<Entity_Shot>>() {
                         }.getType());
                         for (Entity_Shot shot : content) {
@@ -94,11 +104,22 @@ public class Fragment_Visitor extends Framework_Fragment {
         );
     }
 
+    /**
+     * 初始化映射表
+     */
+    private void initConvertMap() {
+        sort  = new HashMap<>();
+        sort .put("Popular",null);
+        sort .put("Most Viewed", API.EndPoint.Parameter.Sort.VIEWS.toString());
+        sort .put("Most Commented",null);
+
+    }
+
     @Override
     protected void initAdapter(Activity activity) {
-        spinner_popularity.setAdapter(ArrayAdapter.createFromResource(activity, R.array.popularity, android.R.layout.simple_spinner_item));
-        spinner_type.setAdapter(ArrayAdapter.createFromResource(activity, R.array.type, android.R.layout.simple_spinner_item));
-        spinner_timeLine.setAdapter(ArrayAdapter.createFromResource(activity, R.array.timeLine, android.R.layout.simple_spinner_item));
+        spinner_sort.setAdapter(ArrayAdapter.createFromResource(activity, R.array.sort, android.R.layout.simple_spinner_item));
+        spinner_list.setAdapter(ArrayAdapter.createFromResource(activity, R.array.list, android.R.layout.simple_spinner_item));
+        spinner_timeFrame.setAdapter(ArrayAdapter.createFromResource(activity, R.array.timeFrame, android.R.layout.simple_spinner_item));
         gridView.setAdapter(adapter);
     }
 

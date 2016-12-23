@@ -6,4 +6,18 @@
 
     <string name="main_drawerOpened">The drawer opened</string>
     <string name="main_drawerClosed">The drawer closed</string>
+
+    <!--Sort-->
+    <string name="popular">Popular</string>
+    <string name="recent">Recent</string>
+    <string name="views">Most Viewed</string>
+    <string name="comments">Most Commented</string>
+    <!--List-->
+    <string name="shots">Shots</string>
+    <string name="debuts">Debuts</string>
+    <string name="teams">Team Shots</string>
+    <string name="playoffs">Playoffs</string>
+    <string name="rebounds">Rebounds</string>
+    <string name="animated_gifs">Animated GIFs</string>
+    <string name="attached_shots">Attached Shots</string>
 </resources>

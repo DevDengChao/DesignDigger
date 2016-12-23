@@ -67,7 +67,7 @@ public class App extends Application {
      * @param errorListener 响应失败监听器
      */
     public static void pageRequest(int page, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        queue.add(new StringRequest(String.format(API.END_POINT.SHOTS_PAGE, page + ""), listener, errorListener) {
+        queue.add(new StringRequest(String.format(API.EndPoint.SHOTS_PAGE, page + ""), listener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;

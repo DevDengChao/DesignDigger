@@ -72,7 +72,7 @@ public class API {
         /**
          * 活动范围,即用户可操作的范围
          */
-        public static class SCOPE {
+        public static class Scope {
             /**
              * 公开域,用户只能读取来自服务器的信息(默认)
              */
@@ -95,7 +95,7 @@ public class API {
             /**
              * 完整域
              */
-            public static final String FULL = SCOPE.PUBLIC + "+" + SCOPE.COMMENT + "+" + SCOPE.WRITE + "+" + SCOPE.UPLOAD;
+            public static final String FULL = Scope.PUBLIC + "+" + Scope.COMMENT + "+" + Scope.WRITE + "+" + Scope.UPLOAD;
         }
 
         /**
@@ -105,14 +105,14 @@ public class API {
         public static final String TOKEN = "https://dribbble.com/oauth/token/?"
                 + CLIENT_ID + "=" + CLIENT_ID_VALUE + "&"
                 + CLIENT_SECRET + "=" + CLIENT_SECRET_VALUE + "&"
-                + SCOPES + "=" + SCOPE.FULL + "&"
+                + SCOPES + "=" + Scope.FULL + "&"
                 + "code=%s";
     }
 
     /**
      * API接入点
      */
-    public static class END_POINT {// TODO: 2016/12/22 规范接入点格式
+    public static class EndPoint {// TODO: 2016/12/22 规范接入点格式
         /**
          * 入口
          */
@@ -132,6 +132,138 @@ public class API {
          * 需要配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
+
+        /**
+         * 请求shot时可用的参数
+         */
+        public static class Parameter {
+            /**
+             * 按列查询
+             */
+            public static final String LIST = "list";
+
+            /**
+             * 注意该枚举中的顺序需与string_array中的顺序相同
+             */
+            public enum List {
+                /**
+                 * 投篮(单个的作品)
+                 */
+                SHOTS("shots"),
+                /**
+                 * 处女作/首次出现的作品
+                 */
+                DEBUTS("debuts"),
+                /**
+                 * 团队作品
+                 */
+                TEAMS("teams"),
+                /**
+                 * 季后赛作品(拥有大量rebounds的作品)
+                 */
+                PLAYOFFS("playoffs"),
+                /**
+                 * 有响应作品的作品
+                 */
+                REBOUNDS("rebounds"),
+                /**
+                 * 动态的(gif)
+                 */
+                ANIMATED("animated"),
+                /**
+                 * 有附件的作品
+                 */
+                ATTACHMENTS("attachments");
+                private String value;
+
+                List(String value) {
+                    this.value = value;
+                }
+
+                @Override
+                public String toString() {
+                    return value;
+                }
+            }
+
+            /**
+             * 按时间查询
+             */
+            public static final String TIMEFRAME = "timeframe";
+
+            /**
+             * 注意该枚举中的顺序需与string_array中的顺序相同
+             */
+            public enum TimeFrame {
+                /**
+                 * 现在
+                 */
+                Now("now"),
+                /**
+                 * 本周
+                 */
+                WEEK("week"),
+                /**
+                 * 本月
+                 */
+                MONTH("month"),
+                /**
+                 * 今年
+                 */
+                YEAR("year"),
+                /**
+                 * 不限
+                 */
+                EVER("ever");
+                private String value;
+
+                TimeFrame(String value) {
+                    this.value = value;
+                }
+
+                @Override
+                public String toString() {
+                    return value;
+                }
+            }
+
+            /**
+             * 排序方式
+             */
+            public static final String SORT = "sort";
+
+            /**
+             * 注意该枚举中的顺序需与string_array中的顺序相同
+             */
+            public enum Sort {
+                /**
+                 * 人气最高的
+                 */
+                POPULAR("popular"),
+                /**
+                 * 评论最多的
+                 */
+                COMMENTS("comments"),
+                /**
+                 * 最近的
+                 */
+                RECENT("recent"),
+                /**
+                 * 浏览量最多的
+                 */
+                VIEWS("views");
+                private String value;
+
+                Sort(String value) {
+                    this.value = value;
+                }
+
+                @Override
+                public String toString() {
+                    return value;
+                }
+            }
+        }
 
         //"https://api.dribbble.com/v1/users/glebich/shots"请求指定用户的shots
         //"https://api.dribbble.com/v1/user/followers"当前ACCESS_TOKEN持有者(23448678)的粉丝列表
