@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.adapter.Adapter_FirstLaunch;
-import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.dao.Dao_Manager;
+import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.view.cricle_indicator.CircleIndicator;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 
 public class Activity_FirstLaunch extends Framework_Activity {
-    private static final String TAG = "Activity_FirstLaunch";
+    public static final String TAG = "Activity_FirstLaunch";
     /**
      * what:跳转至Activity_Splash
      */
@@ -128,7 +128,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
                 startActivity(Activity_Splash.class);//父类的包装方法
                 break;
             case TO_LOGIN_ACTIVITY:
-                startActivity(Activity_Login.class);
+                startActivity(Activity_Login.class, Activity_FirstLaunch.TAG);
                 break;
         }
         finish();

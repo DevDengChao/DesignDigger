@@ -109,7 +109,12 @@ public class Dao_Manager {
      * @param user 将要存入的用户对象
      * @return 是否存入成功
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public boolean setUser(String user) {
+        File file = new File(fileDir, AVATAR);
+        if (file.exists()) {//移除原有的头像文件,以免获取头像失败后显示原有头像
+            file.delete();
+        }
         return preferences.edit().putString(USER, user).commit();
     }
 

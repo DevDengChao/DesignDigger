@@ -37,7 +37,7 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
     protected View getViewImp(int position, View convertView, ViewGroup parent) {
         Entity_Shot temp = data.get(position);
         ViewHolder holder;
-        if (convertView == null) {// TODO: 2016/12/18 item的资源
+        if (convertView == null) {// TODO: 2016/12/18 优化:Item布局
             convertView = inflater.inflate(R.layout.item, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
@@ -58,7 +58,7 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
     private void initView(final ViewHolder holder, Entity_Shot temp) {
         App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar);
         App.imageRequest(temp.getImages().getTeaser(), holder.content);
-        if (temp.getRebounds_count() == 0) {// TODO: 2016/12/18 资源与逻辑
+        if (temp.getRebounds_count() == 0) {
             holder.rebound.setVisibility(View.INVISIBLE);
         } else {
             holder.rebound.setVisibility(View.VISIBLE);

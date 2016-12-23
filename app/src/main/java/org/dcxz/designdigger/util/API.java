@@ -1,5 +1,7 @@
 package org.dcxz.designdigger.util;
 
+import org.dcxz.designdigger.App;
+
 /**
  * DribbbleAPI工具,提供OAuth2认证所需的资源以及Dribbble提供的接入口
  * <br/>
@@ -40,7 +42,7 @@ public class API {
         public static String ACCESS_TOKEN = ACCESS_TOKEN_DEFAULT;
 
         /**
-         * 替换ACCESS_TOKEN,标识用户登录与否
+         * 替换ACCESS_TOKEN,标识用户登录与否.{@link App#updateHeader()}
          *
          * @param accessToken 将要设置为的ACCESS_TOKEN
          */

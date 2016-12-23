@@ -11,8 +11,8 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.dcxz.designdigger.util.API;
 import org.dcxz.designdigger.dao.Dao_Manager;
+import org.dcxz.designdigger.util.API;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +32,7 @@ public class App extends Application {
      * 访问DribbbleAPI必要的头信息
      */
     private static HashMap<String, String> header;
+    private static Dao_Manager manager;
 
     /**
      * 获取请求队列
@@ -102,7 +103,15 @@ public class App extends Application {
         super.onCreate();
         queue = Volley.newRequestQueue(this);
         header = new HashMap<>();
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + Dao_Manager.getInstance(this).getAccessToken());
+        manager = Dao_Manager.getInstance(this);
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + manager.getAccessToken());
+    }
+
+    /**
+     * 更新AccessToken
+     */
+    public static void updateHeader() {
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + manager.getAccessToken());
     }
 
 }

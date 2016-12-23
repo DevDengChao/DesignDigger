@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.Activity_Login;
-import org.dcxz.designdigger.util.API;
 import org.dcxz.designdigger.dao.Dao_Manager;
+import org.dcxz.designdigger.util.API;
 import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
+
+import java.lang.ref.WeakReference;
 
 /**
  * <br/>
@@ -29,11 +33,14 @@ import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
  */
 
 public class Fragment_Menu extends MenuFragment {
+    public static final String TAG = "Fragment_Menu";
     private Dao_Manager manager;
     private ImageView avatar;
     private TextView signUp, signIn, signOut;
     private TextView settings;
     private AlertDialog dialog;
+    private AvatarReceiver receiver;
+    private WeakReference<Activity> reference;
 
 
     @Override
@@ -54,12 +61,15 @@ public class Fragment_Menu extends MenuFragment {
         signIn = (TextView) view.findViewById(R.id.menu_signIn);
         signOut = (TextView) view.findViewById(R.id.menu_signOut);
         settings = (TextView) view.findViewById(R.id.menu_settings);
+        receiver = new AvatarReceiver();
+        reference = new WeakReference<>(activity);
     }
 
     private void initData(final Activity activity) {
         manager = Dao_Manager.getInstance(activity);
         String accessToken = manager.getAccessToken();
-        setSignOutVisible(activity, !accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
+        activity.registerReceiver(receiver, new IntentFilter("AvatarUpdated"));
+        setSignOutVisible(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Sign out");
@@ -68,7 +78,7 @@ public class Fragment_Menu extends MenuFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-                setSignOutVisible(activity, false);
+                setSignOutVisible(false);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -78,21 +88,22 @@ public class Fragment_Menu extends MenuFragment {
     /**
      * Sign in/Sign up 是否不可见,以及Sign out是否可见
      *
-     * @param activity   用于初始化Dao_Manager
      * @param visibility true:Sign out 可见,其他不可见
      */
-    private void setSignOutVisible(Activity activity, boolean visibility) {
+    private void setSignOutVisible(boolean visibility) {
         if (visibility) {
             signUp.setVisibility(View.INVISIBLE);
             signIn.setVisibility(View.INVISIBLE);
             signOut.setVisibility(View.VISIBLE);
-            avatar.setImageBitmap(Dao_Manager.getInstance(activity).getAvatar());
+            avatar.setImageBitmap(manager.getAvatar());
         } else {
             signUp.setVisibility(View.VISIBLE);
             signIn.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.INVISIBLE);
             avatar.setImageResource(R.mipmap.dribbble_ball_mark);
-            API.Oauth2.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);// TODO: 2016/12/23 注销再登录逻辑
+            API.Oauth2.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
+            manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
+            App.updateHeader();
         }
     }
 
@@ -115,7 +126,9 @@ public class Fragment_Menu extends MenuFragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(activity, Activity_Login.class));
+                Intent intent = new Intent(activity, Activity_Login.class);
+                intent.putExtra("STATE", Fragment_Menu.TAG);
+                startActivity(intent);
             }
         });
         signOut.setOnClickListener(new View.OnClickListener() {
@@ -132,14 +145,16 @@ public class Fragment_Menu extends MenuFragment {
         });
     }
 
-    /**
-     * 监听Activity_Login发送的登陆成功事件
-     */
-    private class LoginReceiver extends BroadcastReceiver {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        reference.get().unregisterReceiver(receiver);// TODO: 2016/12/23 将Framework_Fragment中的Activity替换为弱引用
+    }
 
+    private class AvatarReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-// TODO: 2016/12/22 登录成功监听
+            setSignOutVisible(true);
         }
     }
 }
