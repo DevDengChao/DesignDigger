@@ -37,20 +37,6 @@ public class API {
          */
         public static final String ACCESS_TOKEN_DEFAULT = "e57b6ea8ad4ca7051144a6f6d584673f8d8c8c7f98db0c4f70d24b3c4fe5e988";
         /**
-         * 动态ACCESS_TOKEN
-         */
-        public static String ACCESS_TOKEN = ACCESS_TOKEN_DEFAULT;
-
-        /**
-         * 替换ACCESS_TOKEN,标识用户登录与否.{@link App#updateHeader()}
-         *
-         * @param accessToken 将要设置为的ACCESS_TOKEN
-         */
-        public static void setAccessToken(String accessToken) {
-            ACCESS_TOKEN = accessToken;
-        }
-
-        /**
          * 请求头需要包含的KEY
          */
         public static final String AUTHORIZATION = "Authorization";
@@ -68,6 +54,28 @@ public class API {
          * 活动范围,即用户可操作的范围
          */
         public static final String SCOPES = "scope";
+        /**
+         * 获取临时令牌的URL,需要配合{@link String#format(String, Object...)}使用<br/>
+         * POST: https://dribbble.com/oauth/token/?...code=%s<br/>
+         */
+        public static final String TOKEN = "https://dribbble.com/oauth/token/?"
+                + CLIENT_ID + "=" + CLIENT_ID_VALUE + "&"
+                + CLIENT_SECRET + "=" + CLIENT_SECRET_VALUE + "&"
+                + SCOPES + "=" + Scope.FULL + "&"
+                + "code=%s";
+        /**
+         * 动态ACCESS_TOKEN
+         */
+        public static String ACCESS_TOKEN = ACCESS_TOKEN_DEFAULT;
+
+        /**
+         * 替换ACCESS_TOKEN,标识用户登录与否.
+         *
+         * @param accessToken 将要设置为的ACCESS_TOKEN
+         */
+        public static void setAccessToken(String accessToken) {
+            ACCESS_TOKEN = accessToken;
+        }
 
         /**
          * 活动范围,即用户可操作的范围
@@ -97,22 +105,12 @@ public class API {
              */
             public static final String FULL = Scope.PUBLIC + "+" + Scope.COMMENT + "+" + Scope.WRITE + "+" + Scope.UPLOAD;
         }
-
-        /**
-         * 获取临时令牌的URL,需要配合{@link String#format(String, Object...)}使用<br/>
-         * POST: https://dribbble.com/oauth/token/?...code=%s<br/>
-         */
-        public static final String TOKEN = "https://dribbble.com/oauth/token/?"
-                + CLIENT_ID + "=" + CLIENT_ID_VALUE + "&"
-                + CLIENT_SECRET + "=" + CLIENT_SECRET_VALUE + "&"
-                + SCOPES + "=" + Scope.FULL + "&"
-                + "code=%s";
     }
 
     /**
      * API接入点
      */
-    public static class EndPoint {// TODO: 2016/12/22 规范接入点格式
+    public static class EndPoint {
         /**
          * 入口
          */
@@ -128,21 +126,54 @@ public class API {
         public static final String SHOTS = ENTRY + "/shots";
         /**
          * 获取特定页Shots时使用的URL<br/>
-         * 直接访问会获得popular,shots,now条件下的特定页的12个对象.<br/>
-         * 需要配合{@link String#format(String, Object...)}使用<br/>
+         * 需要1个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
+        /**
+         * 按特定条件进行指定页的Shots请求<br/>
+         * 需要4个参数,配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOTS_PAGE_SORT_LIST_TIMEFRAME = SHOTS_PAGE + "&sort=%s&list=%s&timeframe=%s";
 
         /**
          * 请求shot时可用的参数
          */
         public static class Parameter {
             /**
-             * 按列查询
+             * 排序方式<br/>
+             * 注意该枚举中的顺序需与string_array中的顺序相同
              */
-            public static final String LIST = "list";
+            public enum Sort {
+                /**
+                 * 人气最高的
+                 */
+                POPULAR("popular"),
+                /**
+                 * 最近的
+                 */
+                RECENT("recent"),
+                /**
+                 * 浏览量最多的
+                 */
+                VIEWS("views"),
+                /**
+                 * 评论最多的
+                 */
+                COMMENTS("comments");
+                private String value;
+
+                Sort(String value) {
+                    this.value = value;
+                }
+
+                @Override
+                public String toString() {
+                    return value;
+                }
+            }
 
             /**
+             * 按列查询<br/>
              * 注意该枚举中的顺序需与string_array中的顺序相同
              */
             public enum List {
@@ -174,6 +205,7 @@ public class API {
                  * 有附件的作品
                  */
                 ATTACHMENTS("attachments");
+
                 private String value;
 
                 List(String value) {
@@ -184,14 +216,11 @@ public class API {
                 public String toString() {
                     return value;
                 }
+
             }
 
             /**
-             * 按时间查询
-             */
-            public static final String TIMEFRAME = "timeframe";
-
-            /**
+             * 按时间查询<br/>
              * 注意该枚举中的顺序需与string_array中的顺序相同
              */
             public enum TimeFrame {
@@ -215,6 +244,7 @@ public class API {
                  * 不限
                  */
                 EVER("ever");
+
                 private String value;
 
                 TimeFrame(String value) {
@@ -225,43 +255,7 @@ public class API {
                 public String toString() {
                     return value;
                 }
-            }
 
-            /**
-             * 排序方式
-             */
-            public static final String SORT = "sort";
-
-            /**
-             * 注意该枚举中的顺序需与string_array中的顺序相同
-             */
-            public enum Sort {
-                /**
-                 * 人气最高的
-                 */
-                POPULAR("popular"),
-                /**
-                 * 评论最多的
-                 */
-                COMMENTS("comments"),
-                /**
-                 * 最近的
-                 */
-                RECENT("recent"),
-                /**
-                 * 浏览量最多的
-                 */
-                VIEWS("views");
-                private String value;
-
-                Sort(String value) {
-                    this.value = value;
-                }
-
-                @Override
-                public String toString() {
-                    return value;
-                }
             }
         }
 

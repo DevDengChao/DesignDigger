@@ -20,4 +20,10 @@
     <string name="rebounds">Rebounds</string>
     <string name="animated_gifs">Animated GIFs</string>
     <string name="attached_shots">Attached Shots</string>
+    <!--TimeFrame-->
+    <string name="now">Now</string>
+    <string name="week">This Week</string>
+    <string name="month">This Month</string>
+    <string name="year">This Year</string>
+    <string name="ever">Ever</string>
 </resources>

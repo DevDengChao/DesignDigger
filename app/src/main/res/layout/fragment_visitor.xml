@@ -30,14 +30,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/progress_rotate" />
-
         <GridView
             android:id="@+id/fragment_visitor_gridView"
             android:layout_width="match_parent"
@@ -45,5 +37,13 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:scrollbars="none" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/progress_rotate" />
     </RelativeLayout>
 </LinearLayout>

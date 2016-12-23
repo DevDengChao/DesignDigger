@@ -16,9 +16,10 @@
         <item>@string/attached_shots</item>
     </string-array>
     <string-array name="timeFrame">
-        <item>This Week</item>
-        <item>This Month</item>
-        <item>This Year</item>
-        <item>All Time</item>
+        <item>@string/now</item>
+        <item>@string/week</item>
+        <item>@string/month</item>
+        <item>@string/year</item>
+        <item>@string/ever</item>
     </string-array>
 </resources>

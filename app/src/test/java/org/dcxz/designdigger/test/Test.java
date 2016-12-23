@@ -20,6 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class Test {
     private static final String TAG = "Test";
 
+    @SuppressWarnings("unused")
     @org.junit.Test
     public void test() throws IOException {
         String locations[] =
@@ -29,7 +30,7 @@ public class Test {
                         "https://dribbble.com/oauth/authorize/?client_id=e8e27bfbaa6d35bfe58255c68957c70aecfb444b20fc8197bf1c5f9acc1181ce",//get success
                         "https://dribbble.com/oauth/authorize/?client_id=e8e27bfbaa6d35bfe58255c68957c70aecfb444b20fc8197bf1c5f9acc1181ce&redirect_uri=www.baidu.com",
                 };
-        post(locations[2]);
+        //post(locations[2]);
     }
 
     @SuppressWarnings("unused")
@@ -71,6 +72,16 @@ public class Test {
         }
     }
 
+    @org.junit.Test
+    public void testE() {
+        System.out.println(E.A);
+        ArrayList<String> arr = new ArrayList<>();
+        for (E e : E.values()) {
+            arr.add(e.toString());
+        }
+        System.out.println(arr);
+    }
+
     private enum E {
         A("A"), B("B"), C("C");
         private String value;
@@ -83,15 +94,5 @@ public class Test {
         public String toString() {
             return value;
         }
-    }
-
-    @org.junit.Test
-    public void testE() {
-        System.out.println(E.A);
-        ArrayList<String> arr = new ArrayList<>();
-        for (E e : E.values()) {
-            arr.add(e.toString());
-        }
-        System.out.println(arr);
     }
 }
