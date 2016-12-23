@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.dcxz.designdigger.view.flowing_drawer.LeftDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_2"
-    android:clipChildren="false">
+    android:background="@color/default_2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,27 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
     <!--    menu    -->
-    <RelativeLayout
-        android:layout_width="280dp"
+    <fragment
+        android:id="@+id/main_menu"
+        android:name="org.dcxz.designdigger.fragment.Fragment_Menu"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:clipChildren="false">
+        tools:layout="@layout/fragment_menu" />
 
-        <org.dcxz.designdigger.view.flowing_drawer.FlowingView
-            android:id="@+id/flowingView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <fragment
-            android:id="@+id/main_menu"
-            android:name="org.dcxz.designdigger.fragment.Fragment_Menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="75dp"
-            tools:ignore="RtlHardcoded"
-            tools:layout="@layout/fragment_menu" />
-    </RelativeLayout>
-
-</org.dcxz.designdigger.view.flowing_drawer.LeftDrawerLayout>
+</android.support.v4.widget.DrawerLayout>

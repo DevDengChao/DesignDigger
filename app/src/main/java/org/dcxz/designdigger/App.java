@@ -102,16 +102,17 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         queue = Volley.newRequestQueue(this);
-        header = new HashMap<>();
         manager = Dao_Manager.getInstance(this);
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + manager.getAccessToken());
+        header = new HashMap<>();
+        updateHeader();
     }
 
     /**
      * 更新AccessToken
      */
     public static void updateHeader() {
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + manager.getAccessToken());
+        API.Oauth2.setAccessToken(manager.getAccessToken());
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + API.Oauth2.ACCESS_TOKEN);
     }
 
 }

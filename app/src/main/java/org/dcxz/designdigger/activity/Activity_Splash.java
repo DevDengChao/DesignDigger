@@ -31,9 +31,6 @@ public class Activity_Splash extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
-        if (getActionBar() != null) {
-            getActionBar().hide();
-        }
         return R.layout.activity_splash;
     }
 
@@ -51,15 +48,12 @@ public class Activity_Splash extends Framework_Activity {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "onResponse: cache created");
-                        // handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        toast(R.string.connect_error);
                         Log.i(TAG, "onErrorResponse: connect error");
                         error.printStackTrace();
-                        //  handler.sendEmptyMessage(TO_MAIN_ACTIVITY);
                     }
                 });
     }

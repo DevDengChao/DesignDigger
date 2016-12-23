@@ -7,10 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +17,8 @@ import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.Activity_Login;
 import org.dcxz.designdigger.dao.Dao_Manager;
+import org.dcxz.designdigger.framework.Framework_Fragment;
 import org.dcxz.designdigger.util.API;
-import org.dcxz.designdigger.view.flowing_drawer.MenuFragment;
 
 import java.lang.ref.WeakReference;
 
@@ -32,7 +30,7 @@ import java.lang.ref.WeakReference;
  * </pre>
  */
 
-public class Fragment_Menu extends MenuFragment {
+public class Fragment_Menu extends Framework_Fragment {
     public static final String TAG = "Fragment_Menu";
     private Dao_Manager manager;
     private ImageView avatar;
@@ -42,20 +40,12 @@ public class Fragment_Menu extends MenuFragment {
     private AvatarReceiver receiver;
     private WeakReference<Activity> reference;
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: 2016/12/21 菜单颜色
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
-        Activity activity = getActivity();
-        initView(activity, view);
-        initData(activity);
-        initAdapter(activity);
-        initListener(activity);
-        return setupReveal(view);
+    protected int setContentViewImp() {
+        return R.layout.fragment_menu;
     }
 
-    private void initView(Activity activity, View view) {
+    protected void initView(Activity activity, View view) {
         avatar = (ImageView) view.findViewById(R.id.menu_avatar);
         signUp = (TextView) view.findViewById(R.id.menu_signUp);
         signIn = (TextView) view.findViewById(R.id.menu_signIn);
@@ -65,7 +55,7 @@ public class Fragment_Menu extends MenuFragment {
         reference = new WeakReference<>(activity);
     }
 
-    private void initData(final Activity activity) {
+    protected void initData(final Activity activity) {
         manager = Dao_Manager.getInstance(activity);
         String accessToken = manager.getAccessToken();
         activity.registerReceiver(receiver, new IntentFilter("AvatarUpdated"));
@@ -107,10 +97,10 @@ public class Fragment_Menu extends MenuFragment {
         }
     }
 
-    private void initAdapter(Activity activity) {
+    protected void initAdapter(Activity activity) {
     }
 
-    private void initListener(final Activity activity) {
+    protected void initListener(final Activity activity) {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +133,11 @@ public class Fragment_Menu extends MenuFragment {
                 Toast.makeText(activity, "Settings", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void handleMessageImp(Message msg) {
+
     }
 
     @Override
