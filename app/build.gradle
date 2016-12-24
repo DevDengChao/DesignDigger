@@ -31,4 +31,5 @@ dependencies {
     compile 'io.github.openfeign:feign-gson:9.4.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
 }

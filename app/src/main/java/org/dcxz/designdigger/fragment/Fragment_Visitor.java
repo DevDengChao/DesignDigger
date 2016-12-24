@@ -72,6 +72,11 @@ public class Fragment_Visitor extends Framework_Fragment {
      * GridView中的内容
      */
     private ArrayList<Entity_Shot> content;
+    /**
+     * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
+     */
+    private boolean refreshEnable = true;
+
     private Framework_Adapter<Entity_Shot> adapter;
     /**
      * content的类型
@@ -147,6 +152,7 @@ public class Fragment_Visitor extends Framework_Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sortSelected = sortValue[position];
+                Log.i(TAG, "onItemSelected: sortSelected=" + sortSelected);
                 reRequest();
             }
 
@@ -159,6 +165,7 @@ public class Fragment_Visitor extends Framework_Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 listSelected = listValue[position];
+                Log.i(TAG, "onItemSelected: listSelected=" + listSelected);
                 reRequest();
             }
 
@@ -171,6 +178,7 @@ public class Fragment_Visitor extends Framework_Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 timeFrameSelected = timeFrameValue[position];
+                Log.i(TAG, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
                 reRequest();
             }
 
@@ -181,11 +189,6 @@ public class Fragment_Visitor extends Framework_Fragment {
         });
 
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            /**
-             * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
-             */
-            private boolean refreshEnable = true;
-
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -193,13 +196,13 @@ public class Fragment_Visitor extends Framework_Fragment {
 
             /**
              * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
-             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link #refreshEnable}<br/>
+             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Visitor#refreshEnable}<br/>
              * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
              */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if ((totalItemCount - 3 > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 3)) {
-                    //当滑动到倒数第4个item以内时尝试加载新数据
+                if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
+                    //当滑动到倒数第7个item以内时尝试加载新数据
                     Log.i(TAG, "onScroll: refreshEnable=" + refreshEnable);
                     if (refreshEnable) {//状态锁,当前状态是否可以请求数据
                         Log.i(TAG, "onScroll: try onScroll refresh");
@@ -210,6 +213,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                                     @Override
                                     public void onResponse(String response) {
                                         refreshEnable = true;//重置状态锁
+                                        pageSelected++;//更新页码
                                         Log.i(TAG, "onResponse: onScroll refresh success");
                                         ArrayList<Entity_Shot> temp = new Gson().fromJson(response, type);
                                         for (Entity_Shot shot : temp) {
@@ -227,7 +231,6 @@ public class Fragment_Visitor extends Framework_Fragment {
                                         Log.i(TAG, "onErrorResponse: onScroll refresh failed");
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
-                        pageSelected++;//更新页码
                     }
                 }
             }
@@ -247,6 +250,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        refreshEnable = true;
                         Log.i(TAG, "onResponse: reRequest refresh success");
                         progressBar.setVisibility(View.INVISIBLE);
                         content = new Gson().fromJson(response, type);
@@ -260,6 +264,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        refreshEnable = true;
                         Log.i(TAG, "onErrorResponse: reRequest refresh failed");
                         progressBar.setVisibility(View.INVISIBLE);
                         toast(R.string.connect_error);
