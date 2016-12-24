@@ -9,7 +9,6 @@ import com.android.volley.VolleyError;
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
-import org.dcxz.designdigger.util.API;
 
 /**
  * <br/>
@@ -43,18 +42,18 @@ public class Activity_Splash extends Framework_Activity {
     protected void initData() {
         //不论是否成功获取数据均应当在2500ms后跳转
         handler.sendEmptyMessageDelayed(TO_MAIN_ACTIVITY, 2500);
-        App.pageRequest(
-                1,
+        App.stringRequest(
+                "https://api.dribbble.com/v1/shots/?page=2&sort=popular&list=shots&timeframe=now",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "onResponse: cache created");
                     }
-                }, new Response.ErrorListener() {
+                },
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i(TAG, "onErrorResponse: connect error");
-                        error.printStackTrace();
                     }
                 });
     }

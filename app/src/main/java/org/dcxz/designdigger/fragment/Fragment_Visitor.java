@@ -10,12 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,24 +35,27 @@ import java.util.ArrayList;
  */
 
 public class Fragment_Visitor extends Framework_Fragment {
+    /**
+     * 日志标签,请求标签
+     */
     public static final String TAG = "Fragment_Visitor";
+    /**
+     * 用于遮罩的进度条
+     */
     private ProgressBar progressBar;
     /**
-     * 内容筛选,控制流行程度
+     * 内容筛选,控制流行程度,控制分类,控制时间范围
      */
-    private Spinner spinner_sort;
+    private Spinner spinner_sort, spinner_list, spinner_timeFrame;
     /**
-     * 内容筛选,控制分类
-     */
-    private Spinner spinner_list;
-    /**
-     * 内容筛选,控制时间范围
-     */
-    private Spinner spinner_timeFrame;
-    /**
+     * 界面上显示的文本,来自资源文件<br/>
      * 由于显示在页面上的文本与实际需要填入url中的文本不一致,因此需要进行键值对映射
      */
-    private String[] sortKey, listKey, timeFrameKey, sortValue, listValue, timeFrameValue;
+    private String[] sortKey, listKey, timeFrameKey;
+    /**
+     * 请求实际发送的文本,来自API.EndPoint.Parameter<br/>
+     */
+    private String[] sortValue, listValue, timeFrameValue;
     /**
      * 被选中的条件
      */
@@ -66,8 +67,7 @@ public class Fragment_Visitor extends Framework_Fragment {
     /**
      * 展示内容用的GridView
      */
-    private GridView gridView;
-
+    private GridView gridView;// TODO: 2016/12/24 pullToRefresh
     /**
      * GridView中的内容
      */
@@ -97,7 +97,6 @@ public class Fragment_Visitor extends Framework_Fragment {
     protected void initData(Activity activity) {
         mapping();
         content = new ArrayList<>();
-        adapter = new Adapter_Visitor(activity, content);
         type = new TypeToken<ArrayList<Entity_Shot>>() {
         }.getType();
     }
@@ -138,6 +137,7 @@ public class Fragment_Visitor extends Framework_Fragment {
         spinner_sort.setAdapter(new ArrayAdapter<>(activity, layoutID, sortKey));
         spinner_list.setAdapter(new ArrayAdapter<>(activity, layoutID, listKey));
         spinner_timeFrame.setAdapter(new ArrayAdapter<>(activity, layoutID, timeFrameKey));
+        adapter = new Adapter_Visitor(activity, content);
         gridView.setAdapter(adapter);
     }
 
@@ -180,49 +180,74 @@ public class Fragment_Visitor extends Framework_Fragment {
             }
         });
 
-        /*gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            /**
+             * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
+             */
+            private boolean refreshEnable = true;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
 
+            /**
+             * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
+             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link #refreshEnable}<br/>
+             * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
+             */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount == totalItemCount - 3) {//当滑动到倒数第3个item时开始加载新数据
-                    pageSelected++;
-                    App.getQueue().add(
-                            new StringRequest(
-                                    String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
-                                            pageSelected + "", sortSelected, listSelected, timeFrameSelected),
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            Log.i(TAG, "onResponse: onScroll refresh");
-                                            ArrayList<Entity_Shot> temp = new Gson().fromJson(response, type);
-                                            for (Entity_Shot shot : temp) {
-                                                //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
-                                                shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
-                                            }
-                                            content.addAll(temp);
-                                            adapter.setData(content);
+                if ((totalItemCount - 3 > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 3)) {
+                    //当滑动到倒数第4个item以内时尝试加载新数据
+                    Log.i(TAG, "onScroll: refreshEnable=" + refreshEnable);
+                    if (refreshEnable) {//状态锁,当前状态是否可以请求数据
+                        Log.i(TAG, "onScroll: try onScroll refresh");
+                        refreshEnable = false;
+                        App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
+                                pageSelected + "", sortSelected, listSelected, timeFrameSelected),
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        refreshEnable = true;//重置状态锁
+                                        Log.i(TAG, "onResponse: onScroll refresh success");
+                                        ArrayList<Entity_Shot> temp = new Gson().fromJson(response, type);
+                                        for (Entity_Shot shot : temp) {
+                                            //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+                                            shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
                                         }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Log.i(TAG, "onErrorResponse: onScroll refresh error");
-                                        }
+                                        content.addAll(temp);//将请求到的数据追加到原有内容的尾部
+                                        adapter.setData(content);
                                     }
-                            )).setTag(TAG);//添加新的请求,并标记tag
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        refreshEnable = true;//重置状态锁
+                                        Log.i(TAG, "onErrorResponse: onScroll refresh failed");
+                                    }
+                                }, TAG);//标记这个请求,因为它可能会被用户的操作取消
+                        pageSelected++;//更新页码
+                    }
                 }
             }
-        });*/
+        });
+    }
 
-        App.pageRequest(pageSelected,
+    /**
+     * 因筛选条件改变而需要再次请求合适的数据
+     */
+    private void reRequest() {
+        progressBar.setVisibility(View.VISIBLE);
+        pageSelected = 1;//重置页码
+        content.clear();//清空已有内容
+        App.getQueue().cancelAll(TAG);//取消尚未完成的请求
+        App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
+                pageSelected + "", sortSelected, listSelected, timeFrameSelected),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "onResponse: test refresh");
+                        Log.i(TAG, "onResponse: reRequest refresh success");
                         progressBar.setVisibility(View.INVISIBLE);
                         content = new Gson().fromJson(response, type);
                         for (Entity_Shot shot : content) {
@@ -235,50 +260,20 @@ public class Fragment_Visitor extends Framework_Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i(TAG, "onErrorResponse: test failed");
+                        Log.i(TAG, "onErrorResponse: reRequest refresh failed");
+                        progressBar.setVisibility(View.INVISIBLE);
                         toast(R.string.connect_error);
                     }
-                }
-        );
-    }
-
-    /**
-     * 因筛选条件改变而需要再次请求合适的数据
-     */
-    private void reRequest() {
-        progressBar.setVisibility(View.VISIBLE);// TODO: 2016/12/24  API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME
-        pageSelected = 1;//重置页码
-        /*content.clear();//清空已有内容
-        App.getQueue().cancelAll(TAG);//取消尚未完成的请求
-        App.getQueue().add(
-                new StringRequest(
-                        String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
-                                pageSelected + "", sortSelected, listSelected, timeFrameSelected),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.i(TAG, "onResponse: reRequest refresh");
-                                progressBar.setVisibility(View.INVISIBLE);
-                                content = new Gson().fromJson(response, type);
-                                for (Entity_Shot shot : content) {
-                                    //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
-                                    shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
-                                }
-                                adapter.setData(content);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.i(TAG, "onErrorResponse: reRequest error");
-                                toast(R.string.connect_error);
-                            }
-                        }
-                )).setTag(TAG);//添加新的请求,并标记tag*/
+                }, TAG);
     }
 
     @Override
     public void handleMessageImp(Message msg) {
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        App.getQueue().cancelAll(Adapter_Visitor.TAG);//取消掉未完成的全部图像请求
     }
 }

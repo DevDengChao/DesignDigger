@@ -60,30 +60,31 @@ public class App extends Application {
     }
 
     /**
-     * 通过DribbbleAPI进行字符串请求,获取指定页的Shots
+     * 通过DribbbleAPI进行字符串请求
      *
-     * @param page          页码
+     * @param url           目标地址
      * @param listener      响应成功监听器
      * @param errorListener 响应失败监听器
+     * @param tag           请求标签,用于取消请求
      */
-    public static void pageRequest(int page, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        queue.add(new StringRequest(String.format(API.EndPoint.SHOTS_PAGE, page + ""), listener, errorListener) {
+    public static void stringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener, String tag) {
+        queue.add(new StringRequest(url, listener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
             }
-        });
+        }.setTag(tag));
     }
 
-    // TODO: 2016/12/22 规范请求方法
 
     /**
      * 通过DribbbleAPI进行图像请求(原尺寸);
      *
      * @param url       目标地址
      * @param imageView 将要设置图像的ImageView
+     * @param tag       请求标签,用于取消请求
      */
-    public static void imageRequest(String url, final ImageView imageView) {
+    public static void imageRequest(String url, final ImageView imageView, String tag) {
         // TODO: 2016/12/22 定制图像大小
         queue.add(new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
@@ -95,7 +96,7 @@ public class App extends Application {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return header;
             }
-        });
+        }.setTag(tag));
     }
 
     @Override

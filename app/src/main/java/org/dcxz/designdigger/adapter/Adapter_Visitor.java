@@ -22,8 +22,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
-
-    private static final String TAG = "Adapter_Visitor";
+    /**
+     * 请求标签
+     */
+    public static final String TAG = "Adapter_Visitor";
 
     /**
      * @param context 用于初始化{@link #inflater}的上下文
@@ -56,8 +58,11 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
      */
     @SuppressLint("SetTextI18n")
     private void initView(final ViewHolder holder, Entity_Shot temp) {
-        App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar);
-        App.imageRequest(temp.getImages().getTeaser(), holder.content);
+        holder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
+        App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar, TAG);
+
+        holder.content.setImageResource(R.drawable.progress_rotate);
+        App.imageRequest(temp.getImages().getTeaser(), holder.content, TAG);
         if (temp.getRebounds_count() == 0) {
             holder.rebound.setVisibility(View.INVISIBLE);
         } else {

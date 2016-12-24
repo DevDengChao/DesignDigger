@@ -1,7 +1,5 @@
 package org.dcxz.designdigger.util;
 
-import org.dcxz.designdigger.App;
-
 /**
  * DribbbleAPI工具,提供OAuth2认证所需的资源以及Dribbble提供的接入口
  * <br/>
@@ -131,9 +129,19 @@ public class API {
         public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
         /**
          * 按特定条件进行指定页的Shots请求<br/>
+         * 需要2个参数,配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOTS_PAGE_SORT = SHOTS_PAGE + "&sort=%s";
+        /**
+         * 按特定条件进行指定页的Shots请求<br/>
+         * 需要3个参数,配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOTS_PAGE_SORT_LIST = SHOTS_PAGE_SORT + "&list=%s";
+        /**
+         * 按特定条件进行指定页的Shots请求<br/>
          * 需要4个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
-        public static final String SHOTS_PAGE_SORT_LIST_TIMEFRAME = SHOTS_PAGE + "&sort=%s&list=%s&timeframe=%s";
+        public static final String SHOTS_PAGE_SORT_LIST_TIMEFRAME = SHOTS_PAGE_SORT_LIST + "&timeframe=%s";
 
         /**
          * 请求shot时可用的参数

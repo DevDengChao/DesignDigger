@@ -20,8 +20,6 @@ import org.dcxz.designdigger.dao.Dao_Manager;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 import org.dcxz.designdigger.util.API;
 
-import java.lang.ref.WeakReference;
-
 /**
  * <br/>
  * Created by OvO on 2016/12/16.<br/>
@@ -38,7 +36,6 @@ public class Fragment_Menu extends Framework_Fragment {
     private TextView settings;
     private AlertDialog dialog;
     private AvatarReceiver receiver;
-    private WeakReference<Activity> reference;
 
     @Override
     protected int setContentViewImp() {
@@ -52,7 +49,6 @@ public class Fragment_Menu extends Framework_Fragment {
         signOut = (TextView) view.findViewById(R.id.menu_signOut);
         settings = (TextView) view.findViewById(R.id.menu_settings);
         receiver = new AvatarReceiver();
-        reference = new WeakReference<>(activity);
     }
 
     protected void initData(final Activity activity) {
@@ -91,9 +87,8 @@ public class Fragment_Menu extends Framework_Fragment {
             signIn.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.INVISIBLE);
             avatar.setImageResource(R.mipmap.dribbble_ball_mark);
-            API.Oauth2.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-            manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-            App.updateHeader();
+            manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);//用默认access_token替换用户access_token
+            App.updateHeader();//更新内存和请求头部的access_token
         }
     }
 
@@ -143,7 +138,7 @@ public class Fragment_Menu extends Framework_Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        reference.get().unregisterReceiver(receiver);// TODO: 2016/12/23 将Framework_Fragment中的Activity替换为弱引用
+        getActivity().unregisterReceiver(receiver);
     }
 
     private class AvatarReceiver extends BroadcastReceiver {
