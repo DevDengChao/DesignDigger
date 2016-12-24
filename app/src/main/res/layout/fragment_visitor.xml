@@ -40,9 +40,11 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/progress_rotate" />
+            android:background="#AACFD5D9"
+            android:indeterminateDrawable="@drawable/progress_rotate"
+            android:padding="125dp" />
     </RelativeLayout>
 </LinearLayout>

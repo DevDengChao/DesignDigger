@@ -163,11 +163,12 @@ public class Dao_Manager {
     /**
      * 获取布尔值
      *
-     * @param key 关键字
-     * @return 关键字在配置文件中对应的布尔值;若获取失败则返回FALSE;
+     * @param key          关键字
+     * @param defaultValue 默认值
+     * @return 关键字在配置文件中对应的布尔值;
      */
-    public boolean getBoolean(String key) {
-        return preferences.getBoolean(key, false);
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return preferences.getBoolean(key, defaultValue);
     }
 
     /**

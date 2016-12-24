@@ -69,10 +69,6 @@ public class Fragment_Visitor extends Framework_Fragment {
      */
     private GridView gridView;// TODO: 2016/12/24 pullToRefresh
     /**
-     * GridView中的内容
-     */
-    private ArrayList<Entity_Shot> content;
-    /**
      * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
      */
     private boolean refreshEnable = true;
@@ -82,6 +78,7 @@ public class Fragment_Visitor extends Framework_Fragment {
      * content的类型
      */
     private Type type;
+    private Gson gson;
 
     @Override
     protected int setContentViewImp() {
@@ -101,7 +98,7 @@ public class Fragment_Visitor extends Framework_Fragment {
     @Override
     protected void initData(Activity activity) {
         mapping();
-        content = new ArrayList<>();
+        gson = new Gson();
         type = new TypeToken<ArrayList<Entity_Shot>>() {
         }.getType();
     }
@@ -142,7 +139,7 @@ public class Fragment_Visitor extends Framework_Fragment {
         spinner_sort.setAdapter(new ArrayAdapter<>(activity, layoutID, sortKey));
         spinner_list.setAdapter(new ArrayAdapter<>(activity, layoutID, listKey));
         spinner_timeFrame.setAdapter(new ArrayAdapter<>(activity, layoutID, timeFrameKey));
-        adapter = new Adapter_Visitor(activity, content);
+        adapter = new Adapter_Visitor(activity, new ArrayList<Entity_Shot>());
         gridView.setAdapter(adapter);
     }
 
@@ -203,69 +200,70 @@ public class Fragment_Visitor extends Framework_Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
                     //当滑动到倒数第7个item以内时尝试加载新数据
-                    Log.i(TAG, "onScroll: refreshEnable=" + refreshEnable);
                     if (refreshEnable) {//状态锁,当前状态是否可以请求数据
-                        Log.i(TAG, "onScroll: try onScroll refresh");
                         refreshEnable = false;
+                        Log.i(TAG, "onScroll: try onScroll refresh at page " + pageSelected);
                         App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
                                 pageSelected + "", sortSelected, listSelected, timeFrameSelected),
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
+                                        Log.i(TAG, "onResponse: onScroll refresh success at page " + pageSelected);
                                         refreshEnable = true;//重置状态锁
                                         pageSelected++;//更新页码
-                                        Log.i(TAG, "onResponse: onScroll refresh success");
-                                        ArrayList<Entity_Shot> temp = new Gson().fromJson(response, type);
-                                        for (Entity_Shot shot : temp) {
+                                        ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
+                                        for (Entity_Shot shot : shots) {
                                             //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
                                             shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
                                         }
-                                        content.addAll(temp);//将请求到的数据追加到原有内容的尾部
-                                        adapter.setData(content);
+                                        adapter.addDataToBottom(shots);//将请求到的数据追加到原有内容的尾部
                                     }
                                 },
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         refreshEnable = true;//重置状态锁
-                                        Log.i(TAG, "onErrorResponse: onScroll refresh failed");
+                                        Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + pageSelected);
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
                     }
+                    // }
                 }
             }
         });
     }
 
     /**
-     * 因筛选条件改变而需要再次请求合适的数据
+     * 因筛选条件改变而需要再次请求合适的数据<br/>
+     * 请务必注意此方法与onScroll()的调用顺序,并注意pageSelected变更的时机
      */
     private void reRequest() {
         progressBar.setVisibility(View.VISIBLE);
         pageSelected = 1;//重置页码
-        content.clear();//清空已有内容
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
+        Log.i(TAG, "reRequest: last request with TAG canceled");
         App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
                 pageSelected + "", sortSelected, listSelected, timeFrameSelected),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.i(TAG, "onResponse: reRequest refresh success at page " + pageSelected);
                         refreshEnable = true;
-                        Log.i(TAG, "onResponse: reRequest refresh success");
+                        pageSelected++;
                         progressBar.setVisibility(View.INVISIBLE);
-                        content = new Gson().fromJson(response, type);
-                        for (Entity_Shot shot : content) {
+                        ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
+                        for (Entity_Shot shot : shots) {
                             //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
                             shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
                         }
-                        adapter.setData(content);
+                        adapter.setData(shots);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         refreshEnable = true;
-                        Log.i(TAG, "onErrorResponse: reRequest refresh failed");
+                        Log.i(TAG, "onErrorResponse: reRequest refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
                         toast(R.string.connect_error);
                     }

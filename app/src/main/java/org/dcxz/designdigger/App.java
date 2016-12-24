@@ -44,6 +44,14 @@ public class App extends Application {
     }
 
     /**
+     * 更新AccessToken
+     */
+    public static void updateHeader() {
+        API.Oauth2.setAccessToken(manager.getAccessToken());
+        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + API.Oauth2.ACCESS_TOKEN);
+    }
+
+    /**
      * 通过DribbbleAPI进行字符串请求
      *
      * @param url           目标地址
@@ -76,7 +84,6 @@ public class App extends Application {
         }.setTag(tag));
     }
 
-
     /**
      * 通过DribbbleAPI进行图像请求(原尺寸);
      *
@@ -106,14 +113,6 @@ public class App extends Application {
         manager = Dao_Manager.getInstance(this);
         header = new HashMap<>();
         updateHeader();
-    }
-
-    /**
-     * 更新AccessToken
-     */
-    public static void updateHeader() {
-        API.Oauth2.setAccessToken(manager.getAccessToken());
-        header.put(API.Oauth2.AUTHORIZATION, API.Oauth2.AUTHORIZATION_TYPE + API.Oauth2.ACCESS_TOKEN);
     }
 
 }
