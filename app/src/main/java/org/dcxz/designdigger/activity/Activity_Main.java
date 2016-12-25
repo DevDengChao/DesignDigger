@@ -9,7 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.fragment.Fragment_Visitor;
+import org.dcxz.designdigger.fragment.Fragment_Following;
+import org.dcxz.designdigger.fragment.Fragment_Rank;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 
@@ -51,8 +52,9 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initData() {
-        fragments = new Framework_Fragment[1];
-        fragments[0] = new Fragment_Visitor();
+        fragments = new Framework_Fragment[2];
+        fragments[0] = new Fragment_Following();
+        fragments[1] = new Fragment_Rank();
     }
 
     @Override
