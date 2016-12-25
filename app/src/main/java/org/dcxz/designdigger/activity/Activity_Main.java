@@ -1,6 +1,7 @@
 package org.dcxz.designdigger.activity;
 
 import android.os.Message;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ public class Activity_Main extends Framework_Activity {
      * 用于切换Fragment的ViewPager
      */
     private ViewPager viewPager;
+    private String titles[];
     /**
      * 可用的Fragment
      */
@@ -48,6 +50,8 @@ public class Activity_Main extends Framework_Activity {
         toolbar = (Toolbar) findViewById(R.id.activity_main_toolBar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -55,6 +59,9 @@ public class Activity_Main extends Framework_Activity {
         fragments = new Framework_Fragment[2];
         fragments[0] = new Fragment_Following();
         fragments[1] = new Fragment_Rank();
+        titles = new String[2];
+        titles[0] = "Following";
+        titles[1] = "Rank";
     }
 
     @Override
@@ -68,6 +75,11 @@ public class Activity_Main extends Framework_Activity {
             @Override
             public int getCount() {
                 return fragments.length;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return titles[position];
             }
         });
     }

@@ -21,17 +21,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by DC on 2016/12/17.<br/>
  */
 
-public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
+public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
     /**
      * 请求标签
      */
-    public static final String TAG = "Adapter_Visitor";
+    public static final String TAG = "Adapter_Main";
 
     /**
      * @param context 用于初始化{@link #inflater}的上下文
      * @param data    将要被适配的数据集合
      */
-    public Adapter_Visitor(Context context, ArrayList<Entity_Shot> data) {
+    public Adapter_Main(Context context, ArrayList<Entity_Shot> data) {
         super(context, data);
     }
 
@@ -47,7 +47,7 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
             holder = (ViewHolder) convertView.getTag();
             //检查该对象是否已经显示,若已经显示则直接返回,否则进行初始化.
             //用于优化GirdView在更新数据集合过程中出现的闪烁现象.
-            if (temp.getUser().getAvatar_url().equals(holder.avatar.getTag())) {
+            if (temp.getImages().getTeaser().equals(holder.content.getTag())) {
                 return convertView;
             }
         }
@@ -64,10 +64,10 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
     @SuppressLint("SetTextI18n")
     private void initView(final ViewHolder holder, Entity_Shot temp) {
         holder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
-        holder.avatar.setTag(temp.getUser().getAvatar_url());
         App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar, TAG);
 
         holder.content.setImageResource(R.mipmap.item_content);
+        holder.content.setTag(temp.getImages().getTeaser());
         App.imageRequest(temp.getImages().getTeaser(), holder.content, TAG);
         if (temp.getRebounds_count() == 0) {
             holder.rebound.setVisibility(View.INVISIBLE);

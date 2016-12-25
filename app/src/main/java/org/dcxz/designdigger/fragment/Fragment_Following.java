@@ -22,7 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.Activity_Login;
-import org.dcxz.designdigger.adapter.Adapter_Visitor;
+import org.dcxz.designdigger.adapter.Adapter_Main;
 import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
 import org.dcxz.designdigger.framework.Framework_Fragment;
@@ -118,7 +118,7 @@ public class Fragment_Following extends Framework_Fragment {
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_Visitor(activity, new ArrayList<Entity_Shot>());
+        adapter = new Adapter_Main(activity, new ArrayList<Entity_Shot>());
         gridView.setAdapter(adapter);
     }
 
@@ -251,7 +251,7 @@ public class Fragment_Following extends Framework_Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        App.getQueue().cancelAll(Adapter_Visitor.TAG);//取消掉未完成的全部图像请求
+        App.getQueue().cancelAll(Adapter_Main.TAG);//取消掉未完成的全部图像请求
         getActivity().unregisterReceiver(receiver);
     }
 }

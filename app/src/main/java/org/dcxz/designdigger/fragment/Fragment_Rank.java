@@ -21,7 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.adapter.Adapter_Visitor;
+import org.dcxz.designdigger.adapter.Adapter_Main;
 import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
 import org.dcxz.designdigger.framework.Framework_Fragment;
@@ -157,7 +157,7 @@ public class Fragment_Rank extends Framework_Fragment {
         spinner_sort.setAdapter(new ArrayAdapter<>(activity, layoutID, sortKey));
         spinner_list.setAdapter(new ArrayAdapter<>(activity, layoutID, listKey));
         spinner_timeFrame.setAdapter(new ArrayAdapter<>(activity, layoutID, timeFrameKey));
-        adapter = new Adapter_Visitor(activity, new ArrayList<Entity_Shot>());
+        adapter = new Adapter_Main(activity, new ArrayList<Entity_Shot>());
         gridView.setAdapter(adapter);
     }
 
@@ -317,6 +317,6 @@ public class Fragment_Rank extends Framework_Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        App.getQueue().cancelAll(Adapter_Visitor.TAG);//取消掉未完成的全部图像请求
+        App.getQueue().cancelAll(Adapter_Main.TAG);//取消掉未完成的全部图像请求
     }
 }
