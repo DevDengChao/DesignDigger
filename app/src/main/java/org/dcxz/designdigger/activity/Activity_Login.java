@@ -170,7 +170,7 @@ public class Activity_Login extends Framework_Activity {
                                             public void onResponse(Bitmap response) {
                                                 if (manager.setAvatar(response)) {
                                                     Log.i(TAG, "onResponse: download avatar success");
-                                                    sendBroadcast(new Intent("AvatarUpdated"));
+                                                    sendBroadcast(new Intent(TAG));
                                                 } else {
                                                     Log.i(TAG, "onResponse: download avatar failed:File IO Exception");
                                                     toast("Download avatar failed:File IO Exception");

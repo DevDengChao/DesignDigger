@@ -32,24 +32,24 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <GridView
+                android:id="@+id/fragment_main_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
             <!--提示用户网络连接异常,允许用户点击这个TextView来触发请求-->
             <TextView
                 android:id="@+id/fragment_main_connectionError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:background="@color/default_2"
                 android:drawableTop="@drawable/connection_error"
                 android:gravity="center"
                 android:text="@string/connection_error"
                 android:visibility="invisible" />
-
-            <GridView
-                android:id="@+id/fragment_main_gridView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/default_2"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
 
             <ProgressBar
                 android:id="@+id/fragment_main_progressBar"

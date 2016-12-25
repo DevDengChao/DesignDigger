@@ -2,6 +2,10 @@ package org.dcxz.designdigger.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.activity.Activity_Login;
 import org.dcxz.designdigger.adapter.Adapter_Visitor;
 import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
@@ -71,6 +76,10 @@ public class Fragment_Following extends Framework_Fragment {
      */
     private Type type;
     private Gson gson;
+    /**
+     * 检查用户登录状态的广播接收器
+     */
+    private BroadcastReceiver receiver;
 
     @Override
     protected int setContentViewImp() {
@@ -90,6 +99,13 @@ public class Fragment_Following extends Framework_Fragment {
         view.findViewById(R.id.fragment_main_timeFrame).setVisibility(View.GONE);
         gridView = (GridView) view.findViewById(R.id.fragment_main_gridView);
         gridView.setNumColumns(1);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                doPullToRefresh();
+            }
+        };
+        activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
     }
 
     @Override
@@ -111,39 +127,10 @@ public class Fragment_Following extends Framework_Fragment {
         ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                pageSelected = 1;//重置页码
-                App.getQueue().cancelAll(TAG);//取消尚未完成的请求
-                Log.i(TAG, "onRefreshBegin: last request with TAG canceled");
-                Log.i(TAG, "onRefreshBegin: pull to refresh");
-                App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
-                        pageSelected + ""),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.i(TAG, "onResponse: pull to refresh success at page " + pageSelected);
-                                refreshEnable = true;
-                                pageSelected++;
-                                ptrFrameLayout.refreshComplete();
-                                progressBar.setVisibility(View.INVISIBLE);
-                                connectionError.setVisibility(View.INVISIBLE);
-                                ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
-                                for (Entity_Shot shot : shots) {
-                                    //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
-                                    shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
-                                }
-                                adapter.setData(shots);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                refreshEnable = true;
-                                Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + pageSelected);
-                                progressBar.setVisibility(View.INVISIBLE);
-                                connectionError.setVisibility(View.VISIBLE);
-                                toast(R.string.connection_error);
-                            }
-                        }, TAG);
+                //判断用户是否已登录
+                if (isUserLogined()) {
+                    doPullToRefresh();
+                }
             }
 
             /**
@@ -159,7 +146,6 @@ public class Fragment_Following extends Framework_Fragment {
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             /**
@@ -171,7 +157,7 @@ public class Fragment_Following extends Framework_Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
                     //当滑动到倒数第7个item以内时尝试加载新数据
-                    if (refreshEnable) {//状态锁,当前状态是否可以请求数据
+                    if (refreshEnable && isUserLogined()) {//状态锁,当前状态是否可以请求数据以及用户是否已登录
                         refreshEnable = false;
                         Log.i(TAG, "onScroll: try onScroll refresh at page " + pageSelected);
                         App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
@@ -204,6 +190,60 @@ public class Fragment_Following extends Framework_Fragment {
         });
     }
 
+    /**
+     * 执行一次下拉刷新
+     */
+    private void doPullToRefresh() {
+        connectionError.setVisibility(View.INVISIBLE);
+        pageSelected = 1;//重置页码
+        App.getQueue().cancelAll(TAG);//取消尚未完成的请求
+        Log.i(TAG, "onRefreshBegin: last request with TAG canceled");
+        Log.i(TAG, "onRefreshBegin: try pull to refresh");
+        App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
+                pageSelected + ""),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "onResponse: pull to refresh success at page " + pageSelected);
+                        refreshEnable = true;
+                        pageSelected++;
+                        ptrFrameLayout.refreshComplete();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
+                        for (Entity_Shot shot : shots) {
+                            //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+                            shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
+                        }
+                        adapter.setData(shots);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        refreshEnable = true;
+                        Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + pageSelected);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        connectionError.setText(R.string.connection_error);
+                        connectionError.setVisibility(View.VISIBLE);
+                        toast(R.string.connection_error);
+                    }
+                }, TAG);
+    }
+
+    /**
+     * 检查用户是否已登录
+     */
+    private boolean isUserLogined() {
+        if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
+            return true;
+        } else {
+            connectionError.setText(R.string.youAreNotLoginYet);
+            connectionError.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            return false;
+        }
+    }
+
     @Override
     public void handleMessageImp(Message msg) {
     }
@@ -212,5 +252,6 @@ public class Fragment_Following extends Framework_Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         App.getQueue().cancelAll(Adapter_Visitor.TAG);//取消掉未完成的全部图像请求
+        getActivity().unregisterReceiver(receiver);
     }
 }

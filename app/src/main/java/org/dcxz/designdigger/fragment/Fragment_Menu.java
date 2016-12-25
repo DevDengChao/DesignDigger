@@ -35,7 +35,7 @@ public class Fragment_Menu extends Framework_Fragment {
     private TextView signUp, signIn, signOut;
     private TextView settings;
     private AlertDialog dialog;
-    private AvatarReceiver receiver;
+    private BroadcastReceiver receiver;
 
     @Override
     protected int setContentViewImp() {
@@ -48,14 +48,19 @@ public class Fragment_Menu extends Framework_Fragment {
         signIn = (TextView) view.findViewById(R.id.menu_signIn);
         signOut = (TextView) view.findViewById(R.id.menu_signOut);
         settings = (TextView) view.findViewById(R.id.menu_settings);
-        receiver = new AvatarReceiver();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                isUserLogined(true);
+            }
+        };
     }
 
     protected void initData(final Activity activity) {
         manager = Dao_Manager.getInstance(activity);
         String accessToken = manager.getAccessToken();
-        activity.registerReceiver(receiver, new IntentFilter("AvatarUpdated"));
-        setSignOutVisible(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
+        activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
+        isUserLogined(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Sign out");
@@ -64,7 +69,7 @@ public class Fragment_Menu extends Framework_Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-                setSignOutVisible(false);
+                isUserLogined(false);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -76,7 +81,7 @@ public class Fragment_Menu extends Framework_Fragment {
      *
      * @param visibility true:Sign out 可见,其他不可见
      */
-    private void setSignOutVisible(boolean visibility) {
+    private void isUserLogined(boolean visibility) {
         if (visibility) {
             signUp.setVisibility(View.INVISIBLE);
             signIn.setVisibility(View.INVISIBLE);
@@ -141,10 +146,4 @@ public class Fragment_Menu extends Framework_Fragment {
         getActivity().unregisterReceiver(receiver);
     }
 
-    private class AvatarReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setSignOutVisible(true);
-        }
-    }
 }
