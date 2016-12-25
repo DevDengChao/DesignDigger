@@ -118,33 +118,49 @@ public class API {
          */
         public static final String USER = ENTRY + "/user";
         /**
-         * 获取第一页Shots时使用的URL<br/>
+         * 按特定条件进行Shots请求(第一页)<br/>
          * 直接访问会获得popular,shots,now条件下的第一页的12个对象.
          */
         public static final String SHOTS = ENTRY + "/shots";
         /**
-         * 获取特定页Shots时使用的URL<br/>
+         * 按特定条件进行Shots请求(指定页)<br/>
          * 需要1个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
         /**
-         * 按特定条件进行指定页的Shots请求<br/>
+         * 按特定条件进行Shots请求(指定页)<br/>
          * 需要2个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE_SORT = SHOTS_PAGE + "&sort=%s";
         /**
-         * 按特定条件进行指定页的Shots请求<br/>
+         * 按特定条件进行Shots请求(指定页)<br/>
          * 需要3个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE_SORT_LIST = SHOTS_PAGE_SORT + "&list=%s";
         /**
-         * 按特定条件进行指定页的Shots请求<br/>
+         * 按特定条件进行Shots请求(指定页)<br/>
          * 需要4个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
         public static final String SHOTS_PAGE_SORT_LIST_TIMEFRAME = SHOTS_PAGE_SORT_LIST + "&timeframe=%s";
+        /**
+         * 获取当前用户的关注列表(第一页)
+         */
+        public static final String FOLLOWING = USER + "/following";
+        /**
+         * 获取当前用户的关注列表(指定页)
+         */
+        public static final String FOLLOWING_PAGE = FOLLOWING + "/?page=%s";
+        /**
+         * 获取当前用户关注的对象的shots(第一页)
+         */
+        public static final String FOLLOWING_SHOTS = FOLLOWING + "/shots";
+        /**
+         * 获取当前用户关注的对象的shots(指定页)
+         */
+        public static final String FOLLOWING_SHOTS_PAGE = FOLLOWING_SHOTS + "/?page=%s";
 
         /**
-         * 请求shot时可用的参数
+         * 请求shots时可用的参数
          */
         public static class Parameter {
             /**
@@ -269,7 +285,5 @@ public class API {
 
         //"https://api.dribbble.com/v1/users/glebich/shots"请求指定用户的shots
         //"https://api.dribbble.com/v1/user/followers"当前ACCESS_TOKEN持有者(23448678)的粉丝列表
-        //"https://api.dribbble.com/v1/user/following"当前ACCESS_TOKEN持有者的关注用户列表
-        //"https://api.dribbble.com/v1/user/following/shots"当前ACCESS_TOKEN持有者的关注用户的shots列表
     }
 }
