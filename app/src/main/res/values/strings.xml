@@ -26,4 +26,5 @@
     <string name="month">This Month</string>
     <string name="year">This Year</string>
     <string name="ever">Ever</string>
+    <string name="header_pullToRefresh">Pull to refresh</string>
 </resources>

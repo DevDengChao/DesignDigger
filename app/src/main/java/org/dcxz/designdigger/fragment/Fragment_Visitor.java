@@ -1,5 +1,6 @@
 package org.dcxz.designdigger.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Message;
@@ -97,12 +98,14 @@ public class Fragment_Visitor extends Framework_Fragment {
         return R.layout.fragment_visitor;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected void initView(Activity activity, View view) {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         connectionError = (TextView) view.findViewById(R.id.fragment_visitor_connectionError);
         ptrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.fragment_visitor_ptrFrameLayout);
         ptrFrameLayout.setPullToRefresh(true);
+        ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
         spinner_sort = (Spinner) view.findViewById(R.id.fragment_visitor_sort);
         spinner_list = (Spinner) view.findViewById(R.id.fragment_visitor_list);
         spinner_timeFrame = (Spinner) view.findViewById(R.id.fragment_visitor_timeFrame);
@@ -163,18 +166,20 @@ public class Fragment_Visitor extends Framework_Fragment {
         ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                Log.i(TAG, "onRefreshBegin: try reRequest");
                 reRequest();
+                Log.i(TAG, "onRefreshBegin: pull to refresh");
             }
-        });
-        connectionError.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * 覆盖触发下拉事件的检查
+             */
             @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: try reRequest");
-                progressBar.setVisibility(View.VISIBLE);
-                reRequest();
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                //对gridView是否可滚动进行检测,当gridView无法向下滚动时允许进行下拉刷新
+                return !gridView.canScrollVertically(-1);
             }
         });
+
         spinner_sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -282,6 +287,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                         Log.i(TAG, "onResponse: reRequest refresh success at page " + pageSelected);
                         refreshEnable = true;
                         pageSelected++;
+                        ptrFrameLayout.refreshComplete();
                         progressBar.setVisibility(View.INVISIBLE);
                         connectionError.setVisibility(View.INVISIBLE);
                         ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
@@ -298,7 +304,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                         refreshEnable = true;
                         Log.i(TAG, "onErrorResponse: reRequest refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
-                        connectionError.setVisibility(View.VISIBLE);//由于变更筛选条件触发的请求失败应当允许用户再次触发请求
+                        connectionError.setVisibility(View.VISIBLE);
                         toast(R.string.connection_error);
                     }
                 }, TAG);
