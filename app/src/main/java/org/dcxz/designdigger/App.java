@@ -39,7 +39,7 @@ public class App extends Application {
      *
      * @return 当前应用持有的请求队列
      */
-    public static RequestQueue getQueue() {// TODO: 2016/12/22 findUsage
+    public static RequestQueue getQueue() {
         return queue;
     }
 
@@ -112,6 +112,8 @@ public class App extends Application {
         queue = Volley.newRequestQueue(this);
         manager = Dao_Manager.getInstance(this);
         header = new HashMap<>();
+        header.put("Accept", "application/json");
+        header.put("Accept-Charset", "utf-8");
         updateHeader();
     }
 
