@@ -45,6 +45,11 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+            //检查该对象是否已经显示,若已经显示则直接返回,否则进行初始化.
+            //用于优化GirdView在更新数据集合过程中出现的闪烁现象.
+            if (temp.getUser().getAvatar_url().equals(holder.avatar.getTag())) {
+                return convertView;
+            }
         }
         initView(holder, temp);
         return convertView;
@@ -59,9 +64,10 @@ public class Adapter_Visitor extends Framework_Adapter<Entity_Shot> {
     @SuppressLint("SetTextI18n")
     private void initView(final ViewHolder holder, Entity_Shot temp) {
         holder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
+        holder.avatar.setTag(temp.getUser().getAvatar_url());
         App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar, TAG);
 
-        holder.content.setImageResource(R.drawable.progress_rotate);
+        holder.content.setImageResource(R.mipmap.item_content);
         App.imageRequest(temp.getImages().getTeaser(), holder.content, TAG);
         if (temp.getRebounds_count() == 0) {
             holder.rebound.setVisibility(View.INVISIBLE);
