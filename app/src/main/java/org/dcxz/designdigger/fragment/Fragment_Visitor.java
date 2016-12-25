@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,6 +28,9 @@ import org.dcxz.designdigger.util.API;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 
 
 /**
@@ -48,6 +52,18 @@ public class Fragment_Visitor extends Framework_Fragment {
      */
     private Spinner spinner_sort, spinner_list, spinner_timeFrame;
     /**
+     * 展示内容用的GridView
+     */
+    private GridView gridView;// TODO: 2016/12/24 pullToRefresh
+    /**
+     * 用于提示用户连接异常
+     */
+    private TextView connectionError;
+    /**
+     * 下拉刷新需要的控件
+     */
+    private PtrFrameLayout ptrFrameLayout;
+    /**
      * 界面上显示的文本,来自资源文件<br/>
      * 由于显示在页面上的文本与实际需要填入url中的文本不一致,因此需要进行键值对映射
      */
@@ -64,10 +80,6 @@ public class Fragment_Visitor extends Framework_Fragment {
      * 被选中的页面
      */
     private int pageSelected = 1;
-    /**
-     * 展示内容用的GridView
-     */
-    private GridView gridView;// TODO: 2016/12/24 pullToRefresh
     /**
      * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
      */
@@ -88,6 +100,9 @@ public class Fragment_Visitor extends Framework_Fragment {
     @Override
     protected void initView(Activity activity, View view) {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        connectionError = (TextView) view.findViewById(R.id.fragment_visitor_connectionError);
+        ptrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.fragment_visitor_ptrFrameLayout);
+        ptrFrameLayout.setPullToRefresh(true);
         spinner_sort = (Spinner) view.findViewById(R.id.fragment_visitor_sort);
         spinner_list = (Spinner) view.findViewById(R.id.fragment_visitor_list);
         spinner_timeFrame = (Spinner) view.findViewById(R.id.fragment_visitor_timeFrame);
@@ -145,12 +160,28 @@ public class Fragment_Visitor extends Framework_Fragment {
 
     @Override
     protected void initListener(Activity activity) {
+        ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                Log.i(TAG, "onRefreshBegin: try reRequest");
+                reRequest();
+            }
+        });
+        connectionError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: try reRequest");
+                progressBar.setVisibility(View.VISIBLE);
+                reRequest();
+            }
+        });
         spinner_sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sortSelected = sortValue[position];
-                Log.i(TAG, "onItemSelected: sortSelected=" + sortSelected);
+                progressBar.setVisibility(View.VISIBLE);
                 reRequest();
+                Log.i(TAG, "onItemSelected: sortSelected=" + sortSelected);
             }
 
             @Override
@@ -162,8 +193,9 @@ public class Fragment_Visitor extends Framework_Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 listSelected = listValue[position];
-                Log.i(TAG, "onItemSelected: listSelected=" + listSelected);
+                progressBar.setVisibility(View.VISIBLE);
                 reRequest();
+                Log.i(TAG, "onItemSelected: listSelected=" + listSelected);
             }
 
             @Override
@@ -175,8 +207,9 @@ public class Fragment_Visitor extends Framework_Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 timeFrameSelected = timeFrameValue[position];
-                Log.i(TAG, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
+                progressBar.setVisibility(View.VISIBLE);
                 reRequest();
+                Log.i(TAG, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
             }
 
             @Override
@@ -227,7 +260,6 @@ public class Fragment_Visitor extends Framework_Fragment {
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
                     }
-                    // }
                 }
             }
         });
@@ -235,10 +267,10 @@ public class Fragment_Visitor extends Framework_Fragment {
 
     /**
      * 因筛选条件改变而需要再次请求合适的数据<br/>
+     * 或因为网络连接异常导致完全没有获得任何数据而需要再次请求合适的数据<br/>
      * 请务必注意此方法与onScroll()的调用顺序,并注意pageSelected变更的时机
      */
     private void reRequest() {
-        progressBar.setVisibility(View.VISIBLE);
         pageSelected = 1;//重置页码
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
         Log.i(TAG, "reRequest: last request with TAG canceled");
@@ -251,6 +283,7 @@ public class Fragment_Visitor extends Framework_Fragment {
                         refreshEnable = true;
                         pageSelected++;
                         progressBar.setVisibility(View.INVISIBLE);
+                        connectionError.setVisibility(View.INVISIBLE);
                         ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
                         for (Entity_Shot shot : shots) {
                             //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
@@ -265,7 +298,8 @@ public class Fragment_Visitor extends Framework_Fragment {
                         refreshEnable = true;
                         Log.i(TAG, "onErrorResponse: reRequest refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
-                        toast(R.string.connect_error);
+                        connectionError.setVisibility(View.VISIBLE);//由于变更筛选条件触发的请求失败应当允许用户再次触发请求
+                        toast(R.string.connection_error);
                     }
                 }, TAG);
     }

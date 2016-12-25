@@ -24,27 +24,44 @@
             style="@style/Fragment.Visitor.Spinner" />
 
     </LinearLayout>
-
-    <RelativeLayout
+    <!--下拉刷新需要的布局-->
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/fragment_visitor_ptrFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <GridView
-            android:id="@+id/fragment_visitor_gridView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
+            android:layout_height="match_parent">
+            <!--提示用户网络连接异常,允许用户点击这个TextView来触发请求-->
+            <TextView
+                android:id="@+id/fragment_visitor_connectionError"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@mipmap/connection_error"
+                android:gravity="center"
+                android:paddingBottom="150dp"
+                android:paddingTop="150dp"
+                android:text="@string/connection_error"
+                android:visibility="invisible" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="#AACFD5D9"
-            android:indeterminateDrawable="@drawable/progress_rotate"
-            android:padding="125dp" />
-    </RelativeLayout>
+            <GridView
+                android:id="@+id/fragment_visitor_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="#AACFD5D9"
+                android:indeterminateDrawable="@drawable/progress_rotate"
+                android:padding="130dp" />
+        </RelativeLayout>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
 </LinearLayout>

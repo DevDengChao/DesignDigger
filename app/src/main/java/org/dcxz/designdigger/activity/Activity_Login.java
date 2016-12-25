@@ -58,7 +58,7 @@ public class Activity_Login extends Framework_Activity {
 
     @Override
     protected int setContentViewImp() {
-        return R.layout.activity_test;
+        return R.layout.activity_login;
     }
 
     @SuppressWarnings("deprecation")
