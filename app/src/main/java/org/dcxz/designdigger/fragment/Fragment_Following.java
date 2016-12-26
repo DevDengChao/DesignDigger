@@ -169,6 +169,7 @@ public class Fragment_Following extends Framework_Fragment {
                                         refreshEnable = true;//重置状态锁
                                         pageSelected++;//更新页码
                                         progressBar.setVisibility(View.INVISIBLE);
+                                        connectionError.setVisibility(View.INVISIBLE);
                                         ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
                                         for (Entity_Shot shot : shots) {
                                             //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
@@ -181,6 +182,10 @@ public class Fragment_Following extends Framework_Fragment {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         refreshEnable = true;//重置状态锁
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        if (adapter.getCount() == 0) {
+                                            connectionError.setVisibility(View.VISIBLE);
+                                        }
                                         Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + pageSelected);
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
@@ -188,6 +193,20 @@ public class Fragment_Following extends Framework_Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * 检查用户是否已登录
+     */
+    private boolean isUserLogined() {
+        if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
+            return true;
+        } else {
+            connectionError.setText(R.string.youAreNotLoginYet);
+            connectionError.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            return false;
+        }
     }
 
     /**
@@ -199,8 +218,7 @@ public class Fragment_Following extends Framework_Fragment {
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
         Log.i(TAG, "onRefreshBegin: last request with TAG canceled");
         Log.i(TAG, "onRefreshBegin: try pull to refresh");
-        App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
-                pageSelected + ""),
+        App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, pageSelected + ""),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -221,6 +239,7 @@ public class Fragment_Following extends Framework_Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         refreshEnable = true;
+                        ptrFrameLayout.refreshComplete();
                         Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
                         connectionError.setText(R.string.connection_error);
@@ -228,20 +247,6 @@ public class Fragment_Following extends Framework_Fragment {
                         toast(R.string.connection_error);
                     }
                 }, TAG);
-    }
-
-    /**
-     * 检查用户是否已登录
-     */
-    private boolean isUserLogined() {
-        if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
-            return true;
-        } else {
-            connectionError.setText(R.string.youAreNotLoginYet);
-            connectionError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            return false;
-        }
     }
 
     @Override

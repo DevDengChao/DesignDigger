@@ -302,6 +302,7 @@ public class Fragment_Rank extends Framework_Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         refreshEnable = true;
+                        ptrFrameLayout.refreshComplete();
                         Log.i(TAG, "onErrorResponse: reRequest refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
                         connectionError.setVisibility(View.VISIBLE);
