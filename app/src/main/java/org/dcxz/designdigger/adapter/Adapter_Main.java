@@ -11,6 +11,7 @@ import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
+import org.dcxz.designdigger.view.AutoHeightGifImageView;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
             holder = (ViewHolder) convertView.getTag();
             //检查该对象是否已经显示,若已经显示则直接返回,否则进行初始化.
             //用于优化GirdView在更新数据集合过程中出现的闪烁现象.
-            if (temp.getImages().getTeaser().equals(holder.content.getTag())) {
+            if (temp.getImages().getNormal().equals(holder.content.getTag())) {
                 return convertView;
             }
         }
@@ -62,13 +63,40 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
      * @param temp   持有数据的Entity_Shot
      */
     @SuppressLint("SetTextI18n")
-    private void initView(final ViewHolder holder, Entity_Shot temp) {
+    private void initView(final ViewHolder holder, final Entity_Shot temp) {
         holder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
         App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar, TAG);
 
         holder.content.setImageResource(R.mipmap.item_content);
-        holder.content.setTag(temp.getImages().getTeaser());
-        App.imageRequest(temp.getImages().getTeaser(), holder.content, TAG);
+        holder.content.setTag(temp.getImages().getNormal());
+        if (temp.isAnimated()) {
+           /* App.stringRequest(temp.getImages().getNormal(), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    byte[] cache = response.getBytes();
+                    Log.i(TAG, "onResponse: " + cache.length);
+                    holder.content.setBytes(cache);
+                    holder.gif.setVisibility(View.VISIBLE);
+                    holder.gif.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (holder.content.isAnimating()) {
+                                holder.content.stopAnimation();
+                            } else {
+                                holder.content.startAnimation();
+                            }
+                        }
+                    });
+                }
+            }, null, TAG);*/
+            App.imageRequest(temp.getImages().getNormal(), holder.content, TAG);
+            holder.gif.setVisibility(View.VISIBLE);
+            holder.gif.setOnClickListener(null);
+        } else {
+            App.imageRequest(temp.getImages().getNormal(), holder.content, TAG);
+            holder.gif.setVisibility(View.INVISIBLE);
+            holder.gif.setOnClickListener(null);
+        }
         if (temp.getRebounds_count() == 0) {
             holder.rebound.setVisibility(View.INVISIBLE);
         } else {
@@ -94,7 +122,8 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
      */
     private static class ViewHolder {
         CircleImageView avatar;
-        ImageView content;
+        AutoHeightGifImageView content;
+        ImageView gif;
 
         TextView rebound;
         TextView attachment;
@@ -109,7 +138,8 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
 
         ViewHolder(View convertView) {
             avatar = (CircleImageView) convertView.findViewById(R.id.item_avatar);
-            content = (ImageView) convertView.findViewById(R.id.item_content);
+            content = (AutoHeightGifImageView) convertView.findViewById(R.id.item_content);
+            gif = (ImageView) convertView.findViewById(R.id.item_gif);
             rebound = (TextView) convertView.findViewById(R.id.item_rebound);
             attachment = (TextView) convertView.findViewById(R.id.item_attachment);
             view = (TextView) convertView.findViewById(R.id.item_view);

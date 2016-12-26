@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="2dp">
 
@@ -21,8 +20,7 @@
             android:id="@+id/item_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:civ_border_color="@color/default_4"
-            app:civ_border_width="2dp"
+            android:layout_margin="2dp"
             android:src="@mipmap/dribbble_ball_mark" />
 
         <LinearLayout
@@ -67,12 +65,27 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/item_content"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:src="@mipmap/item_content" />
+        android:layout_height="wrap_content">
+
+        <org.dcxz.designdigger.view.AutoHeightGifImageView
+            android:id="@+id/item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:src="@mipmap/item_content" />
+
+        <ImageView
+            android:id="@+id/item_gif"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+
+            android:src="@drawable/item_gif" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
