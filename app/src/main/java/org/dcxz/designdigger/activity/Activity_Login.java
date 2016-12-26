@@ -228,6 +228,7 @@ public class Activity_Login extends Framework_Activity {
                 startActivity(Activity_Main.class);
                 break;
         }
+        finish();
     }
 
     @Override
