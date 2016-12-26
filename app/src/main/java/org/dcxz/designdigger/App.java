@@ -92,7 +92,6 @@ public class App extends Application {
      * @param tag       请求标签,用于取消请求
      */
     public static void imageRequest(String url, final ImageView imageView, String tag) {
-        // TODO: 2016/12/22 定制图像大小
         queue.add(new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
