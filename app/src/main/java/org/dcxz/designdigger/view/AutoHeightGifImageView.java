@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.felipecsl.gifimageview.library.GifImageView;
+import pl.droidsonroids.gif.GifImageView;
 
 
 /**
@@ -19,8 +19,8 @@ import com.felipecsl.gifimageview.library.GifImageView;
 
 public class AutoHeightGifImageView extends GifImageView {
 
-    private Drawable mDrawable = null;
     private static int mWidth = 0;
+    private Drawable mDrawable = null;
 
     public AutoHeightGifImageView(Context context, AttributeSet attrs) {
         super(context, attrs);

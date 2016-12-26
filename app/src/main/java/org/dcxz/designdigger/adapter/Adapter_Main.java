@@ -2,6 +2,8 @@ package org.dcxz.designdigger.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,9 +15,18 @@ import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.framework.Framework_Adapter;
 import org.dcxz.designdigger.view.AutoHeightGifImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import pl.droidsonroids.gif.GifDrawable;
 
 /**
  * <br/>
@@ -27,6 +38,8 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
      * 请求标签
      */
     public static final String TAG = "Adapter_Main";
+    private final Handler handler;
+    private final File cacheDir;
 
     /**
      * @param context 用于初始化{@link #inflater}的上下文
@@ -34,6 +47,8 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
      */
     public Adapter_Main(Context context, ArrayList<Entity_Shot> data) {
         super(context, data);
+        handler = new Handler();
+        cacheDir = context.getCacheDir();
     }
 
     @Override
@@ -69,29 +84,114 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
 
         holder.content.setImageResource(R.mipmap.item_content);
         holder.content.setTag(temp.getImages().getNormal());
-        if (temp.isAnimated()) {
-           /* App.stringRequest(temp.getImages().getNormal(), new Response.Listener<String>() {
+        if (temp.isAnimated()) {// TODO: 2016/12/26 GIF
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        String path = temp.getImages().getNormal();
+                        HttpsURLConnection connection = (HttpsURLConnection) new URL(path).openConnection();
+                        connection.setConnectTimeout(10000);
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            final File file = new File(cacheDir, path.substring(path.lastIndexOf("/") + 1));
+                            if (!file.exists()) {
+                                if (file.createNewFile()) {
+                                    InputStream inputStream = connection.getInputStream();
+                                    FileOutputStream outputStream = new FileOutputStream(file);
+                                    byte cache[] = new byte[1024];
+                                    int length;
+                                    while ((length = inputStream.read(cache)) != -1) {
+                                        outputStream.write(cache, 0, length);
+                                    }
+                                    outputStream.flush();
+                                }
+                            }
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {//not in GIF format
+                                        final GifDrawable gifDrawable = new GifDrawable(file);
+                                        holder.content.setImageDrawable(gifDrawable);
+                                        holder.gif.setVisibility(View.VISIBLE);
+                                        holder.gif.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (gifDrawable.isPlaying()) {
+                                                    Log.i(TAG, "onClick: gifDrawable is playing, now stop");
+                                                    gifDrawable.pause();
+                                                } else {
+                                                    Log.i(TAG, "onClick: gifDrawable is stopped, now playing");
+                                                    gifDrawable.start();
+                                                }
+                                            }
+                                        });
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+            /*App.stringRequest(temp.getImages().getNormal(), new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    byte[] cache = response.getBytes();
-                    Log.i(TAG, "onResponse: " + cache.length);
-                    holder.content.setBytes(cache);
                     holder.gif.setVisibility(View.VISIBLE);
-                    holder.gif.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (holder.content.isAnimating()) {
-                                holder.content.stopAnimation();
-                            } else {
-                                holder.content.startAnimation();
+                    byte[] cache = response.getBytes();
+                    try {//No frames found, at least one frame required
+                        final GifDrawable gifDrawable = new GifDrawable(cache);
+                        holder.content.setImageDrawable(gifDrawable);
+                        holder.gif.setVisibility(View.VISIBLE);
+                        holder.gif.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (gifDrawable.isPlaying()) {
+                                    Log.i(TAG, "onClick: gifDrawable is playing, now stop");
+                                    gifDrawable.pause();
+                                } else {
+                                    Log.i(TAG, "onClick: gifDrawable is stopped, now playing");
+                                    gifDrawable.start();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, null, TAG);*/
-            App.imageRequest(temp.getImages().getNormal(), holder.content, TAG);
-            holder.gif.setVisibility(View.VISIBLE);
-            holder.gif.setOnClickListener(null);
+            /*App.getQueue().add(new ImageRequest(
+                    temp.getImages().getNormal(),
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap response) {
+                            holder.gif.setVisibility(View.VISIBLE);
+                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
+                            response.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                            try {//not in GIF format
+                                final GifDrawable gifDrawable = new GifDrawable(outputStream.toByteArray());
+                                holder.content.setImageDrawable(gifDrawable);
+                                holder.gif.setVisibility(View.VISIBLE);
+                                holder.gif.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (gifDrawable.isPlaying()) {
+                                            Log.i(TAG, "onClick: gifDrawable is playing, now stop");
+                                            gifDrawable.pause();
+                                        } else {
+                                            Log.i(TAG, "onClick: gifDrawable is stopped, now playing");
+                                            gifDrawable.start();
+                                        }
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 0, 0, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.ARGB_8888, null
+            ));*/
         } else {
             App.imageRequest(temp.getImages().getNormal(), holder.content, TAG);
             holder.gif.setVisibility(View.INVISIBLE);
