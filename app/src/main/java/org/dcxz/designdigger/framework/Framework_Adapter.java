@@ -54,6 +54,7 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
      *
      * @param newData 将要添加的数据
      */
+    @SuppressWarnings("WeakerAccess")
     public void addDataToTop(ArrayList<T> newData) {
         data.addAll(0, newData);
         notifyDataSetChanged();
@@ -86,17 +87,6 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getViewImp(position, convertView, parent);
-    }
+    public abstract View getView(int position, View convertView, ViewGroup parent);
 
-    /**
-     * getView实现
-     *
-     * @param position    数据集合中的特定位置
-     * @param convertView 重用控件
-     * @param parent      这个控件最终将依附的控件组
-     * @return 对应特定位置上数据的控件
-     */
-    protected abstract View getViewImp(int position, View convertView, ViewGroup parent);
 }

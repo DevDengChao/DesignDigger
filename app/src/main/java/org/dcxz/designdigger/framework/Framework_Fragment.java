@@ -20,10 +20,6 @@ public abstract class Framework_Fragment extends Fragment {
      * Framework_Fragment持有的Framework_Handler对象,为子类提供消息机制接口
      */
     protected Framework_Handler handler;
-    /**
-     * Framework_Fragment持有的Toast对象,为子类提供消息弹出接口
-     */
-    private Toast toast;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,6 +96,5 @@ public abstract class Framework_Fragment extends Fragment {
         if (getActivity() != null) {
             Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT).show();
         }
-
     }
 }

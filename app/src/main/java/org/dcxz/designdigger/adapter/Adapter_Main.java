@@ -37,7 +37,7 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
     }
 
     @Override
-    protected View getViewImp(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         Entity_Shot temp = data.get(position);
         ViewHolder holder;
         String imagePath = temp.getImages().getNormal();// TODO: 2016/12/27 允许用户自定义预览图的精度

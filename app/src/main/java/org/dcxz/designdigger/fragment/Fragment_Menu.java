@@ -62,18 +62,20 @@ public class Fragment_Menu extends Framework_Fragment {
         activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
         isUserLogined(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Sign out");
-        builder.setMessage("You are going to sign out");
-        builder.setPositiveButton("Sign out", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);
-                isUserLogined(false);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        dialog = builder.create();
+        dialog = new AlertDialog.Builder(activity)
+                .setTitle("Sign out")
+                .setMessage("You are going to sign out")
+                .setPositiveButton(
+                        "Sign out",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);//用默认access_token替换用户access_token
+                                App.updateHeader();//更新内存和请求头部的access_token
+                                isUserLogined(false);
+                            }
+                        })
+                .setNegativeButton("Cancel", null).create();
     }
 
     /**
@@ -92,8 +94,6 @@ public class Fragment_Menu extends Framework_Fragment {
             signIn.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.INVISIBLE);
             avatar.setImageResource(R.mipmap.dribbble_ball_mark);
-            manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);//用默认access_token替换用户access_token
-            App.updateHeader();//更新内存和请求头部的access_token
         }
     }
 
@@ -116,9 +116,7 @@ public class Fragment_Menu extends Framework_Fragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, Activity_Login.class);
-                intent.putExtra("STATE", Fragment_Menu.TAG);
-                startActivity(intent);
+                startActivity(new Intent(activity, Activity_Login.class).putExtra("STATE", Fragment_Menu.TAG));
             }
         });
         signOut.setOnClickListener(new View.OnClickListener() {

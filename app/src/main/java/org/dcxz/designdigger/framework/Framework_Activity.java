@@ -23,10 +23,6 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
      */
     protected Framework_Handler handler;
-    /**
-     * Framework_Activity持有的Toast对象,为子类提供消息弹出接口
-     */
-    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +81,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param msg 待弹出的消息
      */
     protected void toast(String msg) {
-        toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -95,8 +90,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
-        toast = Toast.makeText(this, resID, Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(this, resID, Toast.LENGTH_SHORT).show();
     }
 
     /**
