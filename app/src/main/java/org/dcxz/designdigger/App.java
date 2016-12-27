@@ -2,11 +2,16 @@ package org.dcxz.designdigger;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -14,8 +19,13 @@ import com.android.volley.toolbox.Volley;
 import org.dcxz.designdigger.dao.Dao_Manager;
 import org.dcxz.designdigger.util.API;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Application对象,用于初始化{@link #queue}
@@ -103,6 +113,61 @@ public class App extends Application {
                 return header;
             }
         }.setTag(tag));
+    }
+
+    /**
+     * 通过DribbbleAPI进行图像请求(原尺寸);
+     *
+     * @param url        目标地址
+     * @param imageView  将要设置图像的ImageView
+     * @param controller 用于控制播放/暂停的控件
+     * @param tag        请求标签,用于取消请求
+     */
+    public static void gifRequest(String url, final GifImageView imageView, final ImageView controller, String tag) {
+        queue.add(new Request<byte[]>(Request.Method.GET, url, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                imageView.setImageResource(R.drawable.connection_error);
+                error.printStackTrace();
+            }
+        }) {//实现抽象方法
+            @Override
+            protected Response<byte[]> parseNetworkResponse(NetworkResponse response) {
+                if (response.statusCode != HttpURLConnection.HTTP_OK) {
+                    return Response.error(new VolleyError("Response code error:" + response.statusCode));
+                }
+                return Response.success(response.data, HttpHeaderParser.parseCacheHeaders(response));//模仿ImageRequest，设置响应成功时的返回结果
+            }
+
+            /**
+             * 重写响应成功的回调方法（也可以利用监听模式设计该方法{@link com.android.volley.toolbox.StringRequest#deliverResponse(String)}）
+             */
+            @Override
+            protected void deliverResponse(byte[] response) {
+                try {//直接将获得的字节数组交给GifDrawable
+                    final GifDrawable gifDrawable = new GifDrawable(response);
+                    imageView.setImageDrawable(gifDrawable);
+                    controller.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (gifDrawable.isPlaying()) {
+                                        gifDrawable.pause();
+                                    } else {
+                                        gifDrawable.start();
+                                    }
+                                }
+                            });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return header;
+            }
+        }).setTag(tag);
     }
 
     @Override
