@@ -7,5 +7,4 @@
 /build
 /captures
 .externalNativeBuild
-app/src/androidTest/java/org/dcxz/designdigger/ExampleInstrumentedTest.java
-app/src/test/java/org/dcxz/designdigger/ExampleUnitTest.java
+
