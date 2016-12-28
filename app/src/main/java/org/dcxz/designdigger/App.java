@@ -140,21 +140,24 @@ public class App extends Application {
             }
 
             /**
-             * 重写响应成功的回调方法（也可以利用监听模式设计该方法{@link com.android.volley.toolbox.StringRequest#deliverResponse(String)}）
+             * 重写响应成功的回调方法（也可以利用监听模式设计该方法{@link StringRequest#deliverResponse(String)}）
              */
             @Override
             protected void deliverResponse(byte[] response) {
+                final GifDrawable gifDrawable;
                 try {//直接将获得的字节数组交给GifDrawable
-                    final GifDrawable gifDrawable = new GifDrawable(response);
+                    gifDrawable = new GifDrawable(response);
                     imageView.setImageDrawable(gifDrawable);
                     controller.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     if (gifDrawable.isPlaying()) {
-                                        gifDrawable.pause();
+                                        gifDrawable.pause();// TODO: 2016/12/28 Gif始终不动
+                                        System.out.println("playing->pause");
                                     } else {
                                         gifDrawable.start();
+                                        System.out.println("pause->playing");
                                     }
                                 }
                             });
