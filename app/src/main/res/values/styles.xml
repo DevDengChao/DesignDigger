@@ -23,6 +23,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
     </style>
+
+    <style name="Fragment.Player" />
+
+    <style name="Fragment.Player.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
     <!--    Fragment style end    -->
     <!--    Item style start    -->
     <style name="Item" parent="AppTheme" />

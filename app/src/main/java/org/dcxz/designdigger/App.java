@@ -2,6 +2,7 @@ package org.dcxz.designdigger;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -131,6 +132,11 @@ public class App extends Application {
                 error.printStackTrace();
             }
         }) {//实现抽象方法
+            /**
+             * 用于展示Gif的drawable对象
+             */
+            private GifDrawable gifDrawable;
+
             @Override
             protected Response<byte[]> parseNetworkResponse(NetworkResponse response) {
                 if (response.statusCode != HttpURLConnection.HTTP_OK) {
@@ -144,20 +150,21 @@ public class App extends Application {
              */
             @Override
             protected void deliverResponse(byte[] response) {
-                final GifDrawable gifDrawable;
                 try {//直接将获得的字节数组交给GifDrawable
                     gifDrawable = new GifDrawable(response);
                     imageView.setImageDrawable(gifDrawable);
                     controller.setOnClickListener(
                             new View.OnClickListener() {
+                                private static final String TAG = "Controller";
+
                                 @Override
                                 public void onClick(View v) {
                                     if (gifDrawable.isPlaying()) {
-                                        gifDrawable.pause();// TODO: 2016/12/28 Gif始终不动
-                                        System.out.println("playing->pause");
+                                        gifDrawable.pause();// FIXME: 2017/1/2 Gif始终不动
+                                        Log.i(TAG, "onClick: playing->pause");
                                     } else {
                                         gifDrawable.start();
-                                        System.out.println("pause->playing");
+                                        Log.i(TAG, "onClick: pause->playing");
                                     }
                                 }
                             });

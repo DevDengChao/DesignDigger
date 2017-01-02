@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dribbble_pink">#EA4C89</color>
-    <color name="dribbble_pro">#6CC</color>
+    <color name="dribbble_pro">#66CCCC</color>
     <color name="dribbble_teams">#00B6E3</color>
     <color name="dribbble_link_blue">#3A8BBB</color>
-    <color name="dribbble_playbook">#6c9</color>
+    <color name="dribbble_playbook">#66CC99</color>
     <color name="dribbble_jobs_hiring">#7BBB5E</color>
-    <color name="dribbble_slate">#9da3a5</color>
-    <color name="dribbble_charcoal">#333</color>
+    <color name="dribbble_slate">#9DA3A5</color>
+    <color name="dribbble_charcoal">#333333</color>
 
     <!--默认主题-->
     <color name="default_1">#FDFEFE</color>

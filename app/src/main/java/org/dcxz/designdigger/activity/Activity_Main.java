@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.fragment.Fragment_Following;
+import org.dcxz.designdigger.fragment.Fragment_Player;
 import org.dcxz.designdigger.fragment.Fragment_Rank;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.framework.Framework_Fragment;
@@ -56,17 +57,21 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initData() {
-        fragments = new Framework_Fragment[2];
+        int count = 3;
+        fragments = new Framework_Fragment[count];
         fragments[0] = new Fragment_Following();
         fragments[1] = new Fragment_Rank();
-        titles = new String[2];
+        fragments[2] = new Fragment_Player();
+
+        titles = new String[count];
         titles[0] = "Following";
         titles[1] = "Rank";
+        titles[2] = "Profile";
     }
 
     @Override
     protected void initAdapter() {
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {// FIXME: 2017/1/2 STATE
             @Override
             public Fragment getItem(int position) {
                 return fragments[position];

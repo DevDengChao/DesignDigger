@@ -116,7 +116,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toast("SIGN UP");
+                toast("SIGN UP");// TODO: 2017/1/2 Sign up
             }
         });
     }
