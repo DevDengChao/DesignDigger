@@ -38,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
+                android:paddingRight="16dp"
+                android:scrollbars="none" />
             <!--提示用户网络连接异常,允许用户点击这个TextView来触发请求-->
             <TextView
                 android:id="@+id/fragment_main_connectionError"
