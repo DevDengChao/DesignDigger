@@ -33,14 +33,16 @@ public class Fragment_Player extends Framework_Fragment {
     protected void initView(Activity activity, View view) {
         Dao_Manager manager = Dao_Manager.getInstance(activity);
         Entity_User user = manager.getUser();
-        ((CircleImageView) view.findViewById(R.id.player_avatar)).setImageBitmap(manager.getAvatar());
-        ((TextView) view.findViewById(R.id.player_bucketsCount)).setText(user.getBuckets_count() + "");
-        ((TextView) view.findViewById(R.id.player_followersCount)).setText(user.getFollowers_count() + "");
-        ((TextView) view.findViewById(R.id.player_followingCount)).setText(user.getFollowings_count() + "");
-        ((TextView) view.findViewById(R.id.player_introduction)).setText(Html.fromHtml(user.getBio()));
-        ((TextView) view.findViewById(R.id.player_location)).setText(user.getLocation());
-        ((TextView) view.findViewById(R.id.player_shotsCount)).setText(user.getShots_count() + "");
-        ((TextView) view.findViewById(R.id.player_userName)).setText(user.getUsername());
+        if (user != null) {
+            ((CircleImageView) view.findViewById(R.id.player_avatar)).setImageBitmap(manager.getAvatar());
+            ((TextView) view.findViewById(R.id.player_bucketsCount)).setText(user.getBuckets_count() + "");
+            ((TextView) view.findViewById(R.id.player_followersCount)).setText(user.getFollowers_count() + "");
+            ((TextView) view.findViewById(R.id.player_followingCount)).setText(user.getFollowings_count() + "");
+            ((TextView) view.findViewById(R.id.player_introduction)).setText(Html.fromHtml(user.getBio()));
+            ((TextView) view.findViewById(R.id.player_location)).setText(user.getLocation());
+            ((TextView) view.findViewById(R.id.player_shotsCount)).setText(user.getShots_count() + "");
+            ((TextView) view.findViewById(R.id.player_userName)).setText(user.getUsername());
+        }
     }
 
     @Override

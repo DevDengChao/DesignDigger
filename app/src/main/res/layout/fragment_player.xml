@@ -18,23 +18,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="User Name" />
+        android:text="Visitor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
         android:id="@+id/player_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/default_1"
-        tools:text="Location" />
+        android:text="Location"
+        android:textColor="@color/default_1" />
 
     <TextView
         android:id="@+id/player_introduction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="Introduction" />
+        android:text="Introduction" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
             <TextView
                 android:id="@+id/player_shotsCount"
                 style="@style/Fragment.Player.TextView"
-                tools:text="214" />
+                android:text="0" />
 
             <TextView
                 style="@style/Fragment.Player.TextView"
@@ -67,7 +67,7 @@
             <TextView
                 android:id="@+id/player_bucketsCount"
                 style="@style/Fragment.Player.TextView"
-                tools:text="10" />
+                android:text="0" />
 
             <TextView
                 style="@style/Fragment.Player.TextView"
@@ -83,7 +83,7 @@
             <TextView
                 android:id="@+id/player_followersCount"
                 style="@style/Fragment.Player.TextView"
-                tools:text="29262" />
+                android:text="0" />
 
             <TextView
                 style="@style/Fragment.Player.TextView"
@@ -99,7 +99,7 @@
             <TextView
                 android:id="@+id/player_followingCount"
                 style="@style/Fragment.Player.TextView"
-                tools:text="1728" />
+                android:text="0" />
 
             <TextView
                 style="@style/Fragment.Player.TextView"
