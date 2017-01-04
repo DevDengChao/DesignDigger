@@ -71,7 +71,7 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initAdapter() {
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {// FIXME: 2017/1/2 STATE
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return fragments[position];
@@ -87,6 +87,7 @@ public class Activity_Main extends Framework_Activity {
                 return titles[position];
             }
         });
+        viewPager.setOffscreenPageLimit(fragments.length - 1);//保留Fragment状态
     }
 
     @Override
