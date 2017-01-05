@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_2"
     android:orientation="vertical">
 
     <LinearLayout
@@ -43,26 +44,22 @@
             <!--提示用户网络连接异常,允许用户点击这个TextView来触发请求-->
             <TextView
                 android:id="@+id/fragment_main_connectionError"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@color/default_2"
                 android:drawableTop="@drawable/connection_error"
                 android:gravity="center"
                 android:paddingBottom="200dp"
                 android:paddingTop="200dp"
-                android:text="@string/connection_error"
                 android:visibility="invisible" />
 
             <ProgressBar
                 android:id="@+id/fragment_main_progressBar"
                 style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="#AACFD5D9"
-                android:indeterminateDrawable="@drawable/progress_rotate"
-                android:padding="130dp" />
+                android:indeterminateDrawable="@drawable/progress_rotate" />
         </RelativeLayout>
     </in.srain.cube.views.ptr.PtrFrameLayout>
 </LinearLayout>

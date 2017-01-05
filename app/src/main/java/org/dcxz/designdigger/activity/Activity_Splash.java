@@ -1,12 +1,7 @@
 package org.dcxz.designdigger.activity;
 
 import android.os.Message;
-import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.framework.Framework_Activity;
 
@@ -22,6 +17,7 @@ public class Activity_Splash extends Framework_Activity {
     /**
      * 日志Tag
      */
+    @SuppressWarnings("unused")
     private static final String TAG = "Activity_Splash";
     /**
      * what:跳转至Activity_Main
@@ -40,22 +36,7 @@ public class Activity_Splash extends Framework_Activity {
 
     @Override
     protected void initData() {
-        //不论是否成功获取数据均应当在2500ms后跳转
-        handler.sendEmptyMessageDelayed(TO_MAIN_ACTIVITY, 2500);
-        App.stringRequest(
-                "https://api.dribbble.com/v1/shots/?page=2&sort=popular&list=shots&timeframe=now",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "onResponse: cache created");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i(TAG, "onErrorResponse: connect error");
-                    }
-                });
+        handler.sendEmptyMessageDelayed(TO_MAIN_ACTIVITY, 1500);// TODO: 2017/1/5 update check (github release)
     }
 
     @Override

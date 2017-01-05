@@ -74,6 +74,7 @@ public class Fragment_Menu extends Framework_Fragment {
                                 manager.setAccessToken(API.Oauth2.ACCESS_TOKEN_DEFAULT);//用默认access_token替换用户access_token
                                 App.updateHeader();//更新内存和请求头部的access_token
                                 isUserLogined(false);
+                                activity.sendBroadcast(new Intent(TAG));//用户注销广播
                             }
                         })
                 .setNegativeButton("Cancel", null).create();

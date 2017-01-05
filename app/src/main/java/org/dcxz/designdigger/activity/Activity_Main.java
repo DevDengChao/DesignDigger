@@ -1,9 +1,14 @@
 package org.dcxz.designdigger.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +21,8 @@ import org.dcxz.designdigger.fragment.Fragment_Rank;
 import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 
+import butterknife.BindView;
+
 public class Activity_Main extends Framework_Activity {
     /**
      * 日志TAG
@@ -25,20 +32,32 @@ public class Activity_Main extends Framework_Activity {
     /**
      * 用于切换Fragment的ViewPager
      */
-    private ViewPager viewPager;
+    @BindView(R.id.activity_main_viewPager)
+    ViewPager viewPager;
+    /**
+     * 工具栏
+     */
+    @BindView(R.id.activity_main_toolBar)
+    Toolbar toolbar;
+    /**
+     * 侧滑菜单
+     */
+    @BindView(R.id.main_drawerLayout)
+    DrawerLayout drawerLayout;
+    /**
+     * 标签
+     */
+    @BindView(R.id.activity_main_tabLayout)
+    TabLayout tabLayout;
+    /**
+     * Fragment的title
+     */
     private String titles[];
     /**
      * 可用的Fragment
      */
     private Framework_Fragment[] fragments;
-    /**
-     * 工具栏
-     */
-    private Toolbar toolbar;
-    /**
-     * 侧滑菜单
-     */
-    private DrawerLayout drawerLayout;
+    private BroadcastReceiver receiver;
 
     @Override
     protected int setContentViewImp() {
@@ -47,12 +66,16 @@ public class Activity_Main extends Framework_Activity {
 
     @Override
     protected void initView() {
-        viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
-        toolbar = (Toolbar) findViewById(R.id.activity_main_toolBar);
         setSupportActionBar(toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+        //监听登录成功事件,收起侧滑菜单
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        };
+        registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
     }
 
     @Override
@@ -95,10 +118,17 @@ public class Activity_Main extends Framework_Activity {
                 this, drawerLayout, toolbar, R.string.main_drawerOpened, R.string.main_drawerClosed);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
+
     }
 
     @Override
     public void handleMessageImp(Message msg) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 
 /**
  * <br/>
@@ -20,14 +23,16 @@ public abstract class Framework_Fragment extends Fragment {
      * Framework_Fragment持有的Framework_Handler对象,为子类提供消息机制接口
      */
     protected Framework_Handler handler;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(setContentViewImp(), container, false);
+        unbinder = ButterKnife.bind(this, view);
         handler = new Framework_Handler(this);
         Activity activity = getActivity();
         initView(activity, view);
-        initData(activity,savedInstanceState);
+        initData(activity, savedInstanceState);
         initAdapter(activity);
         initListener(activity);
         return view;
@@ -80,22 +85,17 @@ public abstract class Framework_Fragment extends Fragment {
     /**
      * Toast接口
      *
-     * @param msg 待弹出的消息
-     */
-    protected void toast(String msg) {
-        if (getActivity() != null) {
-            Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Toast接口
-     *
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
         if (getActivity() != null) {
             Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

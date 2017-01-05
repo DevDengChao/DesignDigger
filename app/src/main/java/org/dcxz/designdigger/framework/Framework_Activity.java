@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 
+import butterknife.ButterKnife;
+
 public abstract class Framework_Activity extends AppCompatActivity {
 
     /**
@@ -35,6 +37,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
 
     @Override
     public void onContentChanged() {
+        ButterKnife.bind(this);
         initView();
         initData();
         initAdapter();
@@ -74,15 +77,6 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param msg 待处理的消息
      */
     public abstract void handleMessageImp(Message msg);
-
-    /**
-     * Toast接口
-     *
-     * @param msg 待弹出的消息
-     */
-    protected void toast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 
     /**
      * Toast接口

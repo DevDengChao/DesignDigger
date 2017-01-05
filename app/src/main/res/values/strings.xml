@@ -28,4 +28,8 @@
     <string name="ever">Ever</string>
     <string name="header_pullToRefresh">Pull to refresh</string>
     <string name="youAreNotLoginYet">You are not login yet</string>
+    <string name="Authorize_failed_Cannot_get_Access_Token">Authorize failed:Cannot getAccess Token</string>
+    <string name="Download_avatar_failed_Connection_Error">Download avatar failed:Connection Error</string>
+    <string name="Authorize_failed_Cannot_get_user">Authorize failed:Cannot get user</string>
+    <string name="Download_avatar_failed_File_IOException">Download avatar failed:File IO Exception</string>
 </resources>

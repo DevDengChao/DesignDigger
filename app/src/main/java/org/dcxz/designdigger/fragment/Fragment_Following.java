@@ -32,6 +32,7 @@ import org.dcxz.designdigger.util.API;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
@@ -49,19 +50,23 @@ public class Fragment_Following extends Framework_Fragment {
     /**
      * 用于遮罩的进度条
      */
-    private ProgressBar progressBar;
+    @BindView(R.id.fragment_main_progressBar)
+    ProgressBar progressBar;
     /**
      * 展示内容用的GridView
      */
-    private GridView gridView;
+    @BindView(R.id.fragment_main_gridView)
+    GridView gridView;
     /**
      * 用于提示用户连接异常
      */
-    private TextView connectionError;
+    @BindView(R.id.fragment_main_connectionError)
+    TextView connectionError;
     /**
      * 下拉刷新需要的控件
      */
-    private PtrFrameLayout ptrFrameLayout;
+    @BindView(R.id.fragment_main_ptrFrameLayout)
+    PtrFrameLayout ptrFrameLayout;
     /**
      * 被选中的页面
      */
@@ -69,12 +74,12 @@ public class Fragment_Following extends Framework_Fragment {
     /**
      * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
      */
-    private boolean refreshEnable = true;
+    private boolean refreshable = true;
 
     private Framework_Adapter<Entity_Shot> adapter;
     private ArrayList<Entity_Shot> shots;
     /**
-     * content的类型
+     * ArrayList<Entity_Shot>的类型
      */
     private Type type;
     private Gson gson;
@@ -91,23 +96,30 @@ public class Fragment_Following extends Framework_Fragment {
     @SuppressLint("InflateParams")
     @Override
     protected void initView(Activity activity, View view) {
-        progressBar = (ProgressBar) view.findViewById(R.id.fragment_main_progressBar);
-        connectionError = (TextView) view.findViewById(R.id.fragment_main_connectionError);
-        ptrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.fragment_main_ptrFrameLayout);
         ptrFrameLayout.setPullToRefresh(true);
         ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
         view.findViewById(R.id.fragment_main_sort).setVisibility(View.GONE);
         view.findViewById(R.id.fragment_main_list).setVisibility(View.GONE);
         view.findViewById(R.id.fragment_main_timeFrame).setVisibility(View.GONE);
-        gridView = (GridView) view.findViewById(R.id.fragment_main_gridView);
         gridView.setNumColumns(1);
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                doPullToRefresh();
+                switch (intent.getAction()) {
+                    case Activity_Login.TAG:
+                        doPullToRefresh();
+                        break;
+                    case Fragment_Menu.TAG:
+                        App.getQueue().cancelAll(TAG);
+                        isUserLogined();
+                        break;
+                }
             }
         };
-        activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Activity_Login.TAG);//监听登录成功事件
+        filter.addAction(Fragment_Menu.TAG);//监听注销事件
+        activity.registerReceiver(receiver, filter);
     }
 
     @SuppressWarnings("unchecked")
@@ -128,8 +140,7 @@ public class Fragment_Following extends Framework_Fragment {
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_Main(activity, shots);
-        gridView.setAdapter(adapter);
+        gridView.setAdapter(adapter = new Adapter_Main(activity, shots));
     }
 
     @Override
@@ -140,6 +151,8 @@ public class Fragment_Following extends Framework_Fragment {
                 //判断用户是否已登录
                 if (isUserLogined()) {
                     doPullToRefresh();
+                } else {
+                    ptrFrameLayout.refreshComplete();
                 }
             }
 
@@ -160,15 +173,15 @@ public class Fragment_Following extends Framework_Fragment {
 
             /**
              * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
-             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Following#refreshEnable}<br/>
+             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Following#refreshable}<br/>
              * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
              */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
                     //当滑动到倒数第7个item以内时尝试加载新数据
-                    if (refreshEnable && isUserLogined()) {//状态锁,当前状态是否可以请求数据以及用户是否已登录
-                        refreshEnable = false;
+                    if (refreshable && isUserLogined()) {//状态锁,当前状态是否可以请求数据以及用户是否已登录
+                        refreshable = false;
                         Log.i(TAG, "onScroll: try onScroll refresh at page " + pageSelected);
                         App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
                                 pageSelected + ""),
@@ -176,7 +189,7 @@ public class Fragment_Following extends Framework_Fragment {
                                     @Override
                                     public void onResponse(String response) {
                                         Log.i(TAG, "onResponse: onScroll refresh success at page " + pageSelected);
-                                        refreshEnable = true;//重置状态锁
+                                        refreshable = true;//重置状态锁
                                         pageSelected++;//更新页码
                                         progressBar.setVisibility(View.INVISIBLE);
                                         connectionError.setVisibility(View.INVISIBLE);
@@ -191,7 +204,7 @@ public class Fragment_Following extends Framework_Fragment {
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        refreshEnable = true;//重置状态锁
+                                        refreshable = true;//重置状态锁
                                         progressBar.setVisibility(View.INVISIBLE);
                                         if (adapter.getCount() == 0) {
                                             connectionError.setVisibility(View.VISIBLE);
@@ -212,7 +225,9 @@ public class Fragment_Following extends Framework_Fragment {
         if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
             return true;
         } else {
-            connectionError.setText(R.string.youAreNotLoginYet);
+            if (getUserVisibleHint()) {
+                toast(R.string.youAreNotLoginYet);
+            }
             connectionError.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             return false;
@@ -223,7 +238,6 @@ public class Fragment_Following extends Framework_Fragment {
      * 执行一次下拉刷新
      */
     private void doPullToRefresh() {
-        connectionError.setVisibility(View.INVISIBLE);
         pageSelected = 1;//重置页码
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
         Log.i(TAG, "doPullToRefresh: last request with TAG canceled");
@@ -233,9 +247,10 @@ public class Fragment_Following extends Framework_Fragment {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "onResponse: pull to refresh success at page " + pageSelected);
-                        refreshEnable = true;
+                        refreshable = true;
                         pageSelected++;
                         ptrFrameLayout.refreshComplete();
+                        connectionError.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
                         for (Entity_Shot shot : shots) {
@@ -248,13 +263,11 @@ public class Fragment_Following extends Framework_Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        refreshEnable = true;
+                        refreshable = true;
                         ptrFrameLayout.refreshComplete();
                         Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
-                        connectionError.setText(R.string.connection_error);
                         connectionError.setVisibility(View.VISIBLE);
-                        toast(R.string.connection_error);
                     }
                 }, TAG);
     }

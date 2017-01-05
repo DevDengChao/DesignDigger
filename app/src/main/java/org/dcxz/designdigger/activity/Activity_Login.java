@@ -27,6 +27,8 @@ import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.util.API;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+
 /**
  * 用户通过Oauth2进行登录认证<br/>
  * 启动这个Activity的方式分别来自Activity_FirstLaunch和Fragment_Menu
@@ -44,9 +46,14 @@ public class Activity_Login extends Framework_Activity {
      * what:跳转至Activity_Main
      */
     private static final int TO_ACTIVITY_MAIN = 1;
-    private WebView webView;
+    /**
+     * 用于登录的WebView
+     */
+    @BindView(R.id.login_webView)
+    WebView webView;
 
-    private ProgressBar progressBar;
+    @BindView(R.id.login_progressBar)
+    ProgressBar progressBar;
     /**
      * 标识哪个Activity唤醒了这个Activity,用于区分跳转目标
      */
@@ -71,9 +78,7 @@ public class Activity_Login extends Framework_Activity {
             Log.i(TAG, "initView: Cookie cleared");
         }
 
-        progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
         // TODO: 2016/12/22 优化:WebView+JS实现登录 http://www.jb51.net/article/84957.htm
-        webView = (WebView) findViewById(R.id.login_webView);
         webView.setWebViewClient(
                 new WebViewClient() {
                     // https://dribbble.com/login?return_to=%2Foauth%2Fauthorize%3F
@@ -91,6 +96,7 @@ public class Activity_Login extends Framework_Activity {
                         Log.i(TAG, "UrlLoading: " + url);
                         String callback_url = API.Oauth2.REDIRECT_URI_VALUE;
                         if (url.startsWith(callback_url)) {//已经过用户认证,拦截重定向
+                            progressBar.setVisibility(View.VISIBLE);//重定向过程中禁止用户再次操作webView
                             Log.i(TAG, "Intercept redirecting: " + url);
                             String code = url.replace(callback_url + "?code=", "");//获取Dribbble返回的验证码
                             String tokenURL = String.format(API.Oauth2.TOKEN, code);//尝试获取access_token
@@ -116,14 +122,17 @@ public class Activity_Login extends Framework_Activity {
                                             public void onResponse(JSONObject response) {
                                                 Entity_AccessToken token = new Gson().fromJson(response.toString(), Entity_AccessToken.class);
                                                 String access_token = token.getAccess_token();
-                                                Log.i(TAG, "onResponse: token=" + access_token);
-                                                saveUser(access_token);
+                                                //Log.i(TAG, "onResponse: token=" + access_token);
+                                                manager.setAccessToken(access_token);//登录成功,更新文件中的口令
+                                                App.updateHeader();//登录成功,更新请求头（内存）中的口令
+                                                saveUser();
                                             }
                                         },
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                toast("Authorize failed:Cannot getAccess Token");
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                toast(R.string.Authorize_failed_Cannot_get_Access_Token);
                                                 if (webView.canGoBack()) {
                                                     webView.goBack();
                                                 }
@@ -148,13 +157,8 @@ public class Activity_Login extends Framework_Activity {
 
     /**
      * 利用ACCESS_TOKEN获取对应的用户对象
-     *
-     * @param access_token 链接口令
      */
-    private void saveUser(String access_token) {
-        manager.setAccessToken(access_token);//登录成功,更新文件中的口令
-        API.Oauth2.setAccessToken(access_token);//登录成功,更新内存中的口令
-        App.updateHeader();//登录成功,更新请求头中的口令
+    private void saveUser() {
         App.stringRequest(
                 API.EndPoint.USER,
                 new Response.Listener<String>() {
@@ -162,18 +166,19 @@ public class Activity_Login extends Framework_Activity {
                     public void onResponse(String response) {
                         manager.setUser(response);
                         Entity_User user = new Gson().fromJson(response, Entity_User.class);
-                        Log.i(TAG, "onResponse: " + user.getId() + " " + user.getUsername());
+                        Log.i(TAG, "onResponse: UserName=" + user.getUsername() + " UID=" + user.getId());
                         App.getQueue().add(
                                 new ImageRequest(user.getAvatar_url(),
                                         new Response.Listener<Bitmap>() {
                                             @Override
                                             public void onResponse(Bitmap response) {
+                                                progressBar.setVisibility(View.INVISIBLE);
                                                 if (manager.setAvatar(response)) {
                                                     Log.i(TAG, "onResponse: download avatar success");
                                                     sendBroadcast(new Intent(TAG));
                                                 } else {
                                                     Log.i(TAG, "onResponse: download avatar failed:File IO Exception");
-                                                    toast("Download avatar failed:File IO Exception");
+                                                    toast(R.string.Download_avatar_failed_File_IOException);
                                                 }
                                             }
                                         },
@@ -183,7 +188,8 @@ public class Activity_Login extends Framework_Activity {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                toast("Download avatar failed:Connection Error");
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                toast(R.string.Download_avatar_failed_Connection_Error);
                                             }
                                         }));
                         Log.i(TAG, "onResponse: start this activity form " + extraString);
@@ -197,7 +203,8 @@ public class Activity_Login extends Framework_Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        toast("Authorize failed:Cannot get user");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        toast(R.string.Authorize_failed_Cannot_get_user);
                         if (webView.canGoBack()) {
                             webView.goBack();
                         }
@@ -233,8 +240,8 @@ public class Activity_Login extends Framework_Activity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {//拦截返回键时间监听
-            webView.canGoBack();
+        if (webView.canGoBack()) {//拦截返回键
+            webView.goBack();
         } else {
             super.onBackPressed();
         }

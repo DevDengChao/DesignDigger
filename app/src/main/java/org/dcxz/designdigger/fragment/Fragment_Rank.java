@@ -31,6 +31,7 @@ import org.dcxz.designdigger.util.API;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
@@ -48,23 +49,32 @@ public class Fragment_Rank extends Framework_Fragment {
     /**
      * 用于遮罩的进度条
      */
-    private ProgressBar progressBar;
+    @BindView(R.id.fragment_main_progressBar)
+    ProgressBar progressBar;
     /**
      * 内容筛选,控制流行程度,控制分类,控制时间范围
      */
-    private Spinner spinner_sort, spinner_list, spinner_timeFrame;
+    @BindView(R.id.fragment_main_sort)
+    Spinner spinner_sort;
+    @BindView(R.id.fragment_main_list)
+    Spinner spinner_list;
+    @BindView(R.id.fragment_main_timeFrame)
+    Spinner spinner_timeFrame;
     /**
      * 展示内容用的GridView
      */
-    private GridView gridView;
+    @BindView(R.id.fragment_main_gridView)
+    GridView gridView;
     /**
      * 用于提示用户连接异常
      */
-    private TextView connectionError;
+    @BindView(R.id.fragment_main_connectionError)
+    TextView connectionError;
     /**
      * 下拉刷新需要的控件
      */
-    private PtrFrameLayout ptrFrameLayout;
+    @BindView(R.id.fragment_main_ptrFrameLayout)
+    PtrFrameLayout ptrFrameLayout;
     /**
      * 界面上显示的文本,来自资源文件<br/>
      * 由于显示在页面上的文本与实际需要填入url中的文本不一致,因此需要进行键值对映射
@@ -103,15 +113,8 @@ public class Fragment_Rank extends Framework_Fragment {
     @SuppressLint("InflateParams")
     @Override
     protected void initView(Activity activity, View view) {
-        progressBar = (ProgressBar) view.findViewById(R.id.fragment_main_progressBar);
-        connectionError = (TextView) view.findViewById(R.id.fragment_main_connectionError);
-        ptrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.fragment_main_ptrFrameLayout);
         ptrFrameLayout.setPullToRefresh(true);
         ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
-        spinner_sort = (Spinner) view.findViewById(R.id.fragment_main_sort);
-        spinner_list = (Spinner) view.findViewById(R.id.fragment_main_list);
-        spinner_timeFrame = (Spinner) view.findViewById(R.id.fragment_main_timeFrame);
-        gridView = (GridView) view.findViewById(R.id.fragment_main_gridView);
         gridView.setNumColumns(1);
     }
 
@@ -167,8 +170,7 @@ public class Fragment_Rank extends Framework_Fragment {
         spinner_sort.setAdapter(new ArrayAdapter<>(activity, layoutID, sortKey));
         spinner_list.setAdapter(new ArrayAdapter<>(activity, layoutID, listKey));
         spinner_timeFrame.setAdapter(new ArrayAdapter<>(activity, layoutID, timeFrameKey));
-        adapter = new Adapter_Main(activity,shots);
-        gridView.setAdapter(adapter);
+        gridView.setAdapter(adapter = new Adapter_Main(activity, shots));
     }
 
     @Override
@@ -327,7 +329,7 @@ public class Fragment_Rank extends Framework_Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(TAG,adapter.getData());
+        outState.putSerializable(TAG, adapter.getData());
     }
 
     @Override

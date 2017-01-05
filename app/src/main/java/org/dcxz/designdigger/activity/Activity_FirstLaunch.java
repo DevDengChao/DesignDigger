@@ -3,9 +3,7 @@ package org.dcxz.designdigger.activity;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.adapter.Adapter_FirstLaunch;
@@ -14,6 +12,9 @@ import org.dcxz.designdigger.framework.Framework_Activity;
 import org.dcxz.designdigger.view.cricle_indicator.CircleIndicator;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 首次启动应用时进入的介绍页面
@@ -37,21 +38,17 @@ public class Activity_FirstLaunch extends Framework_Activity {
     /**
      * ViewPager容器
      */
-    private ViewPager viewPager;
+    @BindView(R.id.firstLaunch_viewPager)
+    ViewPager viewPager;
+    /**
+     * 底部的指示器
+     */
+    @BindView(R.id.firstLaunch_indicator)
+    CircleIndicator circleIndicator;
     /**
      * ViewPager中的内容
      */
     private ArrayList<ImageView> content;
-    /**
-     * 底部的指示器
-     */
-    private CircleIndicator circleIndicator;
-    /**
-     * 当前页面的数量
-     */
-    private int pageCount = 3;
-
-    private TextView visit, signUp, signIn;
 
     @Override
     protected int setContentViewImp() {
@@ -68,11 +65,6 @@ public class Activity_FirstLaunch extends Framework_Activity {
             Log.i(TAG, "initView: Not first launch");
             handler.sendEmptyMessage(TO_SPLASH_ACTIVITY);
         }
-        viewPager = (ViewPager) this.findViewById(R.id.firstLaunch_viewPager);
-        circleIndicator = (CircleIndicator) this.findViewById(R.id.firstLaunch_indicator);
-        visit = (TextView) findViewById(R.id.firstLaunch_visit);
-        signUp = (TextView) findViewById(R.id.firstLaunch_signUp);
-        signIn = (TextView) findViewById(R.id.firstLaunch_signIn);
     }
 
     @Override
@@ -85,7 +77,7 @@ public class Activity_FirstLaunch extends Framework_Activity {
                 R.mipmap.ic_launcher
         };
         ImageView imageView;
-        for (int i = 0; i < pageCount; i++) {
+        for (int i = 0; i < 3; i++) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setImageResource(resID[i]);
@@ -101,24 +93,21 @@ public class Activity_FirstLaunch extends Framework_Activity {
 
     @Override
     protected void initListener() {
-        visit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handler.sendEmptyMessage(TO_SPLASH_ACTIVITY);
-            }
-        });
-        signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handler.sendEmptyMessage(TO_LOGIN_ACTIVITY);
-            }
-        });
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toast("SIGN UP");// TODO: 2017/1/2 Sign up
-            }
-        });
+    }
+
+    @OnClick(R.id.firstLaunch_visit)
+    public void visit() {
+        handler.sendEmptyMessage(TO_SPLASH_ACTIVITY);
+    }
+
+    @OnClick(R.id.firstLaunch_signIn)
+    public void signIn() {
+        handler.sendEmptyMessage(TO_LOGIN_ACTIVITY);
+    }
+
+    @OnClick(R.id.firstLaunch_signUp)
+    public void signUp() {
+        Log.i(TAG, "signUp");// TODO: 2017/1/2 Sign up
     }
 
     @Override
