@@ -27,7 +27,7 @@ public abstract class Framework_Fragment extends Fragment {
         handler = new Framework_Handler(this);
         Activity activity = getActivity();
         initView(activity, view);
-        initData(activity);
+        initData(activity,savedInstanceState);
         initAdapter(activity);
         initListener(activity);
         return view;
@@ -51,9 +51,10 @@ public abstract class Framework_Fragment extends Fragment {
     /**
      * 收集数据
      *
-     * @param activity 当前活动
+     * @param activity           当前活动
+     * @param savedInstanceState 上一个实例保存的状态
      */
-    protected abstract void initData(Activity activity);
+    protected abstract void initData(Activity activity, Bundle savedInstanceState);
 
     /**
      * 初始化适配器
