@@ -70,6 +70,14 @@ public abstract class Framework_Adapter<T> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * 获取当前adapter持有的数据集合
+     *
+     * @return 当前adapter持有的数据集合
+     */
+    public ArrayList<T> getData() {
+        return data;
+    }
 
     @Override
     public int getCount() {
