@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +32,8 @@ import org.dcxz.designdigger.util.API;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 
 /**
@@ -71,6 +72,7 @@ public class Fragment_Following extends Framework_Fragment {
     private boolean refreshEnable = true;
 
     private Framework_Adapter<Entity_Shot> adapter;
+    private ArrayList<Entity_Shot> shots;
     /**
      * content的类型
      */
@@ -108,23 +110,31 @@ public class Fragment_Following extends Framework_Fragment {
         activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void initData(Activity activity) {
+    protected void initData(Activity activity, Bundle savedInstanceState) {
         gson = new Gson();
         type = new TypeToken<ArrayList<Entity_Shot>>() {
         }.getType();
+        if (savedInstanceState != null) {
+            Log.i(TAG, "initData: savedInstanceState != null");
+            shots = (ArrayList<Entity_Shot>) savedInstanceState.getSerializable(TAG);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            shots = new ArrayList<>();
+        }
     }
 
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_Main(activity, new ArrayList<Entity_Shot>());
+        adapter = new Adapter_Main(activity, shots);
         gridView.setAdapter(adapter);
     }
 
     @Override
     protected void initListener(Activity activity) {
-        ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
+        ptrFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 //判断用户是否已登录
@@ -216,8 +226,8 @@ public class Fragment_Following extends Framework_Fragment {
         connectionError.setVisibility(View.INVISIBLE);
         pageSelected = 1;//重置页码
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
-        Log.i(TAG, "onRefreshBegin: last request with TAG canceled");
-        Log.i(TAG, "onRefreshBegin: try pull to refresh");
+        Log.i(TAG, "doPullToRefresh: last request with TAG canceled");
+        Log.i(TAG, "doPullToRefresh: try pull to refresh");
         App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, pageSelected + ""),
                 new Response.Listener<String>() {
                     @Override
@@ -251,6 +261,11 @@ public class Fragment_Following extends Framework_Fragment {
 
     @Override
     public void handleMessageImp(Message msg) {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(TAG, adapter.getData());
     }
 
     @Override

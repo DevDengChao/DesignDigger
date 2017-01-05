@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,7 +57,7 @@ public class Fragment_Menu extends Framework_Fragment {
         };
     }
 
-    protected void initData(final Activity activity) {
+    protected void initData(final Activity activity, Bundle savedInstanceState) {
         manager = Dao_Manager.getInstance(activity);
         String accessToken = manager.getAccessToken();
         activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));

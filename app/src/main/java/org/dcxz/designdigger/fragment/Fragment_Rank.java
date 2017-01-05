@@ -3,6 +3,7 @@ package org.dcxz.designdigger.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -30,8 +31,8 @@ import org.dcxz.designdigger.util.API;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 
 /**
@@ -87,6 +88,7 @@ public class Fragment_Rank extends Framework_Fragment {
     private boolean refreshEnable = true;
 
     private Framework_Adapter<Entity_Shot> adapter;
+    private ArrayList<Entity_Shot> shots;
     /**
      * content的类型
      */
@@ -113,12 +115,20 @@ public class Fragment_Rank extends Framework_Fragment {
         gridView.setNumColumns(1);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void initData(Activity activity) {
+    protected void initData(Activity activity, Bundle savedInstanceState) {
         mapping();
         gson = new Gson();
         type = new TypeToken<ArrayList<Entity_Shot>>() {
         }.getType();
+        if (savedInstanceState != null) {
+            Log.i(TAG, "initData: savedInstanceState != null");
+            shots = (ArrayList<Entity_Shot>) savedInstanceState.getSerializable(TAG);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            shots = new ArrayList<>();
+        }
     }
 
     /**
@@ -157,16 +167,16 @@ public class Fragment_Rank extends Framework_Fragment {
         spinner_sort.setAdapter(new ArrayAdapter<>(activity, layoutID, sortKey));
         spinner_list.setAdapter(new ArrayAdapter<>(activity, layoutID, listKey));
         spinner_timeFrame.setAdapter(new ArrayAdapter<>(activity, layoutID, timeFrameKey));
-        adapter = new Adapter_Main(activity, new ArrayList<Entity_Shot>());
+        adapter = new Adapter_Main(activity,shots);
         gridView.setAdapter(adapter);
     }
 
     @Override
     protected void initListener(Activity activity) {
-        ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
+        ptrFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                reRequest();
+                doPullToRefresh();
                 Log.i(TAG, "onRefreshBegin: pull to refresh");
             }
 
@@ -185,7 +195,7 @@ public class Fragment_Rank extends Framework_Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sortSelected = sortValue[position];
                 progressBar.setVisibility(View.VISIBLE);
-                reRequest();
+                doPullToRefresh();
                 Log.i(TAG, "onItemSelected: sortSelected=" + sortSelected);
             }
 
@@ -199,7 +209,7 @@ public class Fragment_Rank extends Framework_Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 listSelected = listValue[position];
                 progressBar.setVisibility(View.VISIBLE);
-                reRequest();
+                doPullToRefresh();
                 Log.i(TAG, "onItemSelected: listSelected=" + listSelected);
             }
 
@@ -213,7 +223,7 @@ public class Fragment_Rank extends Framework_Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 timeFrameSelected = timeFrameValue[position];
                 progressBar.setVisibility(View.VISIBLE);
-                reRequest();
+                doPullToRefresh();
                 Log.i(TAG, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
             }
 
@@ -275,16 +285,16 @@ public class Fragment_Rank extends Framework_Fragment {
      * 或因为网络连接异常导致完全没有获得任何数据而需要再次请求合适的数据<br/>
      * 请务必注意此方法与onScroll()的调用顺序,并注意pageSelected变更的时机
      */
-    private void reRequest() {
+    private void doPullToRefresh() {
         pageSelected = 1;//重置页码
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
-        Log.i(TAG, "reRequest: last request with TAG canceled");
+        Log.i(TAG, "doPullToRefresh: last request with TAG canceled");
         App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
                 pageSelected + "", sortSelected, listSelected, timeFrameSelected),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "onResponse: reRequest refresh success at page " + pageSelected);
+                        Log.i(TAG, "onResponse: doPullToRefresh refresh success at page " + pageSelected);
                         refreshEnable = true;
                         pageSelected++;
                         ptrFrameLayout.refreshComplete();
@@ -303,7 +313,7 @@ public class Fragment_Rank extends Framework_Fragment {
                     public void onErrorResponse(VolleyError error) {
                         refreshEnable = true;
                         ptrFrameLayout.refreshComplete();
-                        Log.i(TAG, "onErrorResponse: reRequest refresh failed at page " + pageSelected);
+                        Log.i(TAG, "onErrorResponse: doPullToRefresh refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);
                         connectionError.setVisibility(View.VISIBLE);
                         toast(R.string.connection_error);
@@ -313,6 +323,11 @@ public class Fragment_Rank extends Framework_Fragment {
 
     @Override
     public void handleMessageImp(Message msg) {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(TAG,adapter.getData());
     }
 
     @Override

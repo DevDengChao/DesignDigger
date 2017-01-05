@@ -2,6 +2,7 @@ package org.dcxz.designdigger.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.Html;
 import android.view.View;
@@ -46,7 +47,7 @@ public class Fragment_Player extends Framework_Fragment {
     }
 
     @Override
-    protected void initData(Activity activity) {
+    protected void initData(Activity activity, Bundle savedInstanceState) {
 
     }
 

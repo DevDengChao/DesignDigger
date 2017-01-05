@@ -87,7 +87,6 @@ public class Activity_Main extends Framework_Activity {
                 return titles[position];
             }
         });
-        viewPager.setOffscreenPageLimit(fragments.length - 1);//保留Fragment状态
     }
 
     @Override
