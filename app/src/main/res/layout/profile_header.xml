@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@color/default_2">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/dribbble_ball_mark"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/profile_userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Visitor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/profile_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Location"
+        android:textColor="@color/default_1" />
+
+    <TextView
+        android:id="@+id/profile_introduction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Introduction" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_shotsCount"
+                style="@style/Fragment.Player.TextView"
+                android:text="0" />
+
+            <TextView
+                style="@style/Fragment.Player.TextView"
+                android:text="Shots" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_bucketsCount"
+                style="@style/Fragment.Player.TextView"
+                android:text="0" />
+
+            <TextView
+                style="@style/Fragment.Player.TextView"
+                android:text="Buckets" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_followersCount"
+                style="@style/Fragment.Player.TextView"
+                android:text="0" />
+
+            <TextView
+                style="@style/Fragment.Player.TextView"
+                android:text="Followers" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_followingCount"
+                style="@style/Fragment.Player.TextView"
+                android:text="0" />
+
+            <TextView
+                style="@style/Fragment.Player.TextView"
+                android:text="Following" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
