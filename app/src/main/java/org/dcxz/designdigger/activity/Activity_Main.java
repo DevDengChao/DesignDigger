@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.dao.Dao_Manager;
 import org.dcxz.designdigger.fragment.Fragment_Following;
 import org.dcxz.designdigger.fragment.Fragment_Profile;
 import org.dcxz.designdigger.fragment.Fragment_Rank;
@@ -84,7 +85,7 @@ public class Activity_Main extends Framework_Activity {
         fragments = new Framework_Fragment[count];
         fragments[0] = new Fragment_Following();
         fragments[1] = new Fragment_Rank();
-        fragments[2] = new Fragment_Profile();
+        fragments[2] = Fragment_Profile.newInstance(Dao_Manager.getInstance(this).getUser());
 
         titles = new String[count];
         titles[0] = "Following";

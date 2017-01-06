@@ -15,6 +15,8 @@ import org.dcxz.designdigger.view.AutoHeightGifImageView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -102,35 +104,52 @@ public class Adapter_Main extends Framework_Adapter<Entity_Shot> {
     /**
      * 静态内部类,避免引用
      */
-    private static class ViewHolder {
+    @SuppressWarnings("WeakerAccess")
+    static class ViewHolder {
+        /**
+         * 头像
+         */
+        @BindView(R.id.item_avatar)
         CircleImageView avatar;
+        /**
+         * 作品
+         */
+        @BindView(R.id.item_content)
         AutoHeightGifImageView content;
+        /**
+         * Gif控制按键
+         */
+        @BindView(R.id.item_gif)
         ImageView gif;
 
+        @BindView(R.id.item_rebound)
         TextView rebound;
+        @BindView(R.id.item_attachment)
         TextView attachment;
-
+        @BindView(R.id.item_view)
         TextView view;
+        @BindView(R.id.item_comment)
         TextView comment;
+        @BindView(R.id.item_like)
         TextView like;
-
+        /**
+         * 用户名
+         */
+        @BindView(R.id.item_userName)
         TextView userName;
+        /**
+         * 作品名
+         */
+        @BindView(R.id.item_title)
         TextView title;
+        /**
+         * 作品创作时间
+         */
+        @BindView(R.id.item_time)
         TextView time;
 
         ViewHolder(View convertView) {
-            avatar = (CircleImageView) convertView.findViewById(R.id.item_avatar);
-            content = (AutoHeightGifImageView) convertView.findViewById(R.id.item_content);
-            gif = (ImageView) convertView.findViewById(R.id.item_gif);
-            rebound = (TextView) convertView.findViewById(R.id.item_rebound);
-            attachment = (TextView) convertView.findViewById(R.id.item_attachment);
-            view = (TextView) convertView.findViewById(R.id.item_view);
-            comment = (TextView) convertView.findViewById(R.id.item_comment);
-            like = (TextView) convertView.findViewById(R.id.item_like);
-
-            userName = (TextView) convertView.findViewById(R.id.item_userName);
-            title = (TextView) convertView.findViewById(R.id.item_title);
-            time = (TextView) convertView.findViewById(R.id.item_time);
+            ButterKnife.bind(this, convertView);
         }
     }
 }

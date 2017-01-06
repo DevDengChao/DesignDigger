@@ -116,7 +116,22 @@ public class API {
         /**
          * 获取当前用户时使用的URL
          */
-        public static final String USER = ENTRY + "/user";
+        public static final String USER=ENTRY+"/user";
+        /**
+         * 获取指定用户时使用的URL<br/>
+         * 需要1个参数(UID),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String USERS = ENTRY + "/users/%s";
+        /**
+         * 获取当前用户的shots时使用的URL<br/>
+         * 需要1个参数(UID),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String USERS_SHOTS = USERS + "/shots";
+        /**
+         * 获取当前用户的shots时使用的URL<br/>
+         * 需要2个参数(UID,page),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String USERS_SHOTS_PAGE = USERS_SHOTS + "/?page=%s";
         /**
          * 按特定条件进行Shots请求(第一页)<br/>
          * 直接访问会获得popular,shots,now条件下的第一页的12个对象.
