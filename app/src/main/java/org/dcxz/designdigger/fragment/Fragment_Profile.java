@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.adapter.Adapter_Recycler;
+import org.dcxz.designdigger.adapter.Adapter_User;
 import org.dcxz.designdigger.entity.Entity_User;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 
@@ -20,7 +20,7 @@ import org.dcxz.designdigger.framework.Framework_Fragment;
 public class Fragment_Profile extends Framework_Fragment {
     public static final String TAG = "Fragment_Profile";
     private RecyclerView recyclerView;
-    private Adapter_Recycler adapter;
+    private Adapter_User adapter;
     private GridLayoutManager gridLayoutManager;
     private Entity_User user;
 
@@ -34,6 +34,7 @@ public class Fragment_Profile extends Framework_Fragment {
     public static Fragment_Profile newInstance(Entity_User user) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG, user);
+        //noinspection deprecation
         Fragment_Profile fragmentProfile = new Fragment_Profile();
         fragmentProfile.setArguments(bundle);
         return fragmentProfile;
@@ -41,7 +42,7 @@ public class Fragment_Profile extends Framework_Fragment {
 
     @Override
     protected int setContentViewImp() {
-        return R.layout.fragment_player;
+        return R.layout.fragment_profile;
     }
 
 
@@ -63,7 +64,7 @@ public class Fragment_Profile extends Framework_Fragment {
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_Recycler(activity.getLayoutInflater(), user);
+        adapter = new Adapter_User(activity.getLayoutInflater(), user);
         recyclerView.setAdapter(adapter);
     }
 
@@ -85,7 +86,7 @@ public class Fragment_Profile extends Framework_Fragment {
                                 refreshable = false;//上锁
                                 adapter.queryPage(
                                         page,
-                                        new Adapter_Recycler.OnQueryPageSuccessListener() {
+                                        new Adapter_User.OnQueryPageSuccessListener() {
                                             @Override
                                             public void onQueryPageSuccess() {
                                                 page++;
