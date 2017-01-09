@@ -5,12 +5,23 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
+import com.android.volley.Response;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.adapter.Adapter_User;
+import org.dcxz.designdigger.adapter.Adapter_Main2;
+import org.dcxz.designdigger.entity.Entity_Shot;
 import org.dcxz.designdigger.entity.Entity_User;
 import org.dcxz.designdigger.framework.Framework_Fragment;
+import org.dcxz.designdigger.util.API;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * <br/>
@@ -20,15 +31,23 @@ import org.dcxz.designdigger.framework.Framework_Fragment;
 public class Fragment_Profile extends Framework_Fragment {
     public static final String TAG = "Fragment_Profile";
     private RecyclerView recyclerView;
-    private Adapter_User adapter;
+    private Adapter_Main2 adapter;
     private GridLayoutManager gridLayoutManager;
     private Entity_User user;
+    /**
+     * ArrayList<Entity_Shot>的类型
+     */
+    private Type type;
+    private Gson gson;
 
     /**
      * Use {@link #newInstance(Entity_User)} instead.
      */
     @Deprecated()
     public Fragment_Profile() {
+        gson = new Gson();
+        type = new TypeToken<ArrayList<Entity_Shot>>() {
+        }.getType();
     }
 
     public static Fragment_Profile newInstance(Entity_User user) {
@@ -64,7 +83,7 @@ public class Fragment_Profile extends Framework_Fragment {
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_User(activity.getLayoutInflater(), user);
+        adapter = new Adapter_Main2(activity.getLayoutInflater(), new ArrayList<Entity_Shot>(), user);
         recyclerView.setAdapter(adapter);
     }
 
@@ -84,15 +103,24 @@ public class Fragment_Profile extends Framework_Fragment {
                         if (gridLayoutManager.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
                             if (refreshable) {
                                 refreshable = false;//上锁
-                                adapter.queryPage(
-                                        page,
-                                        new Adapter_User.OnQueryPageSuccessListener() {
+                                Log.i(TAG, "onScrolled: try refresh at page " + page);
+                                App.stringRequest(
+                                        String.format(API.EndPoint.USERS_SHOTS_PAGE, user.getId(), page),
+                                        new Response.Listener<String>() {
                                             @Override
-                                            public void onQueryPageSuccess() {
+                                            public void onResponse(String response) {
+                                                Log.i(TAG, "onResponse: query user's shots success at page " + page);
                                                 page++;
                                                 refreshable = true;//解锁
+                                                ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
+                                                for (Entity_Shot shot : shots) {
+                                                    //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
+                                                    shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
+                                                }
+                                                adapter.addDataToBottom(shots);
                                             }
-                                        });
+                                        },
+                                        null, TAG);
                             }
                         }
                     }
