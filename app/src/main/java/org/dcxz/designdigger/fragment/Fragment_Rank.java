@@ -96,7 +96,7 @@ public class Fragment_Rank extends Framework_Fragment {
     /**
      * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
      */
-    private boolean refreshEnable = true;
+    private boolean refreshable = true;
 
     private BaseRecyclerViewAdapter<Entity_Shot> adapter;
     private ArrayList<Entity_Shot> shots;
@@ -105,6 +105,7 @@ public class Fragment_Rank extends Framework_Fragment {
      */
     private Type type;
     private Gson gson;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     protected int setContentViewImp() {
@@ -116,7 +117,8 @@ public class Fragment_Rank extends Framework_Fragment {
     protected void initView(Activity activity, View view) {
         ptrFrameLayout.setPullToRefresh(true);
         ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
-        recyclerView.setLayoutManager(new GridLayoutManager(activity, 1));
+        gridLayoutManager = new GridLayoutManager(activity, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @SuppressWarnings("unchecked")
@@ -236,31 +238,25 @@ public class Fragment_Rank extends Framework_Fragment {
             }
         });
 
-        /*gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
+             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Rank#refreshable}<br/>
+             * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
+             */
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            *//**
-         * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
-         * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Rank#refreshEnable}<br/>
-         * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
-         *//*
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
-                    //当滑动到倒数第7个item以内时尝试加载新数据
-                    if (refreshEnable) {//状态锁,当前状态是否可以请求数据
-                        refreshEnable = false;
-                        Log.i(TAG, "onScroll: try onScroll refresh at page " + pageSelected);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (gridLayoutManager.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
+                    if (refreshable) {
+                        refreshable = false;//上锁
+                        Log.i(TAG, "onScrolled: try refresh at page " + pageSelected);
                         App.stringRequest(String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME,
                                 pageSelected + "", sortSelected, listSelected, timeFrameSelected),
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
                                         Log.i(TAG, "onResponse: onScroll refresh success at page " + pageSelected);
-                                        refreshEnable = true;//重置状态锁
+                                        refreshable = true;//重置状态锁
                                         pageSelected++;//更新页码
                                         ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
                                         for (Entity_Shot shot : shots) {
@@ -273,14 +269,14 @@ public class Fragment_Rank extends Framework_Fragment {
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        refreshEnable = true;//重置状态锁
+                                        refreshable = true;//重置状态锁
                                         Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + pageSelected);
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
                     }
                 }
             }
-        });*/
+        });
     }
 
     /**
@@ -298,7 +294,7 @@ public class Fragment_Rank extends Framework_Fragment {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "onResponse: doPullToRefresh refresh success at page " + pageSelected);
-                        refreshEnable = true;
+                        refreshable = true;
                         pageSelected++;
                         ptrFrameLayout.refreshComplete();
                         progressBar.setVisibility(View.INVISIBLE);
@@ -314,7 +310,7 @@ public class Fragment_Rank extends Framework_Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        refreshEnable = true;
+                        refreshable = true;
                         ptrFrameLayout.refreshComplete();
                         Log.i(TAG, "onErrorResponse: doPullToRefresh refresh failed at page " + pageSelected);
                         progressBar.setVisibility(View.INVISIBLE);

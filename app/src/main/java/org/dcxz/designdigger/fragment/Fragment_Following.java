@@ -8,10 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,8 +24,9 @@ import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.Activity_Login;
 import org.dcxz.designdigger.adapter.Adapter_Main;
+import org.dcxz.designdigger.adapter.Adapter_Main2;
 import org.dcxz.designdigger.entity.Entity_Shot;
-import org.dcxz.designdigger.framework.Framework_Adapter;
+import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 import org.dcxz.designdigger.framework.Framework_Fragment;
 import org.dcxz.designdigger.util.API;
 
@@ -55,8 +56,8 @@ public class Fragment_Following extends Framework_Fragment {
     /**
      * 展示内容用的GridView
      */
-    @BindView(R.id.fragment_main_gridView)
-    GridView gridView;
+    @BindView(R.id.fragment_main_recyclerView)
+    RecyclerView recyclerView;
     /**
      * 用于提示用户连接异常
      */
@@ -76,7 +77,7 @@ public class Fragment_Following extends Framework_Fragment {
      */
     private boolean refreshable = true;
 
-    private Framework_Adapter<Entity_Shot> adapter;
+    private BaseRecyclerViewAdapter<Entity_Shot> adapter;
     private ArrayList<Entity_Shot> shots;
     /**
      * ArrayList<Entity_Shot>的类型
@@ -87,6 +88,7 @@ public class Fragment_Following extends Framework_Fragment {
      * 检查用户登录状态的广播接收器
      */
     private BroadcastReceiver receiver;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     protected int setContentViewImp() {
@@ -101,7 +103,8 @@ public class Fragment_Following extends Framework_Fragment {
         view.findViewById(R.id.fragment_main_sort).setVisibility(View.GONE);
         view.findViewById(R.id.fragment_main_list).setVisibility(View.GONE);
         view.findViewById(R.id.fragment_main_timeFrame).setVisibility(View.GONE);
-        gridView.setNumColumns(1);
+        gridLayoutManager = new GridLayoutManager(activity, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -140,7 +143,7 @@ public class Fragment_Following extends Framework_Fragment {
 
     @Override
     protected void initAdapter(Activity activity) {
-        gridView.setAdapter(adapter = new Adapter_Main(activity, shots));
+        recyclerView.setAdapter(adapter = new Adapter_Main2(activity.getLayoutInflater(), shots));
     }
 
     @Override
@@ -162,27 +165,21 @@ public class Fragment_Following extends Framework_Fragment {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
                 //对gridView是否可滚动进行检测,当gridView无法向下滚动时允许进行下拉刷新
-                return !gridView.canScrollVertically(-1);
+                return !recyclerView.canScrollVertically(-1);
             }
         });
-
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             /**
              * 当GridView滑动到一定位置时自动进行新数据的请求<br/>
-             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Following#refreshable}<br/>
+             * 由于在滑动过程中会多次出发位置判定,因此需要额外进行状态判定{@link Fragment_Rank#refreshable}<br/>
              * 请求到数据后重置状态锁,将反射生成的数据进行修正后追加到内容池中
              */
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount >= totalItemCount - 6) {
-                    //当滑动到倒数第7个item以内时尝试加载新数据
-                    if (refreshable && isUserLogined()) {//状态锁,当前状态是否可以请求数据以及用户是否已登录
-                        refreshable = false;
-                        Log.i(TAG, "onScroll: try onScroll refresh at page " + pageSelected);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (gridLayoutManager.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
+                    if (refreshable) {
+                        refreshable = false;//上锁
+                        Log.i(TAG, "onScrolled: try refresh at page " + pageSelected);
                         App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
                                 pageSelected + ""),
                                 new Response.Listener<String>() {
@@ -206,7 +203,7 @@ public class Fragment_Following extends Framework_Fragment {
                                     public void onErrorResponse(VolleyError error) {
                                         refreshable = true;//重置状态锁
                                         progressBar.setVisibility(View.INVISIBLE);
-                                        if (adapter.getCount() == 0) {
+                                        if (adapter.getItemCount() == 0) {
                                             connectionError.setVisibility(View.VISIBLE);
                                         }
                                         Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + pageSelected);
@@ -216,6 +213,9 @@ public class Fragment_Following extends Framework_Fragment {
                 }
             }
         });
+        if (isUserLogined()) {//触发刷新事件(recyclerView不自动调用onScrolled())
+            doPullToRefresh();
+        }
     }
 
     /**
