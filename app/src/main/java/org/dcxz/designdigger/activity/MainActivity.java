@@ -15,21 +15,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.dao.Dao_Manager;
-import org.dcxz.designdigger.fragment.Fragment_Following;
-import org.dcxz.designdigger.fragment.Fragment_Profile;
-import org.dcxz.designdigger.fragment.Fragment_Rank;
-import org.dcxz.designdigger.framework.Framework_Activity;
-import org.dcxz.designdigger.framework.Framework_Fragment;
+import org.dcxz.designdigger.dao.DaoManager;
+import org.dcxz.designdigger.fragment.FollowingFragment;
+import org.dcxz.designdigger.fragment.ProfileFragment;
+import org.dcxz.designdigger.fragment.RankFragment;
+import org.dcxz.designdigger.framework.BaseActivity;
+import org.dcxz.designdigger.framework.BaseFragment;
 
 import butterknife.BindView;
 
-public class Activity_Main extends Framework_Activity {
+public class MainActivity extends BaseActivity {
     /**
      * 日志TAG
      */
     @SuppressWarnings("unused")
-    private static final String TAG = "Activity_Main";
+    private static final String TAG = "MainActivity";
     /**
      * 用于切换Fragment的ViewPager
      */
@@ -57,7 +57,7 @@ public class Activity_Main extends Framework_Activity {
     /**
      * 可用的Fragment
      */
-    private Framework_Fragment[] fragments;
+    private BaseFragment[] fragments;
     private BroadcastReceiver receiver;
 
     @Override
@@ -76,16 +76,16 @@ public class Activity_Main extends Framework_Activity {
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         };
-        registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
+        registerReceiver(receiver, new IntentFilter(LoginActivity.TAG));
     }
 
     @Override
     protected void initData() {
         int count = 3;
-        fragments = new Framework_Fragment[count];
-        fragments[0] = new Fragment_Following();
-        fragments[1] = new Fragment_Rank();
-        fragments[2] = Fragment_Profile.newInstance(Dao_Manager.getInstance(this).getUser());
+        fragments = new BaseFragment[count];
+        fragments[0] = new FollowingFragment();
+        fragments[1] = new RankFragment();
+        fragments[2] = ProfileFragment.newInstance(DaoManager.getInstance(this).getUser());
 
         titles = new String[count];
         titles[0] = "Following";

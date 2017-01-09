@@ -1,4 +1,4 @@
-package org.dcxz.designdigger.entity;
+package org.dcxz.designdigger.bean;
 
 import java.io.Serializable;
 
@@ -7,19 +7,19 @@ import java.io.Serializable;
  * Created by DC on 2016/12/21.<br/>
  */
 
-public class Entity_AccessToken implements Serializable {
+public class AccessTokenInfo implements Serializable {
     public static final long serialVersionUID = 0L;
     private String access_token;
     private String token_type;
     private String scope;
 
-    public Entity_AccessToken(String access_token, String token_type, String scope) {
+    public AccessTokenInfo(String access_token, String token_type, String scope) {
         this.access_token = access_token;
         this.token_type = token_type;
         this.scope = scope;
     }
 
-    public Entity_AccessToken() {
+    public AccessTokenInfo() {
     }
 
     public String getAccess_token() {
@@ -48,7 +48,7 @@ public class Entity_AccessToken implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity_AccessToken{" +
+        return "AccessTokenInfo{" +
                 "access_token='" + access_token + '\'' +
                 ", token_type='" + token_type + '\'' +
                 ", scope='" + scope + '\'' +

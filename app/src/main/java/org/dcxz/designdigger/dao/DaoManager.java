@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 
-import org.dcxz.designdigger.entity.Entity_User;
+import org.dcxz.designdigger.bean.UserInfo;
 import org.dcxz.designdigger.util.API;
 
 import java.io.File;
@@ -22,11 +22,7 @@ import java.io.FileOutputStream;
  * <pre>
  * </pre>
  */
-public class Dao_Manager {
-    /**
-     * 是否第一次启动应用
-     */
-    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+public class DaoManager {
     /**
      * 动态口令
      */
@@ -42,46 +38,27 @@ public class Dao_Manager {
     /**
      * 单例模式
      */
-    private static Dao_Manager instance;
+    private static DaoManager instance;
     private static SharedPreferences preferences;
     /**
      * 当前应用的文件目录
      */
     private static File fileDir;
 
-    private Dao_Manager(Context context) {
+    private DaoManager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
         fileDir = context.getFilesDir();
     }
 
-    public static Dao_Manager getInstance(Context context) {
+    public static DaoManager getInstance(Context context) {
         if (instance == null) {
-            synchronized (Dao_Manager.class) {
+            synchronized (DaoManager.class) {
                 if (instance == null) {
-                    instance = new Dao_Manager(context);
+                    instance = new DaoManager(context);
                 }
             }
         }
         return instance;
-    }
-
-    /**
-     * 是否第一次启动应用
-     *
-     * @return 是否第一次启动应用
-     */
-    public boolean isFirstLaunch() {
-        return preferences.getBoolean(IS_FIRST_LAUNCH, true);
-    }
-
-    /**
-     * 修改第一次启动应用的判定值
-     *
-     * @param firstLaunch 判定值
-     * @return 是否修改成功
-     */
-    public boolean setFirstLaunch(boolean firstLaunch) {
-        return preferences.edit().putBoolean(IS_FIRST_LAUNCH, firstLaunch).commit();
     }
 
     /**
@@ -123,10 +100,10 @@ public class Dao_Manager {
      *
      * @return 当前用户
      */
-    public Entity_User getUser() {
+    public UserInfo getUser() {
         String json = preferences.getString(USER, null);
         if (json != null) {
-            return new Gson().fromJson(json, Entity_User.class);
+            return new Gson().fromJson(json, UserInfo.class);
         }
         return null;
     }
@@ -160,25 +137,4 @@ public class Dao_Manager {
         }
     }
 
-    /**
-     * 获取布尔值
-     *
-     * @param key          关键字
-     * @param defaultValue 默认值
-     * @return 关键字在配置文件中对应的布尔值;
-     */
-    public boolean getBoolean(String key, boolean defaultValue) {
-        return preferences.getBoolean(key, defaultValue);
-    }
-
-    /**
-     * 存入布尔值
-     *
-     * @param key  关键字
-     * @param flag 将要存入的值
-     * @return 是否存入成功
-     */
-    public boolean putBoolean(String key, boolean flag) {
-        return preferences.edit().putBoolean(key, flag).commit();
-    }
 }

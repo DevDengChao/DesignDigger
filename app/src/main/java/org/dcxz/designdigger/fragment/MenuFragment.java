@@ -14,11 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.activity.Activity_Login;
-import org.dcxz.designdigger.dao.Dao_Manager;
-import org.dcxz.designdigger.framework.Framework_Fragment;
+import org.dcxz.designdigger.activity.LoginActivity;
+import org.dcxz.designdigger.app.App;
+import org.dcxz.designdigger.dao.DaoManager;
+import org.dcxz.designdigger.framework.BaseFragment;
 import org.dcxz.designdigger.util.API;
 
 /**
@@ -29,9 +29,9 @@ import org.dcxz.designdigger.util.API;
  * </pre>
  */
 
-public class Fragment_Menu extends Framework_Fragment {
-    public static final String TAG = "Fragment_Menu";
-    private Dao_Manager manager;
+public class MenuFragment extends BaseFragment {
+    public static final String TAG = "MenuFragment";
+    private DaoManager manager;
     private ImageView avatar;
     private TextView signUp, signIn, signOut;
     private TextView settings;
@@ -58,9 +58,9 @@ public class Fragment_Menu extends Framework_Fragment {
     }
 
     protected void initData(final Activity activity, Bundle savedInstanceState) {
-        manager = Dao_Manager.getInstance(activity);
+        manager = DaoManager.getInstance(activity);
         String accessToken = manager.getAccessToken();
-        activity.registerReceiver(receiver, new IntentFilter(Activity_Login.TAG));
+        activity.registerReceiver(receiver, new IntentFilter(LoginActivity.TAG));
         isUserLogined(!accessToken.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT));
 
         dialog = new AlertDialog.Builder(activity)
@@ -118,7 +118,7 @@ public class Fragment_Menu extends Framework_Fragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(activity, Activity_Login.class).putExtra("STATE", Fragment_Menu.TAG));
+                startActivity(new Intent(activity, LoginActivity.class).putExtra("STATE", MenuFragment.TAG));
             }
         });
         signOut.setOnClickListener(new View.OnClickListener() {

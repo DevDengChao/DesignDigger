@@ -1,4 +1,4 @@
-package org.dcxz.designdigger;
+package org.dcxz.designdigger.app;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -17,7 +17,8 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.dcxz.designdigger.dao.Dao_Manager;
+import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.dao.DaoManager;
 import org.dcxz.designdigger.util.API;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class App extends Application {
      * 访问DribbbleAPI必要的头信息
      */
     private static HashMap<String, String> header;
-    private static Dao_Manager manager;
+    private static DaoManager manager;
 
     /**
      * 获取请求队列
@@ -185,7 +186,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         queue = Volley.newRequestQueue(this);
-        manager = Dao_Manager.getInstance(this);
+        manager = DaoManager.getInstance(this);
         header = new HashMap<>();
         header.put("Accept", "application/json");
         header.put("Accept-Charset", "utf-8");

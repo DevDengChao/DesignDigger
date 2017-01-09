@@ -18,18 +18,18 @@ import butterknife.Unbinder;
  * Created by DC on 2016/12/12.<br/>
  */
 
-public abstract class Framework_Fragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     /**
      * Framework_Fragment持有的Framework_Handler对象,为子类提供消息机制接口
      */
-    protected Framework_Handler handler;
+    protected BaseHandler handler;
     private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(setContentViewImp(), container, false);
         unbinder = ButterKnife.bind(this, view);
-        handler = new Framework_Handler(this);
+        handler = new BaseHandler(this);
         Activity activity = getActivity();
         initView(activity, view);
         initData(activity, savedInstanceState);

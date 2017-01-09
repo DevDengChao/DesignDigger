@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 import butterknife.ButterKnife;
 
-public abstract class Framework_Activity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * {@link #startActivity(Class, Serializable)}存取数据时,用到的关键字
@@ -24,13 +24,13 @@ public abstract class Framework_Activity extends AppCompatActivity {
     /**
      * Framework_Activity持有的Framework_Handler对象,为子类提供消息机制接口
      */
-    protected Framework_Handler handler;
+    protected BaseHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        handler = new Framework_Handler(this);
+        handler = new BaseHandler(this);
 
         setContentView(setContentViewImp());
     }
@@ -92,7 +92,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      *
      * @param c 将要前往的Activity
      */
-    protected void startActivity(Class<? extends Framework_Activity> c) {
+    protected void startActivity(Class<? extends BaseActivity> c) {
         startActivity(new Intent(this, c));
     }
 
@@ -102,7 +102,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param c            将要前往的Activity
      * @param serializable 需要传递的Serializable对象
      */
-    protected void startActivity(Class<? extends Framework_Activity> c, Serializable serializable) {
+    protected void startActivity(Class<? extends BaseActivity> c, Serializable serializable) {
         Intent intent = new Intent(this, c);
         intent.putExtra(SERIALIZABLE, serializable);
         startActivity(intent);
@@ -114,7 +114,7 @@ public abstract class Framework_Activity extends AppCompatActivity {
      * @param c     将要前往的Activity
      * @param state 需要传递的状态信息
      */
-    protected void startActivity(Class<? extends Framework_Activity> c, String state) {
+    protected void startActivity(Class<? extends BaseActivity> c, String state) {
         Intent intent = new Intent(this, c);
         intent.putExtra(STATE, state);
         startActivity(intent);

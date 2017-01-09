@@ -1,104 +1,75 @@
-package org.dcxz.designdigger.entity;
+package org.dcxz.designdigger.bean;
 
 import java.io.Serializable;
 
 /**
+ * 团队实体
  * <br/>
  * Created by DC on 2016/12/13.<br/>
  */
-public class Entity_User implements Serializable {
+@SuppressWarnings({"WeakerAccess", "unused"})
+public class TeamInfo implements Serializable {
     public static final long serialVersionUID = 0L;
-    /**
-     * id
-     */
+
     private int id;
-    /**
-     * 姓名
-     */
+
     private String name;
-    /**
-     * 用户名
-     */
-    private String username;
-    /**
-     * 用户在Dribbble上的主页
-     */
+
     private String html_url;
-    /**
-     * 头像地址
-     */
+
     private String avatar_url;
-    /**
-     * bio,something like this:
-     * <p>
-     * Co-founder &amp; designer of
-     * <a href=\"https://dribbble.com/dribbble\">@Dribbble</a>.
-     * Principal of SimpleBits. Aspiring clawhammer banjoist.
-     */
+
     private String bio;
-    /**
-     * 住址
-     */
+
     private String location;
-    /**
-     * 链接地址
-     */
-    private Entity_Links links;
-    /**
-     * 总球桶数
-     */
+
+    private LinkInfo links;
+
     private int buckets_count;
-    /**
-     * 总评论数
-     */
+
     private int comments_received_count;
-    /**
-     * 总粉丝数
-     */
+
     private int followers_count;
-    /**
-     * 总关注数
-     */
+
     private int followings_count;
+
     private int likes_count;
+
     private int likes_received_count;
-    /**
-     * 总项目数
-     */
+
+    private int members_count;
+
     private int projects_count;
-    /**
-     * "打篮板"
-     */
+
     private int rebounds_received_count;
-    /**
-     * 总作品数
-     */
+
     private int shots_count;
-    /**
-     * 总团队数
-     */
-    private int teams_count;
-    /**
-     * 是否可上传作品
-     */
+
     private boolean can_upload_shot;
-    /**
-     * 用户类型
-     */
+
     private String type;
-    /**
-     * 是不是职业用户
-     */
+
     private boolean pro;
+
     private String buckets_url;
+
     private String followers_url;
+
+    private String following_url;
+
     private String likes_url;
+
+    private String members_url;
+
     private String shots_url;
-    private String teams_url;
+
+    private String team_shots_url;
+
     private String created_at;
+
     private String updated_at;
 
-    public Entity_User() {
+    public TeamInfo() {
     }
 
     public int getId() {
@@ -115,14 +86,6 @@ public class Entity_User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getHtml_url() {
@@ -157,11 +120,11 @@ public class Entity_User implements Serializable {
         this.location = location;
     }
 
-    public Entity_Links getLinks() {
+    public LinkInfo getLinks() {
         return links;
     }
 
-    public void setLinks(Entity_Links links) {
+    public void setLinks(LinkInfo links) {
         this.links = links;
     }
 
@@ -213,6 +176,14 @@ public class Entity_User implements Serializable {
         this.likes_received_count = likes_received_count;
     }
 
+    public int getMembers_count() {
+        return members_count;
+    }
+
+    public void setMembers_count(int members_count) {
+        this.members_count = members_count;
+    }
+
     public int getProjects_count() {
         return projects_count;
     }
@@ -235,14 +206,6 @@ public class Entity_User implements Serializable {
 
     public void setShots_count(int shots_count) {
         this.shots_count = shots_count;
-    }
-
-    public int getTeams_count() {
-        return teams_count;
-    }
-
-    public void setTeams_count(int teams_count) {
-        this.teams_count = teams_count;
     }
 
     public boolean isCan_upload_shot() {
@@ -285,12 +248,28 @@ public class Entity_User implements Serializable {
         this.followers_url = followers_url;
     }
 
+    public String getFollowing_url() {
+        return following_url;
+    }
+
+    public void setFollowing_url(String following_url) {
+        this.following_url = following_url;
+    }
+
     public String getLikes_url() {
         return likes_url;
     }
 
     public void setLikes_url(String likes_url) {
         this.likes_url = likes_url;
+    }
+
+    public String getMembers_url() {
+        return members_url;
+    }
+
+    public void setMembers_url(String members_url) {
+        this.members_url = members_url;
     }
 
     public String getShots_url() {
@@ -301,12 +280,12 @@ public class Entity_User implements Serializable {
         this.shots_url = shots_url;
     }
 
-    public String getTeams_url() {
-        return teams_url;
+    public String getTeam_shots_url() {
+        return team_shots_url;
     }
 
-    public void setTeams_url(String teams_url) {
-        this.teams_url = teams_url;
+    public void setTeam_shots_url(String team_shots_url) {
+        this.team_shots_url = team_shots_url;
     }
 
     public String getCreated_at() {
@@ -327,10 +306,9 @@ public class Entity_User implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity_User{" +
+        return "TeamInfo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
                 ", html_url='" + html_url + '\'' +
                 ", avatar_url='" + avatar_url + '\'' +
                 ", bio='" + bio + '\'' +
@@ -342,18 +320,20 @@ public class Entity_User implements Serializable {
                 ", followings_count=" + followings_count +
                 ", likes_count=" + likes_count +
                 ", likes_received_count=" + likes_received_count +
+                ", members_count=" + members_count +
                 ", projects_count=" + projects_count +
                 ", rebounds_received_count=" + rebounds_received_count +
                 ", shots_count=" + shots_count +
-                ", teams_count=" + teams_count +
                 ", can_upload_shot=" + can_upload_shot +
                 ", type='" + type + '\'' +
                 ", pro=" + pro +
                 ", buckets_url='" + buckets_url + '\'' +
                 ", followers_url='" + followers_url + '\'' +
+                ", following_url='" + following_url + '\'' +
                 ", likes_url='" + likes_url + '\'' +
+                ", members_url='" + members_url + '\'' +
                 ", shots_url='" + shots_url + '\'' +
-                ", teams_url='" + teams_url + '\'' +
+                ", team_shots_url='" + team_shots_url + '\'' +
                 ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
                 '}';

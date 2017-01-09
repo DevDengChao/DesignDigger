@@ -1,4 +1,4 @@
-package org.dcxz.designdigger.entity;
+package org.dcxz.designdigger.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by DC on 2016/12/13.<br/>
  */
 
-public class Entity_Shot implements Serializable {
+public class ShotInfo implements Serializable {
     public static final long serialVersionUID = 0L;
     /**
      * id,int类型应该足够了.
@@ -35,7 +35,7 @@ public class Entity_Shot implements Serializable {
     /**
      * 图像对象
      */
-    private Entity_Images images;
+    private ImageInfo images;
     /**
      * 总浏览数
      */
@@ -107,13 +107,13 @@ public class Entity_Shot implements Serializable {
     /**
      * 用户对象
      */
-    private Entity_User user;
+    private UserInfo user;
     /**
      * 所属团队
      */
-    private Entity_Team team;
+    private TeamInfo team;
 
-    public Entity_Shot() {
+    public ShotInfo() {
     }
 
     public int getId() {
@@ -156,11 +156,11 @@ public class Entity_Shot implements Serializable {
         this.height = height;
     }
 
-    public Entity_Images getImages() {
+    public ImageInfo getImages() {
         return images;
     }
 
-    public void setImages(Entity_Images images) {
+    public void setImages(ImageInfo images) {
         this.images = images;
     }
 
@@ -302,25 +302,25 @@ public class Entity_Shot implements Serializable {
         this.tags = tags;
     }
 
-    public Entity_User getUser() {
+    public UserInfo getUser() {
         return user;
     }
 
-    public void setUser(Entity_User user) {
+    public void setUser(UserInfo user) {
         this.user = user;
     }
 
-    public Entity_Team getTeam() {
+    public TeamInfo getTeam() {
         return team;
     }
 
-    public void setTeam(Entity_Team team) {
+    public void setTeam(TeamInfo team) {
         this.team = team;
     }
 
     @Override
     public String toString() {
-        return "Entity_Shot{" +
+        return "ShotInfo{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

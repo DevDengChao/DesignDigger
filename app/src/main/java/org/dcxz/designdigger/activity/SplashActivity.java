@@ -3,7 +3,7 @@ package org.dcxz.designdigger.activity;
 import android.os.Message;
 
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.framework.Framework_Activity;
+import org.dcxz.designdigger.framework.BaseActivity;
 
 /**
  * <br/>
@@ -13,12 +13,12 @@ import org.dcxz.designdigger.framework.Framework_Activity;
  * </pre>
  */
 
-public class Activity_Splash extends Framework_Activity {
+public class SplashActivity extends BaseActivity {
     /**
      * 日志Tag
      */
     @SuppressWarnings("unused")
-    private static final String TAG = "Activity_Splash";
+    private static final String TAG = "SplashActivity";
     /**
      * what:跳转至Activity_Main
      */
@@ -52,7 +52,7 @@ public class Activity_Splash extends Framework_Activity {
     @Override
     public void handleMessageImp(Message msg) {
         if (msg.what == TO_MAIN_ACTIVITY) {
-            startActivity(Activity_Main.class);
+            startActivity(MainActivity.class);
             finish();
         }
     }

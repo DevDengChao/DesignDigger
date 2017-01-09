@@ -12,12 +12,12 @@ import com.android.volley.Response;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.adapter.Adapter_Main2;
-import org.dcxz.designdigger.entity.Entity_Shot;
-import org.dcxz.designdigger.entity.Entity_User;
-import org.dcxz.designdigger.framework.Framework_Fragment;
+import org.dcxz.designdigger.adapter.ShotsAdapter;
+import org.dcxz.designdigger.app.App;
+import org.dcxz.designdigger.bean.ShotInfo;
+import org.dcxz.designdigger.bean.UserInfo;
+import org.dcxz.designdigger.framework.BaseFragment;
 import org.dcxz.designdigger.util.API;
 
 import java.lang.reflect.Type;
@@ -28,33 +28,33 @@ import java.util.ArrayList;
  * Created by DC on 2017/1/2.<br/>
  */
 
-public class Fragment_Profile extends Framework_Fragment {
-    public static final String TAG = "Fragment_Profile";
+public class ProfileFragment extends BaseFragment {
+    public static final String TAG = "ProfileFragment";
     private RecyclerView recyclerView;
-    private Adapter_Main2 adapter;
+    private ShotsAdapter adapter;
     private GridLayoutManager gridLayoutManager;
-    private Entity_User user;
+    private UserInfo user;
     /**
-     * ArrayList<Entity_Shot>的类型
+     * ArrayList<ShotInfo>的类型
      */
     private Type type;
     private Gson gson;
 
     /**
-     * Use {@link #newInstance(Entity_User)} instead.
+     * Use {@link #newInstance(UserInfo)} instead.
      */
     @Deprecated()
-    public Fragment_Profile() {
+    public ProfileFragment() {
         gson = new Gson();
-        type = new TypeToken<ArrayList<Entity_Shot>>() {
+        type = new TypeToken<ArrayList<ShotInfo>>() {
         }.getType();
     }
 
-    public static Fragment_Profile newInstance(Entity_User user) {
+    public static ProfileFragment newInstance(UserInfo user) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG, user);
         //noinspection deprecation
-        Fragment_Profile fragmentProfile = new Fragment_Profile();
+        ProfileFragment fragmentProfile = new ProfileFragment();
         fragmentProfile.setArguments(bundle);
         return fragmentProfile;
     }
@@ -75,15 +75,15 @@ public class Fragment_Profile extends Framework_Fragment {
     @Override
     protected void initData(Activity activity, Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            user = (Entity_User) savedInstanceState.getSerializable(TAG);
+            user = (UserInfo) savedInstanceState.getSerializable(TAG);
         } else {
-            user = (Entity_User) getArguments().getSerializable(TAG);
+            user = (UserInfo) getArguments().getSerializable(TAG);
         }
     }
 
     @Override
     protected void initAdapter(Activity activity) {
-        adapter = new Adapter_Main2(activity.getLayoutInflater(), new ArrayList<Entity_Shot>(), user);
+        adapter = new ShotsAdapter(activity.getLayoutInflater(), new ArrayList<ShotInfo>(), user);
         recyclerView.setAdapter(adapter);
     }
 
@@ -112,8 +112,8 @@ public class Fragment_Profile extends Framework_Fragment {
                                                 Log.i(TAG, "onResponse: query user's shots success at page " + page);
                                                 page++;
                                                 refreshable = true;//解锁
-                                                ArrayList<Entity_Shot> shots = gson.fromJson(response, type);
-                                                for (Entity_Shot shot : shots) {
+                                                ArrayList<ShotInfo> shots = gson.fromJson(response, type);
+                                                for (ShotInfo shot : shots) {
                                                     //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
                                                     shot.setCreated_at(shot.getCreated_at().replace("T", " ").replace("Z", ""));
                                                 }

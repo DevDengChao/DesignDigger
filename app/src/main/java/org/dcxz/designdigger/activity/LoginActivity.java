@@ -17,13 +17,12 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.dao.Dao_Manager;
-import org.dcxz.designdigger.entity.Entity_AccessToken;
-import org.dcxz.designdigger.entity.Entity_User;
-import org.dcxz.designdigger.fragment.Fragment_Menu;
-import org.dcxz.designdigger.framework.Framework_Activity;
+import org.dcxz.designdigger.app.App;
+import org.dcxz.designdigger.bean.AccessTokenInfo;
+import org.dcxz.designdigger.bean.UserInfo;
+import org.dcxz.designdigger.dao.DaoManager;
+import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.util.API;
 import org.json.JSONObject;
 
@@ -36,12 +35,8 @@ import butterknife.BindView;
  * Created by DC on 2016/12/21.<br/>
  */
 
-public class Activity_Login extends Framework_Activity {
-    public static final String TAG = "Activity_Login";
-    /**
-     * what:跳转至Activity_Splash
-     */
-    private static final int TO_ACTIVITY_SPLASH = 0;
+public class LoginActivity extends BaseActivity {
+    public static final String TAG = "LoginActivity";
     /**
      * what:跳转至Activity_Main
      */
@@ -55,13 +50,9 @@ public class Activity_Login extends Framework_Activity {
     @BindView(R.id.login_progressBar)
     ProgressBar progressBar;
     /**
-     * 标识哪个Activity唤醒了这个Activity,用于区分跳转目标
-     */
-    private String extraString;
-    /**
      * 用于从文件中存取数据
      */
-    private Dao_Manager manager;
+    private DaoManager manager;
 
     @Override
     protected int setContentViewImp() {
@@ -71,12 +62,10 @@ public class Activity_Login extends Framework_Activity {
     @SuppressWarnings("deprecation")
     @Override
     protected void initView() {
-        manager = Dao_Manager.getInstance(Activity_Login.this);
-        extraString = getIntent().getStringExtra(STATE);
-        if (extraString.equals(Fragment_Menu.TAG)) {//从Fragment_Menu启动,说明是注销后再登录,因此需要清理前一个用户的登录信息
-            CookieManager.getInstance().removeAllCookie();
-            Log.i(TAG, "initView: Cookie cleared");
-        }
+        manager = DaoManager.getInstance(LoginActivity.this);
+        //从Fragment_Menu启动,说明是注销后再登录,因此需要清理前一个用户的登录信息
+        CookieManager.getInstance().removeAllCookie();
+        Log.i(TAG, "initView: Cookie cleared");
 
         // TODO: 2016/12/22 优化:WebView+JS实现登录 http://www.jb51.net/article/84957.htm
         webView.setWebViewClient(
@@ -120,7 +109,7 @@ public class Activity_Login extends Framework_Activity {
                                         new Response.Listener<JSONObject>() {
                                             @Override
                                             public void onResponse(JSONObject response) {
-                                                Entity_AccessToken token = new Gson().fromJson(response.toString(), Entity_AccessToken.class);
+                                                AccessTokenInfo token = new Gson().fromJson(response.toString(), AccessTokenInfo.class);
                                                 String access_token = token.getAccess_token();
                                                 //Log.i(TAG, "onResponse: token=" + access_token);
                                                 manager.setAccessToken(access_token);//登录成功,更新文件中的口令
@@ -165,7 +154,7 @@ public class Activity_Login extends Framework_Activity {
                     @Override
                     public void onResponse(String response) {
                         manager.setUser(response);
-                        Entity_User user = new Gson().fromJson(response, Entity_User.class);
+                        UserInfo user = new Gson().fromJson(response, UserInfo.class);
                         Log.i(TAG, "onResponse: UserName=" + user.getUsername() + " UID=" + user.getId());
                         App.getQueue().add(
                                 new ImageRequest(user.getAvatar_url(),
@@ -192,12 +181,7 @@ public class Activity_Login extends Framework_Activity {
                                                 toast(R.string.Download_avatar_failed_Connection_Error);
                                             }
                                         }));
-                        Log.i(TAG, "onResponse: start this activity form " + extraString);
-                        if (extraString.equals(Fragment_Menu.TAG)) {
-                            handler.sendEmptyMessage(TO_ACTIVITY_MAIN);
-                        } else if (extraString.equals(Activity_FirstLaunch.TAG)) {
-                            handler.sendEmptyMessage(TO_ACTIVITY_SPLASH);
-                        }
+                        handler.sendEmptyMessage(TO_ACTIVITY_MAIN);
                     }
                 },
                 new Response.ErrorListener() {
@@ -228,11 +212,8 @@ public class Activity_Login extends Framework_Activity {
     @Override
     public void handleMessageImp(Message msg) {
         switch (msg.what) {
-            case TO_ACTIVITY_SPLASH:
-                startActivity(Activity_Splash.class);
-                break;
             case TO_ACTIVITY_MAIN:
-                startActivity(Activity_Main.class);
+                startActivity(MainActivity.class);
                 break;
         }
         finish();

@@ -1,4 +1,4 @@
-package org.dcxz.designdigger.entity;
+package org.dcxz.designdigger.bean;
 
 import java.io.Serializable;
 
@@ -6,7 +6,8 @@ import java.io.Serializable;
  * <br/>
  * Created by DC on 2016/12/13.<br/>
  */
-public class Entity_Links implements Serializable {
+@SuppressWarnings("WeakerAccess")
+public class LinkInfo implements Serializable {
     public static final long serialVersionUID = 0L;
 
     /**
@@ -17,6 +18,9 @@ public class Entity_Links implements Serializable {
      * 推特地址
      */
     private String twitter;
+
+    public LinkInfo() {
+    }
 
     public String getWeb() {
         return web;
@@ -34,12 +38,9 @@ public class Entity_Links implements Serializable {
         this.twitter = twitter;
     }
 
-    public Entity_Links() {
-    }
-
     @Override
     public String toString() {
-        return "Entity_Links{" +
+        return "LinkInfo{" +
                 "web='" + web + '\'' +
                 ", twitter='" + twitter + '\'' +
                 '}';

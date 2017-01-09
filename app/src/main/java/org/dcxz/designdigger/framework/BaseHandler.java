@@ -9,15 +9,16 @@ import android.os.Message;
  * Created by DC on 2016/12/12.<br/>
  */
 
-public class Framework_Handler extends Handler {
-    private Framework_Activity activity;
-    private Framework_Fragment fragment;
+@SuppressWarnings("WeakerAccess")
+public class BaseHandler extends Handler {
+    private BaseActivity activity;
+    private BaseFragment fragment;
 
-    public Framework_Handler(Framework_Activity activity) {
+    public BaseHandler(BaseActivity activity) {
         this.activity = activity;
     }
 
-    public Framework_Handler(Framework_Fragment fragment) {
+    public BaseHandler(BaseFragment fragment) {
         this.fragment = fragment;
     }
 

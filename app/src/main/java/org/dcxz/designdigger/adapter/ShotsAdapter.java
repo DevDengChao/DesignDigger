@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.dcxz.designdigger.App;
 import org.dcxz.designdigger.R;
-import org.dcxz.designdigger.entity.Entity_Shot;
-import org.dcxz.designdigger.entity.Entity_User;
+import org.dcxz.designdigger.app.App;
+import org.dcxz.designdigger.bean.ShotInfo;
+import org.dcxz.designdigger.bean.UserInfo;
 import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 import org.dcxz.designdigger.view.AutoHeightGifImageView;
 
@@ -30,17 +30,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * </pre>
  */
 
-public class Adapter_Main2 extends BaseRecyclerViewAdapter<Entity_Shot> {
-    public static final String TAG = "Adapter_Main2";
+public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
+    public static final String TAG = "ShotsAdapter";
     private static final int HEADER = 0;
     private static final int NORMAL = 1;
-    private Entity_User user = null;
+    private UserInfo user = null;
 
-    public Adapter_Main2(LayoutInflater inflater, ArrayList<Entity_Shot> data) {
+    public ShotsAdapter(LayoutInflater inflater, ArrayList<ShotInfo> data) {
         super(inflater, data);
     }
 
-    public Adapter_Main2(LayoutInflater inflater, ArrayList<Entity_Shot> data, Entity_User user) {
+    public ShotsAdapter(LayoutInflater inflater, ArrayList<ShotInfo> data, UserInfo user) {
         super(inflater, data);
         this.user = user;
     }
@@ -56,8 +56,8 @@ public class Adapter_Main2 extends BaseRecyclerViewAdapter<Entity_Shot> {
     }
 
     @Override
-    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<Entity_Shot> data) {
-        Entity_Shot temp;
+    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<ShotInfo> data) {
+        ShotInfo temp;
         if (user == null) {//没有用户对象,只显示item
             temp = data.get(position);
             String imagePath = temp.getImages().getNormal();
@@ -70,7 +70,7 @@ public class Adapter_Main2 extends BaseRecyclerViewAdapter<Entity_Shot> {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateViewHolder(ViewHolder viewHolder, Entity_Shot temp, String imagePath) {
+    private void updateViewHolder(ViewHolder viewHolder, ShotInfo temp, String imagePath) {
         viewHolder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
         App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, TAG);
 
@@ -123,13 +123,24 @@ public class Adapter_Main2 extends BaseRecyclerViewAdapter<Entity_Shot> {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * 头像
+         */
         @BindView(R.id.item_avatar)
         CircleImageView avatar;
+        /**
+         * 作品
+         */
         @BindView(R.id.item_content)
         AutoHeightGifImageView content;
+        /**
+         * Gif控制按键
+         */
         @BindView(R.id.item_gif)
         ImageView gif;
+
         @BindView(R.id.item_rebound)
         TextView rebound;
         @BindView(R.id.item_attachment)
@@ -140,20 +151,40 @@ public class Adapter_Main2 extends BaseRecyclerViewAdapter<Entity_Shot> {
         TextView comment;
         @BindView(R.id.item_like)
         TextView like;
+        /**
+         * 用户名
+         */
         @BindView(R.id.item_userName)
         TextView userName;
+        /**
+         * 作品名
+         */
         @BindView(R.id.item_title)
         TextView title;
+        /**
+         * 作品创作时间
+         */
         @BindView(R.id.item_time)
         TextView time;
 
+        /**
+         * 没有用户对象时使用的构造器
+         *
+         * @param itemView 将要修改的视图
+         */
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        /**
+         * 有用户对象时使用的构造器,会产生类似ListView头部的结构
+         *
+         * @param itemView 将要修改的视图
+         * @param user     用户对象
+         */
         @SuppressLint("SetTextI18n")
-        ViewHolder(View itemView, Entity_User user) {
+        ViewHolder(View itemView, UserInfo user) {
             super(itemView);
             App.imageRequest(user.getAvatar_url(), (CircleImageView) itemView.findViewById(R.id.profile_avatar), TAG);// TODO: 2017/1/6 test this
             ((TextView) itemView.findViewById(R.id.profile_bucketsCount)).setText(user.getBuckets_count() + "");
