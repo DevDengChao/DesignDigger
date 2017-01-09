@@ -37,8 +37,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class Adapter_Recycler extends RecyclerView.Adapter {
-    public static final String TAG = "Adapter_Recycler";
+public class Adapter_User extends RecyclerView.Adapter {
+    public static final String TAG = "Adapter_User";
     public static final int HEADER = 0;
     public static final int NORMAL = 1;
     //    public static final int FOOTER = 2;
@@ -59,9 +59,9 @@ public class Adapter_Recycler extends RecyclerView.Adapter {
     private Type type;
     private Gson gson;
 
-    public Adapter_Recycler(LayoutInflater inflater, Entity_User user) {
+    public Adapter_User(LayoutInflater inflater, Entity_User user) {
         this.inflater = inflater;
-        Adapter_Recycler.user = user;
+        Adapter_User.user = user;
         data = new ArrayList<>();
         gson = new Gson();
         type = new TypeToken<ArrayList<Entity_Shot>>() {
@@ -96,14 +96,14 @@ public class Adapter_Recycler extends RecyclerView.Adapter {
     }
 
     @Override
-    public Adapter_Recycler.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case HEADER:
                 headerView = inflater.inflate(R.layout.profile_header, parent, false);
-                return new Adapter_Recycler.Holder(headerView);
+                return new ViewHolder(headerView);
             default:
                 normalView = inflater.inflate(R.layout.item, parent, false);
-                return new Adapter_Recycler.Holder(normalView);
+                return new ViewHolder(normalView);
         }
     }
 
@@ -112,43 +112,43 @@ public class Adapter_Recycler extends RecyclerView.Adapter {
         if (position != 0) {
             Entity_Shot temp = data.get(position - 1);
             String imagePath = temp.getImages().getNormal();
-            initView((Adapter_Recycler.Holder) holder, temp, imagePath);
+            initViewHolder((ViewHolder) holder, temp, imagePath);
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private void initView(Adapter_Recycler.Holder holder, Entity_Shot temp, String imagePath) {
-        holder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
-        App.imageRequest(temp.getUser().getAvatar_url(), holder.avatar, TAG);
+    private void initViewHolder(ViewHolder viewHolder, Entity_Shot temp, String imagePath) {
+        viewHolder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
+        App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, TAG);
 
-        holder.content.setImageResource(R.mipmap.item_content);//使用图像占位,避免重用过程中出现图像突变现象
-        holder.content.setTag(imagePath);
+        viewHolder.content.setImageResource(R.mipmap.item_content);//使用图像占位,避免重用过程中出现图像突变现象
+        viewHolder.content.setTag(imagePath);
         if (temp.isAnimated()) {
-            App.gifRequest(imagePath, holder.content, holder.gif, TAG);
-            holder.gif.setVisibility(View.VISIBLE);
+            App.gifRequest(imagePath, viewHolder.content, viewHolder.gif, TAG);
+            viewHolder.gif.setVisibility(View.VISIBLE);
         } else {
-            App.imageRequest(imagePath, holder.content, TAG);
-            holder.gif.setVisibility(View.INVISIBLE);
-            holder.gif.setOnClickListener(null);
+            App.imageRequest(imagePath, viewHolder.content, TAG);
+            viewHolder.gif.setVisibility(View.INVISIBLE);
+            viewHolder.gif.setOnClickListener(null);
         }
         if (temp.getRebounds_count() == 0) {
-            holder.rebound.setVisibility(View.INVISIBLE);
+            viewHolder.rebound.setVisibility(View.INVISIBLE);
         } else {
-            holder.rebound.setVisibility(View.VISIBLE);
-            holder.attachment.setText(temp.getRebounds_count() + "");
+            viewHolder.rebound.setVisibility(View.VISIBLE);
+            viewHolder.attachment.setText(temp.getRebounds_count() + "");
         }
         if (temp.getAttachments_count() == 0) {
-            holder.attachment.setVisibility(View.INVISIBLE);
+            viewHolder.attachment.setVisibility(View.INVISIBLE);
         } else {
-            holder.attachment.setVisibility(View.VISIBLE);
-            holder.attachment.setText(temp.getAttachments_count() + "");
+            viewHolder.attachment.setVisibility(View.VISIBLE);
+            viewHolder.attachment.setText(temp.getAttachments_count() + "");
         }
-        holder.view.setText(temp.getViews_count() + "");// 1 -> "1"
-        holder.comment.setText(temp.getComments_count() + "");
-        holder.like.setText(temp.getLikes_count() + "");
-        holder.userName.setText(temp.getUser().getUsername());
-        holder.title.setText(temp.getTitle());
-        holder.time.setText(temp.getCreated_at());
+        viewHolder.view.setText(temp.getViews_count() + "");// 1 -> "1"
+        viewHolder.comment.setText(temp.getComments_count() + "");
+        viewHolder.like.setText(temp.getLikes_count() + "");
+        viewHolder.userName.setText(temp.getUser().getUsername());
+        viewHolder.title.setText(temp.getTitle());
+        viewHolder.time.setText(temp.getCreated_at());
     }
 
 
@@ -166,7 +166,7 @@ public class Adapter_Recycler extends RecyclerView.Adapter {
         }
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_avatar)
         CircleImageView avatar;
         @BindView(R.id.item_content)
@@ -192,7 +192,7 @@ public class Adapter_Recycler extends RecyclerView.Adapter {
 
         @SuppressWarnings("deprecation")
         @SuppressLint("SetTextI18n")
-        Holder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             if (headerView == itemView && user != null) {
                 App.imageRequest(user.getAvatar_url(), (CircleImageView) itemView.findViewById(R.id.profile_avatar), TAG);// TODO: 2017/1/6 test this
