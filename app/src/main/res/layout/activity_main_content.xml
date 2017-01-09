@@ -2,44 +2,34 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <!--fixme Toolbar-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_main_toolBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!--fixme Toolbar-->
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/activity_main_toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.5" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|snap" />
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_main_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/activity_main_viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+    <android.support.design.widget.TabLayout
+        android:id="@+id/activity_main_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/default_2"
+        app:tabSelectedTextColor="@color/default_5"
+        app:tabTextColor="@color/default_7" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/activity_main_tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabSelectedTextColor="@color/default_5"
-            app:tabTextColor="@color/default_7" />
-    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
