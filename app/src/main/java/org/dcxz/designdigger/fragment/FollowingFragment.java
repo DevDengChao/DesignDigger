@@ -1,7 +1,6 @@
 package org.dcxz.designdigger.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +24,8 @@ import org.dcxz.designdigger.activity.LoginActivity;
 import org.dcxz.designdigger.adapter.ShotsAdapter;
 import org.dcxz.designdigger.app.App;
 import org.dcxz.designdigger.bean.ShotInfo;
+import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
-import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 import org.dcxz.designdigger.util.API;
 
 import java.lang.reflect.Type;
@@ -53,7 +52,7 @@ public class FollowingFragment extends BaseFragment {
     @BindView(R.id.fragment_main_progressBar)
     ProgressBar progressBar;
     /**
-     * 展示内容用的GridView
+     * 展示内容用的RecyclerView
      */
     @BindView(R.id.fragment_main_recyclerView)
     RecyclerView recyclerView;
@@ -70,13 +69,16 @@ public class FollowingFragment extends BaseFragment {
     /**
      * 被选中的页面
      */
-    private int pageSelected = 1;
+    private int page = 1;
     /**
-     * 滑动过程中的状态锁,控制gridView滑动到指定位置时只发送一次数据请求
+     * 滑动过程中的状态锁,控制recyclerView滑动到指定位置时只发送一次数据请求
      */
     private boolean refreshable = true;
 
-    private BaseRecyclerViewAdapter<ShotInfo> adapter;
+    private ShotsAdapter adapter;
+    /**
+     * adapter持有的数据集合
+     */
     private ArrayList<ShotInfo> shots;
     /**
      * ArrayList<ShotInfo>的类型
@@ -88,20 +90,21 @@ public class FollowingFragment extends BaseFragment {
      */
     private BroadcastReceiver receiver;
     private GridLayoutManager gridLayoutManager;
+    /**
+     * 实例化以后是否需要刷新数据
+     */
+    private boolean needRefresh;
 
     @Override
     protected int setContentViewImp() {
-        return R.layout.fragment_main;
+        return R.layout.fragment_main_content;
     }
 
     @SuppressLint("InflateParams")
     @Override
-    protected void initView(Activity activity, View view) {
+    protected void initView(BaseActivity activity, View view) {
         ptrFrameLayout.setPullToRefresh(true);
         ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
-        view.findViewById(R.id.fragment_main_sort).setVisibility(View.GONE);
-        view.findViewById(R.id.fragment_main_list).setVisibility(View.GONE);
-        view.findViewById(R.id.fragment_main_timeFrame).setVisibility(View.GONE);
         gridLayoutManager = new GridLayoutManager(activity, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
         receiver = new BroadcastReceiver() {
@@ -126,7 +129,7 @@ public class FollowingFragment extends BaseFragment {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void initData(Activity activity, Bundle savedInstanceState) {
+    protected void initData(BaseActivity activity, Bundle savedInstanceState) {
         gson = new Gson();
         type = new TypeToken<ArrayList<ShotInfo>>() {
         }.getType();
@@ -134,19 +137,21 @@ public class FollowingFragment extends BaseFragment {
             Log.i(TAG, "initData: savedInstanceState != null");
             shots = (ArrayList<ShotInfo>) savedInstanceState.getSerializable(TAG);
             progressBar.setVisibility(View.INVISIBLE);
+            needRefresh = false;//已有数据,不需要重复请求
         } else {
             shots = new ArrayList<>();
+            needRefresh = true;//没有数据,需要请求新数据
         }
     }
 
 
     @Override
-    protected void initAdapter(Activity activity) {
-        recyclerView.setAdapter(adapter = new ShotsAdapter(activity.getLayoutInflater(), shots));
+    protected void initAdapter(BaseActivity activity) {
+        recyclerView.setAdapter(adapter = new ShotsAdapter(activity, shots, null));
     }
 
     @Override
-    protected void initListener(Activity activity) {
+    protected void initListener(BaseActivity activity) {
         ptrFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
@@ -163,7 +168,7 @@ public class FollowingFragment extends BaseFragment {
              */
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                //对gridView是否可滚动进行检测,当gridView无法向下滚动时允许进行下拉刷新
+                //对recyclerView是否可滚动进行检测,当recyclerView无法向下滚动时允许进行下拉刷新
                 return !recyclerView.canScrollVertically(-1);
             }
         });
@@ -178,15 +183,15 @@ public class FollowingFragment extends BaseFragment {
                 if (gridLayoutManager.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
                     if (refreshable) {
                         refreshable = false;//上锁
-                        Log.i(TAG, "onScrolled: try refresh at page " + pageSelected);
+                        Log.i(TAG, "onScrolled: try refresh at page " + page);
                         App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE,
-                                pageSelected + ""),
+                                page + ""),
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
-                                        Log.i(TAG, "onResponse: onScroll refresh success at page " + pageSelected);
+                                        Log.i(TAG, "onResponse: onScroll refresh success at page " + page);
                                         refreshable = true;//重置状态锁
-                                        pageSelected++;//更新页码
+                                        page++;//更新页码
                                         progressBar.setVisibility(View.INVISIBLE);
                                         connectionError.setVisibility(View.INVISIBLE);
                                         ArrayList<ShotInfo> shots = gson.fromJson(response, type);
@@ -205,14 +210,14 @@ public class FollowingFragment extends BaseFragment {
                                         if (adapter.getItemCount() == 0) {
                                             connectionError.setVisibility(View.VISIBLE);
                                         }
-                                        Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + pageSelected);
+                                        Log.i(TAG, "onErrorResponse: onScroll refresh failed at page " + page);
                                     }
                                 }, TAG);//标记这个请求,因为它可能会被用户的操作取消
                     }
                 }
             }
         });
-        if (isUserLogined()) {//触发刷新事件(recyclerView不自动调用onScrolled())
+        if (isUserLogined() && needRefresh) {//触发刷新事件(recyclerView不自动调用onScrolled())
             doPullToRefresh();
         }
     }
@@ -224,9 +229,7 @@ public class FollowingFragment extends BaseFragment {
         if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
             return true;
         } else {
-            if (getUserVisibleHint()) {
-                toast(R.string.youAreNotLoginYet);
-            }
+            toast(R.string.youAreNotLoginYet);
             connectionError.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             return false;
@@ -237,17 +240,17 @@ public class FollowingFragment extends BaseFragment {
      * 执行一次下拉刷新
      */
     private void doPullToRefresh() {
-        pageSelected = 1;//重置页码
+        page = 1;//重置页码
         App.getQueue().cancelAll(TAG);//取消尚未完成的请求
         Log.i(TAG, "doPullToRefresh: last request with TAG canceled");
         Log.i(TAG, "doPullToRefresh: try pull to refresh");
-        App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, pageSelected + ""),
+        App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page + ""),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "onResponse: pull to refresh success at page " + pageSelected);
+                        Log.i(TAG, "onResponse: pull to refresh success at page " + page);
                         refreshable = true;
-                        pageSelected++;
+                        page++;
                         ptrFrameLayout.refreshComplete();
                         connectionError.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -264,7 +267,7 @@ public class FollowingFragment extends BaseFragment {
                     public void onErrorResponse(VolleyError error) {
                         refreshable = true;
                         ptrFrameLayout.refreshComplete();
-                        Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + pageSelected);
+                        Log.i(TAG, "onErrorResponse: pull to refresh failed at page " + page);
                         progressBar.setVisibility(View.INVISIBLE);
                         connectionError.setVisibility(View.VISIBLE);
                     }

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_2"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,44 +22,10 @@
             style="@style/Fragment.Visitor.Spinner" />
 
     </LinearLayout>
-    <!--下拉刷新需要的布局-->
-    <in.srain.cube.views.ptr.PtrFrameLayout
-        android:id="@+id/fragment_main_ptrFrameLayout"
+    <!--主要内容部分-->
+    <include
+        layout="@layout/fragment_main_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_main_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:scrollbars="none" />
-            <!--提示用户网络连接异常,允许用户点击这个TextView来触发请求-->
-            <!--todo: use toast instead of this-->
-            <TextView
-                android:id="@+id/fragment_main_connectionError"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:drawableTop="@drawable/connection_error"
-                android:gravity="center"
-                android:paddingBottom="200dp"
-                android:paddingTop="200dp"
-                android:visibility="invisible" />
-
-            <ProgressBar
-                android:id="@+id/fragment_main_progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminateDrawable="@drawable/progress_rotate" />
-        </RelativeLayout>
-    </in.srain.cube.views.ptr.PtrFrameLayout>
+        android:layout_weight="1" />
 </LinearLayout>
