@@ -16,9 +16,8 @@ import android.support.v7.widget.Toolbar;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.dao.DaoManager;
-import org.dcxz.designdigger.fragment.FollowingFragment;
+import org.dcxz.designdigger.fragment.MainFragment;
 import org.dcxz.designdigger.fragment.ProfileFragment;
-import org.dcxz.designdigger.fragment.RankFragment;
 import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
 
@@ -83,8 +82,8 @@ public class MainActivity extends BaseActivity {
     protected void initData() {
         int count = 3;
         fragments = new BaseFragment[count];
-        fragments[0] = new FollowingFragment();
-        fragments[1] = new RankFragment();
+        fragments[0] = MainFragment.newInstance(false);
+        fragments[1] = MainFragment.newInstance(true);
         fragments[2] = ProfileFragment.newInstance(DaoManager.getInstance(this).getUser());
 
         titles = new String[count];
