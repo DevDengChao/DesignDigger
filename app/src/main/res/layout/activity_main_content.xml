@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/default_2"
         app:tabSelectedTextColor="@color/default_5"
         app:tabTextColor="@color/default_7" />
 
