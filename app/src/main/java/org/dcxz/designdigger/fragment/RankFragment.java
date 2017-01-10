@@ -115,7 +115,7 @@ public class RankFragment extends BaseFragment {
     @Override
     protected void initView(BaseActivity activity, View view) {
         ptrFrameLayout.setPullToRefresh(true);
-        ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.header, null));
+        ptrFrameLayout.setHeaderView(activity.getLayoutInflater().inflate(R.layout.refresh_header, null));
         gridLayoutManager = new GridLayoutManager(activity, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
     }

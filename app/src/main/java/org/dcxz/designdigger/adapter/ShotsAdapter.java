@@ -52,7 +52,7 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
     protected RecyclerView.ViewHolder onCreateViewHolderImp(ViewGroup parent, int viewType, LayoutInflater inflater) {
         switch (viewType) {
             case HEADER:
-                return new ViewHolder(inflater.inflate(R.layout.profile_header, parent, false), user);
+                return new ViewHolder(inflater.inflate(R.layout.item_header, parent, false), user);
             default:
                 return new ViewHolder(inflater.inflate(R.layout.item, parent, false));
         }
