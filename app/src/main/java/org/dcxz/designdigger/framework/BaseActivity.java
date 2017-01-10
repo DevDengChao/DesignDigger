@@ -102,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param c            将要前往的Activity
      * @param serializable 需要传递的Serializable对象
      */
-    protected void startActivity(Class<? extends BaseActivity> c, Serializable serializable) {
+    public void startActivity(Class<? extends BaseActivity> c, Serializable serializable) {
         Intent intent = new Intent(this, c);
         intent.putExtra(SERIALIZABLE, serializable);
         startActivity(intent);

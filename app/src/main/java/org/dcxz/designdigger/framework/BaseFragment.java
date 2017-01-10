@@ -1,6 +1,5 @@
 package org.dcxz.designdigger.framework;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -30,7 +29,7 @@ public abstract class BaseFragment extends Fragment {
         View view = inflater.inflate(setContentViewImp(), container, false);
         unbinder = ButterKnife.bind(this, view);
         handler = new BaseHandler(this);
-        Activity activity = getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         initView(activity, view);
         initData(activity, savedInstanceState);
         initAdapter(activity);
@@ -51,7 +50,7 @@ public abstract class BaseFragment extends Fragment {
      * @param activity 当前活动
      * @param view     将要显示的控件
      */
-    protected abstract void initView(Activity activity, View view);
+    protected abstract void initView(BaseActivity activity, View view);
 
     /**
      * 收集数据
@@ -59,21 +58,21 @@ public abstract class BaseFragment extends Fragment {
      * @param activity           当前活动
      * @param savedInstanceState 上一个实例保存的状态
      */
-    protected abstract void initData(Activity activity, Bundle savedInstanceState);
+    protected abstract void initData(BaseActivity activity, Bundle savedInstanceState);
 
     /**
      * 初始化适配器
      *
      * @param activity 当前活动
      */
-    protected abstract void initAdapter(Activity activity);
+    protected abstract void initAdapter(BaseActivity activity);
 
     /**
      * 为控件添加时间监听
      *
      * @param activity 当前活动
      */
-    protected abstract void initListener(Activity activity);
+    protected abstract void initListener(BaseActivity activity);
 
     /**
      * 消息机制接口,处理由{@link #handler}发送的消息
@@ -88,7 +87,7 @@ public abstract class BaseFragment extends Fragment {
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
-        if (getActivity() != null) {
+        if (getActivity() != null && getUserVisibleHint()) {//activity依然活跃并且当前fragment对用户可见
             Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT).show();
         }
     }

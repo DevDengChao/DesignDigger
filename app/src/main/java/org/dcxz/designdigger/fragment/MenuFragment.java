@@ -1,6 +1,5 @@
 package org.dcxz.designdigger.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +17,7 @@ import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.LoginActivity;
 import org.dcxz.designdigger.app.App;
 import org.dcxz.designdigger.dao.DaoManager;
+import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
 import org.dcxz.designdigger.util.API;
 
@@ -43,7 +43,7 @@ public class MenuFragment extends BaseFragment {
         return R.layout.fragment_menu;
     }
 
-    protected void initView(Activity activity, View view) {
+    protected void initView(BaseActivity activity, View view) {
         avatar = (ImageView) view.findViewById(R.id.menu_avatar);
         signUp = (TextView) view.findViewById(R.id.menu_signUp);
         signIn = (TextView) view.findViewById(R.id.menu_signIn);
@@ -57,7 +57,7 @@ public class MenuFragment extends BaseFragment {
         };
     }
 
-    protected void initData(final Activity activity, Bundle savedInstanceState) {
+    protected void initData(final BaseActivity activity, Bundle savedInstanceState) {
         manager = DaoManager.getInstance(activity);
         String accessToken = manager.getAccessToken();
         activity.registerReceiver(receiver, new IntentFilter(LoginActivity.TAG));
@@ -99,10 +99,10 @@ public class MenuFragment extends BaseFragment {
         }
     }
 
-    protected void initAdapter(Activity activity) {
+    protected void initAdapter(BaseActivity activity) {
     }
 
-    protected void initListener(final Activity activity) {
+    protected void initListener(final BaseActivity activity) {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
