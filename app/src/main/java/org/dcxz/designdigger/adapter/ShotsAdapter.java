@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.activity.ProfileActivity;
 import org.dcxz.designdigger.app.App;
 import org.dcxz.designdigger.bean.ShotInfo;
 import org.dcxz.designdigger.bean.UserInfo;
+import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 import org.dcxz.designdigger.view.AutoHeightGifImageView;
 
@@ -34,14 +36,15 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
     public static final String TAG = "ShotsAdapter";
     private static final int HEADER = 0;
     private static final int NORMAL = 1;
-    private UserInfo user = null;
+    private UserInfo user;
 
-    public ShotsAdapter(LayoutInflater inflater, ArrayList<ShotInfo> data) {
-        super(inflater, data);
-    }
-
-    public ShotsAdapter(LayoutInflater inflater, ArrayList<ShotInfo> data, UserInfo user) {
-        super(inflater, data);
+    /**
+     * @param activity 用于获取layoutInflater,设置监听器
+     * @param data     适配器持有的数据集合
+     * @param user     null:只显示Shots;not null:显示头部布局以及Shots
+     */
+    public ShotsAdapter(BaseActivity activity, ArrayList<ShotInfo> data, UserInfo user) {
+        super(activity, data);
         this.user = user;
     }
 
@@ -56,24 +59,35 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
     }
 
     @Override
-    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<ShotInfo> data) {
+    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<ShotInfo> data, BaseActivity activity) {
         ShotInfo temp;
         if (user == null) {//没有用户对象,只显示item
             temp = data.get(position);
             String imagePath = temp.getImages().getNormal();
-            updateViewHolder((ViewHolder) holder, temp, imagePath);
+            updateViewHolder((ViewHolder) holder, temp, imagePath, activity);
         } else if (position != 0) {//有用户对象且不是头部,更新viewHolder
             temp = data.get(position - 1);//由于头部的存在,需要修正对应关系
             String imagePath = temp.getImages().getNormal();
-            updateViewHolder((ViewHolder) holder, temp, imagePath);
+            updateViewHolder((ViewHolder) holder, temp, imagePath, activity);
         }//有用户对象且是头部,什么也不做
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateViewHolder(ViewHolder viewHolder, ShotInfo temp, String imagePath) {
+    private void updateViewHolder(ViewHolder viewHolder, final ShotInfo temp, String imagePath, final BaseActivity activity) {
         viewHolder.avatar.setImageResource(R.drawable.progress_rotate);//使用图像占位,避免重用过程中出现图像突变现象
-        App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, TAG);
-
+        if (temp.getUser() == null) {//当点击头像进入profileFragment时,服务器返回的信息中不包含user数据
+            viewHolder.avatar.setVisibility(View.GONE);
+        } else {//普通请求包含user数据
+            viewHolder.avatar.setVisibility(View.VISIBLE);
+            App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, TAG);
+            viewHolder.avatar.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.startActivity(ProfileActivity.class, temp.getUser());
+                        }
+                    });
+        }
         viewHolder.content.setImageResource(R.mipmap.item_content);//使用图像占位,避免重用过程中出现图像突变现象
         viewHolder.content.setTag(imagePath);
         if (temp.isAnimated()) {
@@ -99,7 +113,12 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         viewHolder.view.setText(temp.getViews_count() + "");// 1 -> "1"
         viewHolder.comment.setText(temp.getComments_count() + "");
         viewHolder.like.setText(temp.getLikes_count() + "");
-        viewHolder.userName.setText(temp.getUser().getUsername());
+        if (temp.getUser() == null) {//当点击头像进入profileFragment时,服务器返回的信息中不包含user数据
+            viewHolder.userName.setVisibility(View.GONE);
+        } else {//普通请求包含user数据
+            viewHolder.userName.setVisibility(View.VISIBLE);
+            viewHolder.userName.setText(temp.getUser().getUsername());
+        }
         viewHolder.title.setText(temp.getTitle());
         viewHolder.time.setText(temp.getCreated_at());
     }
