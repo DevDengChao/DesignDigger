@@ -18,6 +18,6 @@
 **涉及的第三方库**
 * Volley
 * Gson
-* FlipView
 * CircleImageView
 * GifImageView
+* Ultra-PullToRefresh
