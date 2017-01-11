@@ -9,7 +9,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_margin="16dp"
         android:src="@mipmap/dribbble_ball_mark" />
 
     <TextView
@@ -25,8 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Location"
-        android:textColor="@color/default_1" />
+        android:text="Location" />
 
     <TextView
         android:id="@+id/profile_introduction"
