@@ -223,11 +223,11 @@ public class MainFragment extends BaseFragment {
         enableHeadView = args.getBoolean(ENABLE_HEAD_VIEW);
         userInfo = (UserInfo) args.getSerializable(USER_INFO);
 
-        subTag = enableHeadView ? ":Profile" : ":Following";
-        if (enableFilter) {//允许内容筛选
+        subTag = enableHeadView ? "Profile" : "Following";
+        if (enableFilter) {//Rank允许内容筛选
             initFilterData();
-            subTag = ":Rank";
-        } else {
+            subTag = "Rank";
+        } else {//Following & Profile
             listFilter.setVisibility(View.GONE);
             sortFilter.setVisibility(View.GONE);
             timeFrameFilter.setVisibility(View.GONE);
@@ -240,7 +240,7 @@ public class MainFragment extends BaseFragment {
                                 doPullToRefresh();
                                 break;
                             case MenuFragment.TAG:
-                                App.getQueue().cancelAll(TAG + subTag);
+                                App.getQueue().cancelAll(subTag);
                                 isUserLogined();
                                 break;
                         }
@@ -255,7 +255,7 @@ public class MainFragment extends BaseFragment {
 
         shots = new ArrayList<>();
         if (savedInstanceState != null) {//再实例化,需要修正数据集合
-            Log.i(TAG + subTag, "initData: savedInstanceState != null");
+            Log.i(TAG + ":" + subTag, "initData: savedInstanceState != null");
             shots = (ArrayList<ShotInfo>) savedInstanceState.getSerializable(SHOTS);
             progressBar.setVisibility(View.INVISIBLE);
             needForceRefresh = false;
@@ -321,14 +321,14 @@ public class MainFragment extends BaseFragment {
                 if (!enableFilter && !enableHeadView) {//试图刷新Following时需要检查用户是否已登录
                     if (isUserLogined()) {
                         doPullToRefresh();
-                        Log.i(TAG + subTag, "onRefreshBegin: pull to refresh");
+                        Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh");
                     } else {
                         ptrFrameLayout.refreshComplete();
-                        Log.i(TAG + subTag, "onRefreshBegin: pull to refresh cancelled");
+                        Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh cancelled");
                     }
                 } else {
                     doPullToRefresh();
-                    Log.i(TAG + subTag, "onRefreshBegin: pull to refresh");
+                    Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh");
                 }
             }
 
@@ -348,7 +348,7 @@ public class MainFragment extends BaseFragment {
             private Response.Listener<String> scrollRefreshSuccess = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i(TAG + subTag, "onResponse: onScroll refresh success at page " + page);
+                    Log.i(TAG + ":" + subTag, "onResponse: onScroll refresh success at page " + page);
                     refreshable = true;//重置状态锁
                     progressBar.setVisibility(View.INVISIBLE);
                     page++;//更新页码
@@ -367,7 +367,7 @@ public class MainFragment extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     refreshable = true;//重置状态锁
-                    Log.i(TAG + subTag, "onErrorResponse: onScroll refresh failed at page " + page);
+                    Log.i(TAG + ":" + subTag, "onErrorResponse: onScroll refresh failed at page " + page);
                 }
             };
 
@@ -381,17 +381,17 @@ public class MainFragment extends BaseFragment {
                 if (gridLayoutManager.findLastVisibleItemPosition() > adapter.getItemCount() - 6) {
                     if (refreshable) {
                         refreshable = false;//上锁
-                        Log.i(TAG + subTag, "onScrolled: try refresh at page " + page);
+                        Log.i(TAG + ":" + subTag, "onScrolled: try refresh at page " + page);
                         if (enableFilter) {
                             App.stringRequest(
                                     String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME, page + "", sortSelected, listSelected, timeFrameSelected),
-                                    scrollRefreshSuccess, scrollRefreshFailed, TAG + subTag);//标记这个请求,因为它可能会被用户的操作取消
+                                    scrollRefreshSuccess, scrollRefreshFailed, subTag);//标记这个请求,因为它可能会被用户的操作取消
                         } else if (enableHeadView) {
                             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),
-                                    scrollRefreshSuccess, scrollRefreshFailed, TAG + subTag);
+                                    scrollRefreshSuccess, scrollRefreshFailed, subTag);
                         } else {
                             App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page + ""),
-                                    scrollRefreshSuccess, scrollRefreshFailed, TAG + subTag);
+                                    scrollRefreshSuccess, scrollRefreshFailed, subTag);
                         }
                     }
                 }
@@ -399,13 +399,13 @@ public class MainFragment extends BaseFragment {
         });
 
         if (needForceRefresh && getUserVisibleHint()) {
-            if (!enableFilter && !enableHeadView) {
+            if (!enableFilter && !enableHeadView) {//Following
                 if (isUserLogined()) {
-                    Log.i(TAG + subTag, "initListener: force refreshing");
+                    Log.i(TAG + ":" + subTag, "initListener: force refreshing");
                     doPullToRefresh();
                 }
-            } else {
-                Log.i(TAG + subTag, "initListener: force refreshing");
+            } else {//Rank & Profile
+                Log.i(TAG + ":" + subTag, "initListener: force refreshing");
                 doPullToRefresh();
             }
         }
@@ -419,9 +419,9 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sortSelected = sortValues[position];
-                progressBar.setVisibility(View.VISIBLE);// fixme: 2017/1/11 logic
+                progressBar.setVisibility(View.VISIBLE);
                 doPullToRefresh();
-                Log.i(TAG + subTag, "onItemSelected: sortSelected=" + sortSelected);
+                Log.i(TAG + ":" + subTag, "onItemSelected: sortSelected=" + sortSelected);
             }
 
             @Override
@@ -435,7 +435,7 @@ public class MainFragment extends BaseFragment {
                 listSelected = listValues[position];
                 progressBar.setVisibility(View.VISIBLE);
                 doPullToRefresh();
-                Log.i(TAG + subTag, "onItemSelected: listSelected=" + listSelected);
+                Log.i(TAG + ":" + subTag, "onItemSelected: listSelected=" + listSelected);
             }
 
             @Override
@@ -449,7 +449,7 @@ public class MainFragment extends BaseFragment {
                 timeFrameSelected = timeFrameValues[position];
                 progressBar.setVisibility(View.VISIBLE);
                 doPullToRefresh();
-                Log.i(TAG + subTag, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
+                Log.i(TAG + ":" + subTag, "onItemSelected: timeFrameSelected=" + timeFrameSelected);
             }
 
             @Override
@@ -483,7 +483,7 @@ public class MainFragment extends BaseFragment {
         Response.Listener<String> ptrSuccess = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {//下拉刷新成功时调用的监听器
-                Log.i(TAG + subTag, "onResponse: doPullToRefresh refresh success at page " + page);
+                Log.i(TAG + ":" + subTag, "onResponse: doPullToRefresh refresh success at page " + page);
                 refreshable = true;
                 page++;
                 ptrFrameLayout.refreshComplete();
@@ -502,25 +502,25 @@ public class MainFragment extends BaseFragment {
             public void onErrorResponse(VolleyError error) {//下拉刷新失败时调用的监听器
                 refreshable = true;
                 ptrFrameLayout.refreshComplete();
-                Log.i(TAG + subTag, "onErrorResponse: doPullToRefresh refresh failed at page " + page);
+                Log.i(TAG + ":" + subTag, "onErrorResponse: doPullToRefresh refresh failed at page " + page);
                 progressBar.setVisibility(View.INVISIBLE);
                 connectionError.setVisibility(View.VISIBLE);
                 toast(R.string.connection_error);
             }
         };
-        App.getQueue().cancelAll(TAG + subTag);//取消尚未完成的请求
-        Log.i(TAG + subTag, "doPullToRefresh: last request with TAG=\"" + TAG + subTag + "\" canceled");
+        App.getQueue().cancelAll(subTag);//取消尚未完成的请求
+        Log.i(TAG + ":" + subTag, "doPullToRefresh: last request with TAG=\"" + subTag + "\" canceled");
 
         if (enableFilter) {
             App.stringRequest(
-                    String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME, page + "", sortSelected, listSelected, timeFrameSelected),
-                    ptrSuccess, ptrFailed, TAG + subTag);
+                    String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME, page, sortSelected, listSelected, timeFrameSelected),
+                    ptrSuccess, ptrFailed, subTag);
         } else if (enableHeadView) {
             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),
-                    ptrSuccess, ptrFailed, TAG + subTag);
+                    ptrSuccess, ptrFailed, subTag);
         } else {
-            App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page + ""),
-                    ptrSuccess, ptrFailed, TAG + subTag);
+            App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page),
+                    ptrSuccess, ptrFailed, subTag);
         }
     }
 
@@ -539,7 +539,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        App.getQueue().cancelAll(TAG + subTag);//取消掉未完成的全部Shots请求
+        App.getQueue().cancelAll(subTag);//取消掉未完成的全部Shots请求
         App.getQueue().cancelAll(ShotsAdapter.TAG);//取消掉未完成的全部图像请求
         if (receiver != null) {
             getActivity().unregisterReceiver(receiver);
