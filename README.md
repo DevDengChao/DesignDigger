@@ -1,4 +1,4 @@
-# ![](./app/src/main/res/mipmap-mdpi/dribbble_ball.png)DesignDigger
+# <img src="./app/src/main/res/mipmap-mdpi/dribbble_ball.png" width = "64" height = "64" alt="图片名称"/>DesignDigger
 利用[DribbbleAPI](http://developer.dribbble.com/)实现的Android客户端;
 
 **现有特性**
