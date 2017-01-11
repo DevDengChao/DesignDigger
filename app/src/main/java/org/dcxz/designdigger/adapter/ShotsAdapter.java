@@ -33,19 +33,33 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
-    public static final String TAG = "ShotsAdapter";
+    /**
+     * viewType,控制item的布局与viewHolder的更新
+     */
     private static final int HEADER = 0;
+    /**
+     * viewType,控制item的布局与viewHolder的更新
+     */
     private static final int NORMAL = 1;
+    /**
+     * 请求标签,用于取消未完成的请求
+     */
+    private String subTag;
+    /**
+     * 用户对象
+     */
     private UserInfo user;
 
     /**
      * @param activity 用于获取layoutInflater,设置监听器
      * @param data     适配器持有的数据集合
      * @param user     null:只显示Shots;not null:显示头部布局以及Shots
+     * @param subTag   请求标签,用于取消未完成的请求
      */
-    public ShotsAdapter(BaseActivity activity, ArrayList<ShotInfo> data, UserInfo user) {
+    public ShotsAdapter(BaseActivity activity, ArrayList<ShotInfo> data, UserInfo user, String subTag) {
         super(activity, data);
         this.user = user;
+        this.subTag = subTag;
     }
 
     @Override
@@ -79,7 +93,7 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
             viewHolder.avatar.setVisibility(View.GONE);
         } else {//普通请求包含user数据
             viewHolder.avatar.setVisibility(View.VISIBLE);
-            App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, TAG);
+            App.imageRequest(temp.getUser().getAvatar_url(), viewHolder.avatar, subTag);
             viewHolder.avatar.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
@@ -91,10 +105,10 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         viewHolder.content.setImageResource(R.mipmap.item_content);//使用图像占位,避免重用过程中出现图像突变现象
         viewHolder.content.setTag(imagePath);
         if (temp.isAnimated()) {
-            App.gifRequest(imagePath, viewHolder.content, viewHolder.gif, TAG);
+            App.gifRequest(imagePath, viewHolder.content, viewHolder.gif, subTag);
             viewHolder.gif.setVisibility(View.VISIBLE);
         } else {
-            App.imageRequest(imagePath, viewHolder.content, TAG);
+            App.imageRequest(imagePath, viewHolder.content, subTag);
             viewHolder.gif.setVisibility(View.INVISIBLE);
             viewHolder.gif.setOnClickListener(null);
         }
@@ -205,7 +219,7 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         @SuppressLint("SetTextI18n")
         ViewHolder(View itemView, UserInfo user) {
             super(itemView);
-            App.imageRequest(user.getAvatar_url(), (CircleImageView) itemView.findViewById(R.id.profile_avatar), TAG);
+            App.imageRequest(user.getAvatar_url(), (CircleImageView) itemView.findViewById(R.id.profile_avatar), subTag);
             ((TextView) itemView.findViewById(R.id.profile_bucketsCount)).setText(user.getBuckets_count() + "");
             ((TextView) itemView.findViewById(R.id.profile_followersCount)).setText(user.getFollowers_count() + "");
             ((TextView) itemView.findViewById(R.id.profile_followingCount)).setText(user.getFollowings_count() + "");

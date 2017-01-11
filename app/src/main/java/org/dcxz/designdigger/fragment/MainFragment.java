@@ -297,7 +297,7 @@ public class MainFragment extends BaseFragment {
         if (enableFilter) {
             initFilterAdapter(activity);
         }
-        recyclerView.setAdapter(adapter = new ShotsAdapter(activity, shots, userInfo));
+        recyclerView.setAdapter(adapter = new ShotsAdapter(activity, shots, userInfo, subTag));
     }
 
     /**
@@ -539,8 +539,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        App.getQueue().cancelAll(subTag);//取消掉未完成的全部Shots请求
-        App.getQueue().cancelAll(ShotsAdapter.TAG);//取消掉未完成的全部图像请求
+        App.getQueue().cancelAll(subTag);//取消掉未完成的全部Shots请求以及ShotsAdapter对象内的全部图像请求
         if (receiver != null) {
             getActivity().unregisterReceiver(receiver);
         }

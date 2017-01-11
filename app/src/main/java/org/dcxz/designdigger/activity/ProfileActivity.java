@@ -6,7 +6,7 @@ import android.view.View;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.bean.UserInfo;
-import org.dcxz.designdigger.fragment.ProfileFragment;
+import org.dcxz.designdigger.fragment.MainFragment;
 import org.dcxz.designdigger.framework.BaseActivity;
 
 import java.io.Serializable;
@@ -43,7 +43,7 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void initData() {
         UserInfo user = (UserInfo) getIntent().getSerializableExtra(SERIALIZABLE);
-        ProfileFragment fragment=ProfileFragment.newInstance(user);
+        MainFragment fragment = MainFragment.newInstance(false, true, user);
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_profile_container,fragment).commit();
     }
 
