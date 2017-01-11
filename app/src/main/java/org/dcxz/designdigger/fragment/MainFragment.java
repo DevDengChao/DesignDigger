@@ -180,7 +180,7 @@ public class MainFragment extends BaseFragment {
      * 根据不同的参数获取一个新的实例对象
      *
      * @param enableFilter   是否允许内容筛选:<br/>
-     *                       True:允许内容筛选,并访问{@link API.EndPoint#SHOTS_PAGE_SORT_LIST_TIMEFRAME}的内容;<br/>
+     *                       True:允许内容筛选,并访问{@link API.EndPoint#SHOTS_SORT_LIST_TIMEFRAME_PAGE}的内容;<br/>
      *                       False:禁止内容筛选,Spinner将不可见(GONE);
      * @param enableHeadView 是否允许recyclerView加载头布局:<br/>
      *                       True:加载头布局,并访问{@link API.EndPoint#USERS_SHOTS_PAGE}的内容;<br/>
@@ -384,7 +384,7 @@ public class MainFragment extends BaseFragment {
                         Log.i(TAG + ":" + subTag, "onScrolled: try refresh at page " + page);
                         if (enableFilter) {
                             App.stringRequest(
-                                    String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME, page + "", sortSelected, listSelected, timeFrameSelected),
+                                    String.format(API.EndPoint.SHOTS_SORT_LIST_TIMEFRAME_PAGE, sortSelected, listSelected, timeFrameSelected, page),
                                     scrollRefreshSuccess, scrollRefreshFailed, subTag);//标记这个请求,因为它可能会被用户的操作取消
                         } else if (enableHeadView) {
                             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),
@@ -513,7 +513,7 @@ public class MainFragment extends BaseFragment {
 
         if (enableFilter) {
             App.stringRequest(
-                    String.format(API.EndPoint.SHOTS_PAGE_SORT_LIST_TIMEFRAME, page, sortSelected, listSelected, timeFrameSelected),
+                    String.format(API.EndPoint.SHOTS_SORT_LIST_TIMEFRAME_PAGE, sortSelected, listSelected, timeFrameSelected, page),
                     ptrSuccess, ptrFailed, subTag);
         } else if (enableHeadView) {
             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),

@@ -116,7 +116,7 @@ public class API {
         /**
          * 获取当前用户时使用的URL
          */
-        public static final String USER=ENTRY+"/user";
+        public static final String USER = ENTRY + "/user";
         /**
          * 获取指定用户时使用的URL<br/>
          * 需要1个参数(UID),配合{@link String#format(String, Object...)}使用<br/>
@@ -141,22 +141,22 @@ public class API {
          * 按特定条件进行Shots请求(指定页)<br/>
          * 需要1个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
-        public static final String SHOTS_PAGE = SHOTS + "/?page=%s";
+        public static final String SHOTS_SORT = SHOTS + "/?sort=%s";
         /**
          * 按特定条件进行Shots请求(指定页)<br/>
          * 需要2个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
-        public static final String SHOTS_PAGE_SORT = SHOTS_PAGE + "&sort=%s";
+        public static final String SHOTS_SORT_LIST = SHOTS_SORT + "&list=%s";
         /**
          * 按特定条件进行Shots请求(指定页)<br/>
          * 需要3个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
-        public static final String SHOTS_PAGE_SORT_LIST = SHOTS_PAGE_SORT + "&list=%s";
+        public static final String SHOTS_SORT_LIST_TIMEFRAME = SHOTS_SORT_LIST + "&timeframe=%s";
         /**
          * 按特定条件进行Shots请求(指定页)<br/>
          * 需要4个参数,配合{@link String#format(String, Object...)}使用<br/>
          */
-        public static final String SHOTS_PAGE_SORT_LIST_TIMEFRAME = SHOTS_PAGE_SORT_LIST + "&timeframe=%s";
+        public static final String SHOTS_SORT_LIST_TIMEFRAME_PAGE = SHOTS_SORT_LIST_TIMEFRAME + "&page=%s";
         /**
          * 获取当前用户的关注列表(第一页)
          */
