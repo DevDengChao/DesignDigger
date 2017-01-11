@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -13,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.dao.DaoManager;
@@ -21,6 +23,7 @@ import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
     /**
@@ -48,6 +51,8 @@ public class MainActivity extends BaseActivity {
      */
     @BindView(R.id.activity_main_tabLayout)
     TabLayout tabLayout;
+    @BindView(R.id.activity_main_navigationView)
+    NavigationView navigationView;
     /**
      * Fragment的title
      */
@@ -117,7 +122,11 @@ public class MainActivity extends BaseActivity {
                 this, drawerLayout, toolbar, R.string.main_drawerOpened, R.string.main_drawerClosed);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
+    }
 
+    @OnClick(R.id.activity_main_settings)
+    public void settings() {// TODO: 2017/1/11 Sign out
+        Toast.makeText(this, "!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
