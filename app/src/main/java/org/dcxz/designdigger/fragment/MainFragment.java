@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,10 +24,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.activity.LoginActivity;
+import org.dcxz.designdigger.activity.SettingsActivity;
 import org.dcxz.designdigger.adapter.ShotsAdapter;
 import org.dcxz.designdigger.app.App;
 import org.dcxz.designdigger.bean.ShotInfo;
 import org.dcxz.designdigger.bean.UserInfo;
+import org.dcxz.designdigger.dao.DaoManager;
 import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
 import org.dcxz.designdigger.util.API;
@@ -67,11 +68,6 @@ public class MainFragment extends BaseFragment {
      * 将要展示的用户信息
      */
     private static final String USER_INFO = "USER_INFO";
-    /**
-     * 用于提示用户网络异常
-     */
-    @BindView(R.id.fragment_main_connectionError)
-    TextView connectionError;
     /**
      * 用于遮罩的进度条
      */
@@ -217,7 +213,7 @@ public class MainFragment extends BaseFragment {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void initData(BaseActivity activity, Bundle savedInstanceState) {
+    protected void initData(final BaseActivity activity, Bundle savedInstanceState) {
         Bundle args = getArguments();
         enableFilter = args.getBoolean(ENABLE_FILTER);
         enableHeadView = args.getBoolean(ENABLE_HEAD_VIEW);
@@ -231,26 +227,44 @@ public class MainFragment extends BaseFragment {
             listFilter.setVisibility(View.GONE);
             sortFilter.setVisibility(View.GONE);
             timeFrameFilter.setVisibility(View.GONE);
-            if (!enableHeadView) {//Following需要监听用户登录注销事件
+            if (enableHeadView) {//Profile需要监听用户登录注销事件
                 receiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         switch (intent.getAction()) {
                             case LoginActivity.TAG:
-                                doPullToRefresh();
+                                userInfo = DaoManager.getInstance(activity).getUser();
                                 break;
-                            case MenuFragment.TAG:
+                            case SettingsActivity.TAG:
+                                userInfo = null;
+                                toast(R.string.youAreNotLoginYet);
+                                break;
+                        }
+                        recyclerView.setAdapter(adapter = new ShotsAdapter(activity, new ArrayList<ShotInfo>(), userInfo, subTag));
+                        ptrFrameLayout.autoRefresh();
+                    }
+                };
+            } else {//Following需要监听用户登录注销事件
+                receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        switch (intent.getAction()) {
+                            case LoginActivity.TAG:
+                                ptrFrameLayout.autoRefresh();
+                                break;
+                            case SettingsActivity.TAG:
                                 App.getQueue().cancelAll(subTag);
-                                isUserLogined();
+                                toast(R.string.youAreNotLoginYet);
+                                adapter.setData(new ArrayList<ShotInfo>());
                                 break;
                         }
                     }
                 };
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(LoginActivity.TAG);//监听登录成功事件
-                filter.addAction(MenuFragment.TAG);//监听注销事件
-                activity.registerReceiver(receiver, filter);
             }
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(LoginActivity.TAG);//监听登录成功事件
+            filter.addAction(SettingsActivity.TAG);//监听注销事件
+            activity.registerReceiver(receiver, filter);
         }
 
         shots = new ArrayList<>();
@@ -318,7 +332,7 @@ public class MainFragment extends BaseFragment {
         ptrFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                if (!enableFilter && !enableHeadView) {//试图刷新Following时需要检查用户是否已登录
+                if (!enableFilter) {//试图刷新Following或Profile时需要检查用户是否已登录
                     if (isUserLogined()) {
                         doPullToRefresh();
                         Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh");
@@ -326,7 +340,7 @@ public class MainFragment extends BaseFragment {
                         ptrFrameLayout.refreshComplete();
                         Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh cancelled");
                     }
-                } else {
+                } else {//Rank
                     doPullToRefresh();
                     Log.i(TAG + ":" + subTag, "onRefreshBegin: pull to refresh");
                 }
@@ -367,7 +381,8 @@ public class MainFragment extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     refreshable = true;//重置状态锁
-                    Log.i(TAG + ":" + subTag, "onErrorResponse: onScroll refresh failed at page " + page);
+                    Log.w(TAG + ":" + subTag, "onErrorResponse: onScroll refresh failed at page " + page);
+                    Log.w(TAG + ":" + subTag, "onErrorResponse: " + error.getMessage());
                 }
             };
 
@@ -382,14 +397,14 @@ public class MainFragment extends BaseFragment {
                     if (refreshable) {
                         refreshable = false;//上锁
                         Log.i(TAG + ":" + subTag, "onScrolled: try refresh at page " + page);
-                        if (enableFilter) {
+                        if (enableFilter) {//Rank
                             App.stringRequest(
                                     String.format(API.EndPoint.SHOTS_SORT_LIST_TIMEFRAME_PAGE, sortSelected, listSelected, timeFrameSelected, page),
                                     scrollRefreshSuccess, scrollRefreshFailed, subTag);//标记这个请求,因为它可能会被用户的操作取消
-                        } else if (enableHeadView) {
+                        } else if (enableHeadView) {//Profile
                             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),
                                     scrollRefreshSuccess, scrollRefreshFailed, subTag);
-                        } else {
+                        } else {//Following
                             App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page + ""),
                                     scrollRefreshSuccess, scrollRefreshFailed, subTag);
                         }
@@ -398,13 +413,13 @@ public class MainFragment extends BaseFragment {
             }
         });
 
-        if (needForceRefresh && getUserVisibleHint()) {
-            if (!enableFilter && !enableHeadView) {//Following
+        if (needForceRefresh) {
+            if (!enableFilter) {//Following & Profile
                 if (isUserLogined()) {
                     Log.i(TAG + ":" + subTag, "initListener: force refreshing");
                     doPullToRefresh();
                 }
-            } else {//Rank & Profile
+            } else {//Rank
                 Log.i(TAG + ":" + subTag, "initListener: force refreshing");
                 doPullToRefresh();
             }
@@ -467,7 +482,6 @@ public class MainFragment extends BaseFragment {
             return true;
         } else {
             toast(R.string.youAreNotLoginYet);
-            connectionError.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             return false;
         }
@@ -488,7 +502,6 @@ public class MainFragment extends BaseFragment {
                 page++;
                 ptrFrameLayout.refreshComplete();
                 progressBar.setVisibility(View.INVISIBLE);
-                connectionError.setVisibility(View.INVISIBLE);
                 ArrayList<ShotInfo> shots = gson.fromJson(response, type);
                 for (ShotInfo shot : shots) {
                     //"2015-05-29T08:59:36Z" -> "2015-05-29 08:59:36"
@@ -502,23 +515,23 @@ public class MainFragment extends BaseFragment {
             public void onErrorResponse(VolleyError error) {//下拉刷新失败时调用的监听器
                 refreshable = true;
                 ptrFrameLayout.refreshComplete();
-                Log.i(TAG + ":" + subTag, "onErrorResponse: doPullToRefresh refresh failed at page " + page);
+                Log.w(TAG + ":" + subTag, "onErrorResponse: doPullToRefresh refresh failed at page " + page);
+                Log.w(TAG + ":" + subTag, "onErrorResponse: " + error.getMessage());
                 progressBar.setVisibility(View.INVISIBLE);
-                connectionError.setVisibility(View.VISIBLE);
                 toast(R.string.connection_error);
             }
         };
         App.getQueue().cancelAll(subTag);//取消尚未完成的请求
         Log.i(TAG + ":" + subTag, "doPullToRefresh: last request with TAG=\"" + subTag + "\" canceled");
 
-        if (enableFilter) {
+        if (enableFilter) {//Rank
             App.stringRequest(
                     String.format(API.EndPoint.SHOTS_SORT_LIST_TIMEFRAME_PAGE, sortSelected, listSelected, timeFrameSelected, page),
                     ptrSuccess, ptrFailed, subTag);
-        } else if (enableHeadView) {
+        } else if (enableHeadView) {//Profile
             App.stringRequest(String.format(API.EndPoint.USERS_SHOTS_PAGE, userInfo.getId(), page),
                     ptrSuccess, ptrFailed, subTag);
-        } else {
+        } else {//Following
             App.stringRequest(String.format(API.EndPoint.FOLLOWING_SHOTS_PAGE, page),
                     ptrSuccess, ptrFailed, subTag);
         }

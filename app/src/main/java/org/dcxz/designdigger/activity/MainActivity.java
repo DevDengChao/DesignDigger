@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,9 +15,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.bean.UserInfo;
@@ -27,7 +29,6 @@ import org.dcxz.designdigger.framework.BaseFragment;
 import org.dcxz.designdigger.util.API;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity {
@@ -113,7 +114,7 @@ public class MainActivity extends BaseActivity {
                         isUserLogined = true;
                         signIn();
                         break;
-                    case "temp":// TODO: 2017/1/12 sign out
+                    case SettingsActivity.TAG:
                         drawerLayout.closeDrawer(GravityCompat.START, true);
                         isUserLogined = false;
                         signOut();
@@ -121,7 +122,10 @@ public class MainActivity extends BaseActivity {
                 }
             }
         };
-        registerReceiver(receiver, new IntentFilter(LoginActivity.TAG));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(LoginActivity.TAG);
+        filter.addAction(SettingsActivity.TAG);
+        registerReceiver(receiver, filter);
     }
 
     /**
@@ -219,16 +223,31 @@ public class MainActivity extends BaseActivity {
         };
         avatar.setOnClickListener(listener);
         userName.setOnClickListener(listener);
-    }
 
-    @OnClick(R.id.activity_main_settings)
-    public void settings() {// TODO: 2017/1/11 Sign out
-        Toast.makeText(this, "!", Toast.LENGTH_SHORT).show();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_settings:
+                        startActivity(SettingsActivity.class);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
     public void handleMessageImp(Message msg) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

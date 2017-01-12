@@ -17,17 +17,6 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:scrollbars="none" />
-        <!--提示用户网络连接异常-->
-        <TextView
-            android:id="@+id/fragment_main_connectionError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawableTop="@drawable/connection_error"
-            android:gravity="center"
-            android:paddingBottom="200dp"
-            android:paddingTop="200dp"
-            android:visibility="invisible" />
 
         <ProgressBar
             android:id="@+id/fragment_main_progressBar"
