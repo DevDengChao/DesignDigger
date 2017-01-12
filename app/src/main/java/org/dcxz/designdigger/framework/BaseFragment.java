@@ -87,7 +87,7 @@ public abstract class BaseFragment extends Fragment {
      * @param resID 待弹出的消息
      */
     protected void toast(int resID) {
-        if (getActivity() != null && getUserVisibleHint()) {//activity依然活跃并且当前fragment对用户可见
+        if (getActivity() != null) {//activity依然活跃
             Toast.makeText(getActivity(), resID, Toast.LENGTH_SHORT).show();
         }
     }
