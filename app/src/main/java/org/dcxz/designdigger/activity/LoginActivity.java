@@ -130,71 +130,70 @@ public class LoginActivity extends BaseActivity {
                                 ));
                     }
 
+                    /**
+                     * 利用ACCESS_TOKEN获取对应的用户对象
+                     */
+                    private void saveUser() {
+                        App.stringRequest(
+                                API.EndPoint.USER,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        manager.setUser(response);
+                                        UserInfo user = new Gson().fromJson(response, UserInfo.class);
+                                        Log.i(TAG, "onResponse: UserName=" + user.getUsername() + " UID=" + user.getId());
+                                        App.getQueue().add(
+                                                new ImageRequest(user.getAvatar_url(),
+                                                        new Response.Listener<Bitmap>() {
+                                                            @Override
+                                                            public void onResponse(Bitmap response) {
+                                                                progressBar.setVisibility(View.INVISIBLE);
+                                                                if (manager.setAvatar(response)) {
+                                                                    Log.i(TAG, "onResponse: download avatar success");
+                                                                    sendBroadcast(new Intent(TAG));
+                                                                } else {
+                                                                    Log.i(TAG, "onResponse: download avatar failed:File IO Exception");
+                                                                    toast(R.string.Download_avatar_failed_File_IOException);
+                                                                }
+                                                            }
+                                                        }, 0, 0, Bitmap.Config.ARGB_8888,
+                                                        new Response.ErrorListener() {
+                                                            @Override
+                                                            public void onErrorResponse(VolleyError error) {
+                                                                progressBar.setVisibility(View.INVISIBLE);
+                                                                toast(R.string.Download_avatar_failed_Connection_Error);
+                                                                Log.w(TAG, "onErrorResponse: " + error.getMessage());
+                                                            }
+                                                        }));
+                                        handler.sendEmptyMessage(TO_ACTIVITY_MAIN);
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        toast(R.string.Authorize_failed_Cannot_get_user);
+                                        Log.w(TAG, "onErrorResponse: " + error.getMessage());
+                                    }
+                                });
+                    }
+
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         progressBar.setVisibility(View.VISIBLE);
+                        webView.setClickable(false);
                     }
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         progressBar.setVisibility(View.INVISIBLE);
+                        webView.setClickable(true);
                     }
 
                 });
         webView.loadUrl(API.Oauth2.AUTHORIZE);
     }
 
-    /**
-     * 利用ACCESS_TOKEN获取对应的用户对象
-     */
-    private void saveUser() {
-        App.stringRequest(
-                API.EndPoint.USER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        manager.setUser(response);
-                        UserInfo user = new Gson().fromJson(response, UserInfo.class);
-                        Log.i(TAG, "onResponse: UserName=" + user.getUsername() + " UID=" + user.getId());
-                        App.getQueue().add(
-                                new ImageRequest(user.getAvatar_url(),
-                                        new Response.Listener<Bitmap>() {
-                                            @Override
-                                            public void onResponse(Bitmap response) {
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                if (manager.setAvatar(response)) {
-                                                    Log.i(TAG, "onResponse: download avatar success");
-                                                    sendBroadcast(new Intent(TAG));
-                                                } else {
-                                                    Log.i(TAG, "onResponse: download avatar failed:File IO Exception");
-                                                    toast(R.string.Download_avatar_failed_File_IOException);
-                                                }
-                                            }
-                                        },
-                                        0,
-                                        0,
-                                        Bitmap.Config.ARGB_8888,
-                                        new Response.ErrorListener() {
-                                            @Override
-                                            public void onErrorResponse(VolleyError error) {
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                toast(R.string.Download_avatar_failed_Connection_Error);
-                                            }
-                                        }));
-                        handler.sendEmptyMessage(TO_ACTIVITY_MAIN);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        toast(R.string.Authorize_failed_Cannot_get_user);
-                        if (webView.canGoBack()) {
-                            webView.goBack();
-                        }
-                    }
-                });
-    }
 
     @Override
     protected void initData() {
@@ -207,6 +206,12 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
+        progressBar.setOnClickListener(new View.OnClickListener() {//拦截用户在页面请求过程中的点击事件
+            @Override
+            public void onClick(View v) {
+                //拦截用户在页面请求过程中的点击事件
+            }
+        });
     }
 
     @Override
@@ -219,12 +224,4 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {//拦截返回键
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
 }
