@@ -153,8 +153,7 @@ public class App extends Application {
             protected void deliverResponse(byte[] response) {
                 try {//直接将获得的字节数组交给GifDrawable
                     gifDrawable = new GifDrawable(response);
-                    imageView.setImageDrawable(gifDrawable);
-                    controller.setVisibility(View.INVISIBLE);// FIXME: 2017/1/2 Gif始终不动
+                    imageView.setImageDrawable(gifDrawable);// FIXME: 2017/1/2 Gif始终不动
                     controller.setOnClickListener(
                             new View.OnClickListener() {
                                 private static final String TAG = "Controller";
@@ -162,9 +161,11 @@ public class App extends Application {
                                 @Override
                                 public void onClick(View v) {
                                     if (gifDrawable.isPlaying()) {
+                                        controller.setImageResource(R.drawable.item_gif_play);
                                         gifDrawable.pause();
                                         Log.i(TAG, "onClick: playing->pause");
                                     } else {
+                                        controller.setImageResource(R.drawable.item_gif_pause);
                                         gifDrawable.start();
                                         Log.i(TAG, "onClick: pause->playing");
                                     }
