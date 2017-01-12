@@ -8,14 +8,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/linearLayout"
+        android:layout_alignBottom="@+id/menu_linearLayout"
         android:alpha="0.3"
         android:scaleType="fitEnd"
         android:src="@mipmap/menu_header" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/linearLayout"
+        android:id="@+id/menu_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

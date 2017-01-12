@@ -14,16 +14,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.bean.UserInfo;
 import org.dcxz.designdigger.dao.DaoManager;
 import org.dcxz.designdigger.fragment.MainFragment;
 import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseFragment;
+import org.dcxz.designdigger.util.API;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity {
     /**
@@ -61,7 +66,31 @@ public class MainActivity extends BaseActivity {
      * 可用的Fragment
      */
     private BaseFragment[] fragments;
+    /**
+     * 监听登录和注销事件
+     */
     private BroadcastReceiver receiver;
+    /**
+     * 用户头像
+     */
+    private CircleImageView avatar;
+    /**
+     * 用户名
+     */
+    private TextView userName;
+    /**
+     * 用户id
+     */
+    private TextView id;
+    /**
+     * 用户个人投递的作品数
+     */
+    private TextView shotsCount;
+    private DaoManager manager;
+    /**
+     * 用户是否已登录,影响侧滑菜单的文本显示与点击事件
+     */
+    private boolean isUserLogined;
 
     @Override
     protected int setContentViewImp() {
@@ -72,14 +101,68 @@ public class MainActivity extends BaseActivity {
     protected void initView() {
         setSupportActionBar(toolbar);
         tabLayout.setupWithViewPager(viewPager);
-        //监听登录成功事件,收起侧滑菜单
+        manager = DaoManager.getInstance(this);
+        isUserLogined = !manager.getAccessToken().equals(API.Oauth2.ACCESS_TOKEN_DEFAULT);
+
+        initMenuHeader();
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                drawerLayout.closeDrawer(GravityCompat.START);
+                switch (intent.getAction()) {//监听登录/注销事件,收起侧滑菜单
+                    case LoginActivity.TAG:
+                        isUserLogined = true;
+                        signIn();
+                        break;
+                    case "temp":// TODO: 2017/1/12 sign out
+                        drawerLayout.closeDrawer(GravityCompat.START, true);
+                        isUserLogined = false;
+                        signOut();
+                        break;
+                }
             }
         };
         registerReceiver(receiver, new IntentFilter(LoginActivity.TAG));
+    }
+
+    /**
+     * 初始化navigationView上的headerView
+     */
+    private void initMenuHeader() {
+        View menuHeader = navigationView.getHeaderView(0);
+        avatar = (CircleImageView) menuHeader.findViewById(R.id.menu_avatar);
+        userName = (TextView) menuHeader.findViewById(R.id.menu_userName);
+        id = (TextView) menuHeader.findViewById(R.id.menu_id);
+        shotsCount = (TextView) menuHeader.findViewById(R.id.menu_shotsCount);
+        if (isUserLogined) {
+            signIn();
+        } else {
+            signOut();
+        }
+    }
+
+    /**
+     * 用户已登录
+     */
+    private void signIn() {
+        UserInfo userInfo = manager.getUser();
+        avatar.setImageBitmap(manager.getAvatar());
+        String userNameString = userInfo.isPro() ? getString(R.string.menu_userName_pro) : "";
+        userNameString += userInfo.getType() + " " + userInfo.getName();
+        userName.setText(userNameString);
+        String idString = getString(R.string.menu_id) + userInfo.getId();
+        id.setText(idString);
+        String shotsCountString = getString(R.string.menu_shotsCount) + userInfo.getShots_count();
+        shotsCount.setText(shotsCountString);
+    }
+
+    /**
+     * 用户已注销
+     */
+    private void signOut() {
+        avatar.setImageResource(R.mipmap.dribbble_ball_mark);
+        userName.setText(R.string.menu_clickToSignIn);
+        id.setText("");
+        shotsCount.setText("");
     }
 
     @Override
@@ -118,10 +201,24 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.main_drawerOpened, R.string.main_drawerClosed);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isUserLogined) {
+                    viewPager.setCurrentItem(3, true);
+                    drawerLayout.closeDrawer(GravityCompat.START, true);
+                } else {
+                    startActivity(LoginActivity.class);
+                }
+            }
+        };
+        avatar.setOnClickListener(listener);
+        userName.setOnClickListener(listener);
     }
 
     @OnClick(R.id.activity_main_settings)
