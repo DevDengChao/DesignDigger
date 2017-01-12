@@ -69,6 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--fixme gif -->
         <org.dcxz.designdigger.view.AutoHeightGifImageView
             android:id="@+id/item_content"
             android:layout_width="match_parent"
@@ -83,8 +84,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="8dp"
-
-            android:src="@drawable/item_gif" />
+            android:src="@drawable/item_gif"
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <ImageView

@@ -41,9 +41,8 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
      */
     public void setData(ArrayList<T> data) {
         int count = this.data.size();
-        notifyItemRangeRemoved(0, count);//移除旧数据
         this.data = data;
-        notifyItemRangeInserted(0, data.size());//插入新数据
+        notifyItemRangeChanged(0, count);//插入新数据
     }
 
     /**
