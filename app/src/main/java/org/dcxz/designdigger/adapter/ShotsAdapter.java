@@ -104,9 +104,9 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         }
         viewHolder.content.setImageResource(R.mipmap.item_content);//使用图像占位,避免重用过程中出现图像突变现象
         viewHolder.content.setTag(imagePath);
-        if (temp.isAnimated()) {
+        if (temp.isAnimated()) {// FIXME: 2017/1/12 gif
             App.gifRequest(imagePath, viewHolder.content, viewHolder.gif, subTag);
-            viewHolder.gif.setVisibility(View.VISIBLE);
+            viewHolder.gif.setVisibility(View.INVISIBLE);
         } else {
             App.imageRequest(imagePath, viewHolder.content, subTag);
             viewHolder.gif.setVisibility(View.INVISIBLE);

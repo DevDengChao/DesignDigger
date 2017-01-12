@@ -153,7 +153,7 @@ public class App extends Application {
             protected void deliverResponse(byte[] response) {
                 try {//直接将获得的字节数组交给GifDrawable
                     gifDrawable = new GifDrawable(response);
-                    imageView.setImageDrawable(gifDrawable);// FIXME: 2017/1/2 Gif始终不动
+                    imageView.setImageDrawable(gifDrawable);
                     controller.setOnClickListener(
                             new View.OnClickListener() {
                                 private static final String TAG = "Controller";
