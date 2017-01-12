@@ -158,6 +158,7 @@ public class MainFragment extends BaseFragment {
      * 检查用户登录状态的广播接收器
      */
     private BroadcastReceiver receiver;
+    private DaoManager manager;
 
     /**
      * 请使用newInstance来构建带有参数的对象
@@ -214,6 +215,7 @@ public class MainFragment extends BaseFragment {
     @SuppressWarnings("unchecked")
     @Override
     protected void initData(final BaseActivity activity, Bundle savedInstanceState) {
+        manager = DaoManager.getInstance(activity);
         Bundle args = getArguments();
         enableFilter = args.getBoolean(ENABLE_FILTER);
         enableHeadView = args.getBoolean(ENABLE_HEAD_VIEW);
@@ -478,7 +480,7 @@ public class MainFragment extends BaseFragment {
      * 检查用户是否已登录
      */
     private boolean isUserLogined() {
-        if (!API.Oauth2.ACCESS_TOKEN.equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
+        if (!manager.getAccessToken().equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
             return true;
         } else {
             toast(R.string.youAreNotLoginYet);
