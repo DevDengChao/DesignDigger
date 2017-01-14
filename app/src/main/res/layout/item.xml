@@ -36,8 +36,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="Title"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="Title" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,16 +50,16 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="User Name"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="User Name" />
 
                 <TextView
                     android:id="@+id/item_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="1960-01-01 00:00:00"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="1960-01-01 00:00:00" />
             </LinearLayout>
         </LinearLayout>
 
@@ -69,7 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--fixme gif -->
         <org.dcxz.designdigger.view.AutoHeightGifImageView
             android:id="@+id/item_content"
             android:layout_width="match_parent"
@@ -84,8 +83,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/item_gif"
-            android:visibility="invisible" />
+            android:src="@drawable/item_gif" />
     </RelativeLayout>
 
     <ImageView

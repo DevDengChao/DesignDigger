@@ -110,7 +110,6 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         } else {
             App.imageRequest(imagePath, viewHolder.content, subTag);
             viewHolder.gif.setVisibility(View.INVISIBLE);
-            viewHolder.gif.setOnClickListener(null);
         }
         if (temp.getRebounds_count() == 0) {
             viewHolder.rebound.setVisibility(View.INVISIBLE);

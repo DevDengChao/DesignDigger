@@ -153,6 +153,7 @@ public class App extends Application {
             protected void deliverResponse(byte[] response) {
                 try {//直接将获得的字节数组交给GifDrawable
                     gifDrawable = new GifDrawable(response);
+                    gifDrawable.pause();// TODO: 2017/1/14 auto-play?
                     imageView.setImageDrawable(gifDrawable);
                     controller.setOnClickListener(
                             new View.OnClickListener() {
