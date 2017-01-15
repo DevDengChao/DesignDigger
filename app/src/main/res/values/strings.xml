@@ -36,4 +36,5 @@
     <string name="menu_id">"ID : "</string>
     <string name="menu_userName_pro">"Pro "</string>
     <string name="menu_clickToSignIn">Click to sign in</string>
+    <string name="no_more_comments">No more comments</string>
 </resources>

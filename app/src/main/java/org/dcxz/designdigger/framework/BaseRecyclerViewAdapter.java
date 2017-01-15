@@ -41,7 +41,8 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
      */
     public void setData(ArrayList<T> data) {
         this.data = data;
-        notifyItemRangeChanged(0, data.size());//插入新数据
+        notifyDataSetChanged();
+//        notifyItemRangeChanged(0, data.size());//插入新数据
     }
 
     /**
