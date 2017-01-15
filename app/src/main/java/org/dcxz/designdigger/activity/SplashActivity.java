@@ -27,6 +27,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected int setContentViewImp() {
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         return R.layout.activity_splash;
     }
 

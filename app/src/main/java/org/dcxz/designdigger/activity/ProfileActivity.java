@@ -30,7 +30,6 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     protected int setContentViewImp() {
-        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_right);
         return R.layout.activity_profile;
     }
 
