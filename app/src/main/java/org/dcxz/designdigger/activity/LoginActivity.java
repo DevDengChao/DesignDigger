@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
                                                 progressBar.setVisibility(View.INVISIBLE);
-                                                toast(R.string.Authorize_failed_Cannot_get_Access_Token);
+                                                toast(R.string.authorize_failed_cannot_get_access_token);
                                                 if (webView.canGoBack()) {
                                                     webView.goBack();
                                                 }
@@ -153,7 +153,7 @@ public class LoginActivity extends BaseActivity {
                                                                     sendBroadcast(new Intent(TAG));
                                                                 } else {
                                                                     Log.i(TAG, "onResponse: download avatar failed:File IO Exception");
-                                                                    toast(R.string.Download_avatar_failed_File_IOException);
+                                                                    toast(R.string.download_avatar_failed_file_io_exception);
                                                                 }
                                                             }
                                                         }, 0, 0, Bitmap.Config.ARGB_8888,
@@ -161,7 +161,7 @@ public class LoginActivity extends BaseActivity {
                                                             @Override
                                                             public void onErrorResponse(VolleyError error) {
                                                                 progressBar.setVisibility(View.INVISIBLE);
-                                                                toast(R.string.Download_avatar_failed_Connection_Error);
+                                                                toast(R.string.download_avatar_failed_connection_error);
                                                                 Log.w(TAG, "onErrorResponse: " + error.getMessage());
                                                             }
                                                         }));
@@ -172,7 +172,7 @@ public class LoginActivity extends BaseActivity {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         progressBar.setVisibility(View.INVISIBLE);
-                                        toast(R.string.Authorize_failed_Cannot_get_user);
+                                        toast(R.string.authorize_failed_cannot_get_user);
                                         Log.w(TAG, "onErrorResponse: " + error.getMessage());
                                     }
                                 });

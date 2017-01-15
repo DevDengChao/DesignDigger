@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/settings_image_quality_normal"
+        android:dialogTitle="@string/settings_image_quality"
+        android:entries="@array/settings_imageQuality"
+        android:entryValues="@array/settings_imageQuality"
+        android:key="preview_image_mobile"
+        android:title="@string/settings_image_quality_preview_mobile" />
     <Preference
         android:key="settings_about_us"
-        android:title="About us" />
+        android:title="@string/settings_about_us" />
 </PreferenceScreen>

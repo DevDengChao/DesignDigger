@@ -22,4 +22,10 @@
         <item>@string/year</item>
         <item>@string/ever</item>
     </string-array>
+
+    <string-array name="settings_imageQuality">
+        <item>@string/settings_image_quality_light</item>
+        <item>@string/settings_image_quality_normal</item>
+        <item>@string/settings_image_quality_large</item>
+    </string-array>
 </resources>

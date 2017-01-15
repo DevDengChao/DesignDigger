@@ -151,12 +151,12 @@ public class MainActivity extends BaseActivity {
     private void signIn() {
         UserInfo userInfo = manager.getUser();
         avatar.setImageBitmap(manager.getAvatar());
-        String userNameString = userInfo.isPro() ? getString(R.string.menu_userName_pro) : "";
+        String userNameString = userInfo.isPro() ? getString(R.string.menu_user_name_pro) : "";
         userNameString += userInfo.getType() + " " + userInfo.getName();
         userName.setText(userNameString);
         String idString = getString(R.string.menu_id) + userInfo.getId();
         id.setText(idString);
-        String shotsCountString = getString(R.string.menu_shotsCount) + userInfo.getShots_count();
+        String shotsCountString = getString(R.string.menu_shots_count) + userInfo.getShots_count();
         shotsCount.setText(shotsCountString);
     }
 
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity {
      */
     private void signOut() {
         avatar.setImageResource(R.mipmap.dribbble_ball_mark);
-        userName.setText(R.string.menu_clickToSignIn);
+        userName.setText(R.string.menu_click_to_sign_in);
         id.setText("");
         shotsCount.setText("");
     }
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initListener() {
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.main_drawerOpened, R.string.main_drawerClosed);
+                this, drawerLayout, toolbar, R.string.main_drawer_opened, R.string.main_drawer_closed);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
 
