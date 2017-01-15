@@ -85,7 +85,7 @@ public class CommentActivity extends BaseActivity {
         gson = new Gson();
         type = new TypeToken<ArrayList<CommentInfo>>() {
         }.getType();
-        refreshable = true;
+        refreshable = false;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class CommentActivity extends BaseActivity {
                 }
             }
         });
-        doPullToRefresh();//强制刷新数据集合,矫正recyclerView自动触发的两次onScrolled();
+        doPullToRefresh();//强制刷新数据集合;
     }
 
     /**
