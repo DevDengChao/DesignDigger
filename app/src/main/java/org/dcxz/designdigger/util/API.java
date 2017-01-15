@@ -158,6 +158,21 @@ public class API {
          */
         public static final String SHOTS_SORT_LIST_TIMEFRAME_PAGE = SHOTS_SORT_LIST_TIMEFRAME + "&page=%s";
         /**
+         * 按特定条件进行Shot请求(指定个)<br/>
+         * 需要1个参数(shotID),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOT = SHOTS + "/%s";
+        /**
+         * 请求特定Shot的评论(第一页)<br/>
+         * 需要1个参数(shotID),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOT_COMMENTS = SHOT + "/comments";
+        /**
+         * 请求特定Shot的评论(指定页)<br/>
+         * 需要2个参数(shotID,page),配合{@link String#format(String, Object...)}使用<br/>
+         */
+        public static final String SHOT_COMMENTS_PAGE = SHOT_COMMENTS + "/?page=%s";
+        /**
          * 获取当前用户的关注列表(第一页)
          */
         public static final String FOLLOWING = USER + "/following";
