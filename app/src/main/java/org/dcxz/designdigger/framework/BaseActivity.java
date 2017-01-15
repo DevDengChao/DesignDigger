@@ -7,6 +7,8 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import org.dcxz.designdigger.R;
+
 import java.io.Serializable;
 
 import butterknife.ButterKnife;
@@ -29,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
         handler = new BaseHandler(this);
 
         setContentView(setContentViewImp());
