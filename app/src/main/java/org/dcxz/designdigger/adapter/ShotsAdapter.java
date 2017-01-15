@@ -42,7 +42,7 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
      * @param activity 用于获取layoutInflater,设置监听器
      * @param data     适配器持有的数据集合
      * @param user     null:只显示Shots;not null:显示头部布局以及Shots
-     * @param tag   请求标签,用于取消未完成的请求
+     * @param tag      请求标签,用于取消未完成的请求
      */
     public ShotsAdapter(BaseActivity activity, ArrayList<ShotInfo> data, UserInfo user, String tag) {
         super(activity, data);
@@ -56,7 +56,7 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
             case PROFILE:
                 return new ProfileHolder(inflater.inflate(R.layout.item_header, parent, false), user, tag);
             default:
-                return new ShotHolder(inflater.inflate(R.layout.item, parent, false), tag);
+                return new ShotHolder(inflater.inflate(R.layout.item_shot, parent, false), tag);
         }
     }
 
@@ -67,11 +67,11 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         if (user == null) {//没有用户对象,只显示item
             temp = data.get(position);
             imagePath = temp.getImages().getNormal();
-            ((ShotHolder) holder).update(temp, imagePath, activity);
+            ((ShotHolder) holder).update(temp, imagePath, activity, true);
         } else if (position != 0) {//有用户对象且不是头部,更新viewHolder
             temp = data.get(position - 1);//由于头部的存在,需要修正对应关系
             imagePath = temp.getImages().getNormal();
-            ((ShotHolder) holder).update(temp, imagePath, activity);
+            ((ShotHolder) holder).update(temp, imagePath, activity, true);
         }//有用户对象且是头部,什么也不做
     }
 
