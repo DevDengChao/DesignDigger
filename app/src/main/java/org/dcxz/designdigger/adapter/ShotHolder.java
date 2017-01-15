@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.activity.CommentActivity;
 import org.dcxz.designdigger.activity.ProfileActivity;
 import org.dcxz.designdigger.app.App;
 import org.dcxz.designdigger.bean.ShotInfo;
@@ -110,6 +111,12 @@ public class ShotHolder extends RecyclerView.ViewHolder {
             App.imageRequest(imagePath, content, Tag);
             gif.setVisibility(View.INVISIBLE);
         }
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.startActivity(CommentActivity.class, shotInfo);
+            }
+        });
         if (shotInfo.getRebounds_count() == 0) {
             rebound.setVisibility(View.INVISIBLE);
         } else {
