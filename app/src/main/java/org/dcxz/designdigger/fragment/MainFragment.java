@@ -239,7 +239,7 @@ public class MainFragment extends BaseFragment {
                                 break;
                             case SettingsActivity.TAG:
                                 userInfo = null;
-                                toast(R.string.youAreNotLoginYet);
+                                toast(R.string.you_are_not_login_yet);
                                 break;
                         }
                         recyclerView.setAdapter(adapter = new ShotsAdapter(activity, new ArrayList<ShotInfo>(), userInfo, subTag));
@@ -256,7 +256,7 @@ public class MainFragment extends BaseFragment {
                                 break;
                             case SettingsActivity.TAG:
                                 App.getQueue().cancelAll(subTag);
-                                toast(R.string.youAreNotLoginYet);
+                                toast(R.string.you_are_not_login_yet);
                                 adapter.setData(new ArrayList<ShotInfo>());
                                 break;
                         }
@@ -483,7 +483,7 @@ public class MainFragment extends BaseFragment {
         if (!manager.getAccessToken().equals(API.Oauth2.ACCESS_TOKEN_DEFAULT)) {
             return true;
         } else {
-            toast(R.string.youAreNotLoginYet);
+            toast(R.string.you_are_not_login_yet);
             progressBar.setVisibility(View.INVISIBLE);
             return false;
         }

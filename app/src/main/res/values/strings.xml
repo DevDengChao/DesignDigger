@@ -20,13 +20,14 @@
     <string name="year">This Year</string>
     <string name="ever">Ever</string>
     <!--Toast-->
-    <string name="connection_error">Connection Error</string>
-    <string name="youAreNotLoginYet">You are not login yet</string>
     <string name="authorize_failed_cannot_get_user">Authorize failed:Cannot get user</string>
     <string name="authorize_failed_cannot_get_access_token">Authorize failed:Cannot get Access Token</string>
+    <string name="connection_error">Connection Error</string>
     <string name="download_avatar_failed_connection_error">Download avatar failed:Connection Error</string>
     <string name="download_avatar_failed_file_io_exception">Download avatar failed:File IO Exception</string>
     <string name="no_more_comments">No more comments</string>
+    <string name="you_are_using_mobile_network">You are using mobile network</string>
+    <string name="you_are_not_login_yet">You are not login yet</string>
     <!--Navigation-->
     <string name="menu_settings">Settings</string>
     <string name="menu_shots_count">"Shots Count : "</string>
@@ -38,10 +39,15 @@
     <string name="main_drawer_opened">The drawer opened</string>
     <string name="main_drawer_closed">The drawer closed</string>
     <!--Preference-->
+    <string name="settings_about_us">About us</string>
     <string name="settings_image_quality">Image Quality</string>
-    <string name="settings_image_quality_preview_mobile">Preview Image(Mobile Net)</string>
+    <string name="settings_image_quality_preview_mobile">Preview Image(Mobile Network)</string>
+    <string name="settings_image_quality_preview_wifi">Preview Image(Wifi)</string>
+    <string name="settings_image_quality_detail_mobile">Detail Image(Mobile Network)</string>
+    <string name="settings_image_quality_detail_wifi">Detail Image(Wifi)</string>
     <string name="settings_image_quality_light">Light</string>
     <string name="settings_image_quality_normal">Normal</string>
     <string name="settings_image_quality_large">Large</string>
-    <string name="settings_about_us">About us</string>
+    <string name="settings_others">Others</string>
+    <string name="settings_sign_out">Sign out</string>
 </resources>
