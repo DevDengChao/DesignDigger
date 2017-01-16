@@ -67,7 +67,7 @@ public class CommentActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        toolbar.setNavigationIcon(R.drawable.toolbar_back);
+        toolbar.setNavigationIcon(R.drawable.arrow_left);
         setSupportActionBar(toolbar);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
