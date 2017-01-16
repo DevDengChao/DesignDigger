@@ -2,11 +2,13 @@ package org.dcxz.designdigger.dao;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 
+import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.bean.UserInfo;
 import org.dcxz.designdigger.util.API;
 
@@ -44,10 +46,12 @@ public class DaoManager {
      * 当前应用的文件目录
      */
     private static File fileDir;
+    private final Resources resources;
 
     private DaoManager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
         fileDir = context.getFilesDir();
+        resources = context.getResources();
     }
 
     public static DaoManager getInstance(Context context) {
@@ -137,4 +141,55 @@ public class DaoManager {
         }
     }
 
+    /**
+     * 返回偏好设置中"移动网络下的预览图精度"
+     */
+    public String getPreviewImageQualityMobile() {
+        return preferences.getString(
+                resources.getString(R.string.settings_image_quality_preview_mobile),
+                resources.getString(R.string.settings_image_quality_normal));
+    }
+
+    public void setPreviewImageQualityMobile(String value) {
+        preferences.edit().putString(resources.getString(R.string.settings_image_quality_preview_mobile), value).apply();
+    }
+
+    /**
+     * 返回偏好设置中"Wifi网络下的预览图精度"
+     */
+    public String getPreviewImageQualityWifi() {
+        return preferences.getString(
+                resources.getString(R.string.settings_image_quality_preview_wifi),
+                resources.getString(R.string.settings_image_quality_normal));
+    }
+
+    public void setPreviewImageQualityWifi(String value) {
+        preferences.edit().putString(resources.getString(R.string.settings_image_quality_preview_wifi), value).apply();
+    }
+
+    /**
+     * 返回偏好设置中"移动网络下的详情精度"
+     */
+    public String getDetailImageQualityMobile() {
+        return preferences.getString(
+                resources.getString(R.string.settings_image_quality_detail_mobile),
+                resources.getString(R.string.settings_image_quality_normal));
+    }
+
+    public void setDetailImageQualityMobile(String value) {
+        preferences.edit().putString(resources.getString(R.string.settings_image_quality_detail_mobile), value).apply();
+    }
+
+    /**
+     * 返回偏好设置中"Wifi网络下的详情精度"
+     */
+    public String getDetailImageQualityWifi() {
+        return preferences.getString(
+                resources.getString(R.string.settings_image_quality_detail_wifi),
+                resources.getString(R.string.settings_image_quality_normal));
+    }
+
+    public void setDetailImageQualityWifi(String value) {
+        preferences.edit().putString(resources.getString(R.string.settings_image_quality_detail_wifi), value).apply();
+    }
 }
