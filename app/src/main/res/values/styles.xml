@@ -4,13 +4,17 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="FirstLaunch" parent="AppTheme" />
+    <style name="Activity" parent="AppTheme" />
 
-    <style name="FirstLaunch.TextView" parent="AppTheme">
-        <item name="android:layout_width">0dp</item>
+    <style name="Activity.Settings" />
+
+    <style name="Activity.Settings.TextView">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
     </style>
     <!--    Activity style end    -->
     <!--    Fragment style start    -->

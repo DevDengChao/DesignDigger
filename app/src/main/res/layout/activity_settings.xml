@@ -16,7 +16,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap" />
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -26,19 +26,56 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <fragment
-                android:id="@+id/activity_settings_fragment"
-                android:name="org.dcxz.designdigger.fragment.SettingsFragment"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/settings_image_quality" />
+
+            <TextView
+                android:id="@+id/activity_settings_preview_mobile"
+                style="@style/Activity.Settings.TextView"
+                android:drawableEnd="@drawable/arrow_right"
+                android:text="@string/settings_image_quality_preview_mobile" />
+
+            <TextView
+                android:id="@+id/activity_settings_preview_wifi"
+                style="@style/Activity.Settings.TextView"
+                android:drawableEnd="@drawable/arrow_right"
+                android:text="@string/settings_image_quality_preview_wifi" />
+
+            <TextView
+                android:id="@+id/activity_settings_detail_mobile"
+                style="@style/Activity.Settings.TextView"
+                android:drawableEnd="@drawable/arrow_right"
+                android:text="@string/settings_image_quality_detail_mobile" />
+
+            <TextView
+                android:id="@+id/activity_settings_detail_wifi"
+                style="@style/Activity.Settings.TextView"
+                android:drawableEnd="@drawable/arrow_right"
+                android:text="@string/settings_image_quality_detail_wifi" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/settings_others" />
+
+            <TextView
+                android:id="@+id/activity_settings_about_us"
+                style="@style/Activity.Settings.TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_about_us" />
 
             <Button
-                android:id="@+id/activity_settings_signOut"
+                android:id="@+id/activity_settings_sign_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:background="@android:color/holo_red_light"
-                android:text="Sign out" />
+                android:text="@string/settings_sign_out" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

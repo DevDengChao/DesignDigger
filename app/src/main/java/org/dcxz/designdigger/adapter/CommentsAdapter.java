@@ -1,12 +1,15 @@
 package org.dcxz.designdigger.adapter;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.bean.CommentInfo;
+import org.dcxz.designdigger.bean.ImageInfo;
 import org.dcxz.designdigger.bean.ShotInfo;
+import org.dcxz.designdigger.dao.DaoManager;
 import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 
@@ -30,15 +33,25 @@ public class CommentsAdapter extends BaseRecyclerViewAdapter<CommentInfo> {
      */
     private static final int COMMENT = 1;
     /**
+     * 图像质量
+     */
+    private static String light, normal, large;
+    private static DaoManager manager;
+    private String tag;
+    /**
      * 头部展示的ShotInfo对象
      */
     private ShotInfo shotInfo;
-    private String tag;
 
     public CommentsAdapter(BaseActivity activity, ArrayList<CommentInfo> data, ShotInfo shotInfo, String tag) {
         super(activity, data);
         this.shotInfo = shotInfo;
         this.tag = tag;
+        manager = DaoManager.getInstance(activity);
+        Resources resources = activity.getResources();
+        light = resources.getString(R.string.settings_image_quality_light);
+        normal = resources.getString(R.string.settings_image_quality_normal);
+        large = resources.getString(R.string.settings_image_quality_large);
     }
 
     @Override
@@ -51,11 +64,31 @@ public class CommentsAdapter extends BaseRecyclerViewAdapter<CommentInfo> {
     }
 
     @Override
-    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<CommentInfo> data, BaseActivity activity) {
+    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<CommentInfo> data, BaseActivity activity, boolean isWifiNetwork) {
         if (position == 0) {
-            ((ShotHolder) holder).update(shotInfo, shotInfo.getImages().getNormal(), activity, false);
+            ((ShotHolder) holder).update(shotInfo, getImagePath(shotInfo, isWifiNetwork), activity, false);
         } else {
             ((CommentHolder) holder).update(data.get(position - 1));
+        }
+    }
+
+    /**
+     * 根据网络环境与个人偏向获取图像地址
+     */
+    private String getImagePath(ShotInfo shotInfo, boolean isWifiNetWork) {
+        ImageInfo imageInfo = shotInfo.getImages();
+        String preference;
+        if (isWifiNetWork) {
+            preference = manager.getDetailImageQualityWifi();
+        } else {
+            preference = manager.getDetailImageQualityMobile();
+        }
+        if (preference.equals(light)) {
+            return imageInfo.getTeaser();
+        } else if (preference.equals(large) && imageInfo.getHidpi() != null) {
+            return imageInfo.getHidpi();
+        } else {
+            return imageInfo.getNormal();
         }
     }
 

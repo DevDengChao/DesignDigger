@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="@string/settings_image_quality_normal"
-        android:dialogTitle="@string/settings_image_quality"
-        android:entries="@array/settings_imageQuality"
-        android:entryValues="@array/settings_imageQuality"
-        android:key="preview_image_mobile"
-        android:title="@string/settings_image_quality_preview_mobile" />
-    <Preference
-        android:key="settings_about_us"
-        android:title="@string/settings_about_us" />
+
+    <PreferenceCategory android:title="@string/settings_image_quality">
+        <ListPreference
+            android:defaultValue="@string/settings_image_quality_normal"
+            android:dialogTitle="@string/settings_image_quality"
+            android:entries="@array/settings_imageQuality"
+            android:entryValues="@array/settings_imageQuality"
+            android:key="preview_image_mobile"
+            android:title="@string/settings_image_quality_preview_mobile" />
+        <ListPreference
+            android:defaultValue="@string/settings_image_quality_normal"
+            android:dialogTitle="@string/settings_image_quality"
+            android:entries="@array/settings_imageQuality"
+            android:entryValues="@array/settings_imageQuality"
+            android:key="preview_image_wifi"
+            android:title="@string/settings_image_quality_preview_wifi" />
+        <ListPreference
+            android:defaultValue="@string/settings_image_quality_normal"
+            android:dialogTitle="@string/settings_image_quality"
+            android:entries="@array/settings_imageQuality"
+            android:entryValues="@array/settings_imageQuality"
+            android:key="detail_image_mobile"
+            android:title="@string/settings_image_quality_detail_mobile" />
+        <ListPreference
+            android:defaultValue="@string/settings_image_quality_normal"
+            android:dialogTitle="@string/settings_image_quality"
+            android:entries="@array/settings_imageQuality"
+            android:entryValues="@array/settings_imageQuality"
+            android:key="detail_image_wifi"
+            android:title="@string/settings_image_quality_detail_wifi" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Others">
+        <Preference
+            android:key="settings_about_us"
+            android:title="@string/settings_about_us" />
+        <Preference
+            android:key="sign_out"
+            android:title="Sign out" />
+    </PreferenceCategory>
 </PreferenceScreen>

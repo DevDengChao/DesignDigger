@@ -1,12 +1,15 @@
 package org.dcxz.designdigger.adapter;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import org.dcxz.designdigger.R;
+import org.dcxz.designdigger.bean.ImageInfo;
 import org.dcxz.designdigger.bean.ShotInfo;
 import org.dcxz.designdigger.bean.UserInfo;
+import org.dcxz.designdigger.dao.DaoManager;
 import org.dcxz.designdigger.framework.BaseActivity;
 import org.dcxz.designdigger.framework.BaseRecyclerViewAdapter;
 
@@ -30,6 +33,11 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
      */
     private static final int SHOT = 1;
     /**
+     * 图像质量
+     */
+    private static String light, normal, large;
+    private static DaoManager manager;
+    /**
      * 请求标签,用于取消未完成的请求
      */
     private String tag;
@@ -48,6 +56,11 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
         super(activity, data);
         this.user = user;
         this.tag = tag;
+        manager = DaoManager.getInstance(activity);
+        Resources resources = activity.getResources();
+        light = resources.getString(R.string.settings_image_quality_light);
+        normal = resources.getString(R.string.settings_image_quality_normal);
+        large = resources.getString(R.string.settings_image_quality_large);
     }
 
     @Override
@@ -61,20 +74,36 @@ public class ShotsAdapter extends BaseRecyclerViewAdapter<ShotInfo> {
     }
 
     @Override
-    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<ShotInfo> data, BaseActivity activity) {
+    protected void onBindViewHolderImp(RecyclerView.ViewHolder holder, int position, ArrayList<ShotInfo> data, BaseActivity activity, boolean isWifiNetwork) {
         ShotInfo temp;
-        String imagePath;
         if (user == null) {//没有用户对象,只显示item
             temp = data.get(position);
-            imagePath = temp.getImages().getNormal();
-            ((ShotHolder) holder).update(temp, imagePath, activity, true);
+            ((ShotHolder) holder).update(temp, getImagePath(temp, isWifiNetwork), activity, true);
         } else if (position != 0) {//有用户对象且不是头部,更新viewHolder
             temp = data.get(position - 1);//由于头部的存在,需要修正对应关系
-            imagePath = temp.getImages().getNormal();
-            ((ShotHolder) holder).update(temp, imagePath, activity, true);
+            ((ShotHolder) holder).update(temp, getImagePath(temp, isWifiNetwork), activity, true);
         }//有用户对象且是头部,什么也不做
     }
 
+    /**
+     * 根据网络环境与个人偏向获取图像地址
+     */
+    private String getImagePath(ShotInfo shotInfo, boolean isWifiNetWork) {
+        ImageInfo imageInfo = shotInfo.getImages();
+        String preference;
+        if (isWifiNetWork) {
+            preference = manager.getPreviewImageQualityWifi();
+        } else {
+            preference = manager.getPreviewImageQualityMobile();
+        }
+        if (preference.equals(light)) {
+            return imageInfo.getTeaser();
+        } else if (preference.equals(large) && imageInfo.getHidpi() != null) {
+            return imageInfo.getHidpi();
+        } else {
+            return imageInfo.getNormal();
+        }
+    }
 
     @Override
     public int getItemCount() {
