@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -127,6 +129,12 @@ public class MainActivity extends BaseActivity {
         filter.addAction(LoginActivity.TAG);
         filter.addAction(SettingsActivity.TAG);
         registerReceiver(receiver, filter);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            toast(R.string.you_are_using_mobile_network);
+        }
     }
 
     /**
