@@ -2,13 +2,11 @@ package org.dcxz.designdigger.dao;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 
-import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.bean.UserInfo;
 import org.dcxz.designdigger.util.API;
 
@@ -25,6 +23,14 @@ import java.io.FileOutputStream;
  * </pre>
  */
 public class DaoManager {
+    public static final String PREVIEW_IMAGE_QUALITY_MOBILE = "PREVIEW_IMAGE_QUALITY_MOBILE";
+    public static final String PREVIEW_IMAGE_QUALITY_WIFI = "PREVIEW_IMAGE_QUALITY_WIFI";
+    public static final String DETAIL_IMAGE_QUALITY_MOBILE = "PREVIEW_IMAGE_DETAIL_MOBILE";
+    public static final String DETAIL_IMAGE_QUALITY_WIFI = "PREVIEW_IMAGE_DETAIL_WIFI";
+    public static final String IMAGE_QUALITY_LIGHT = "IMAGE_QUALITY_LIGHT";
+    public static final String IMAGE_QUALITY_NORMAL = "IMAGE_QUALITY_NORMAL";
+    public static final String IMAGE_QUALITY_LARGE = "IMAGE_QUALITY_LARGE";
+
     /**
      * 动态口令
      */
@@ -46,12 +52,10 @@ public class DaoManager {
      * 当前应用的文件目录
      */
     private static File fileDir;
-    private final Resources resources;
 
     private DaoManager(Context context) {
         preferences = context.getSharedPreferences("DesignDiggerConfig", Context.MODE_PRIVATE);
         fileDir = context.getFilesDir();
-        resources = context.getResources();
     }
 
     public static DaoManager getInstance(Context context) {
@@ -90,10 +94,10 @@ public class DaoManager {
      * @param user 将要存入的用户对象
      * @return 是否存入成功
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public boolean setUser(String user) {
         File file = new File(fileDir, AVATAR);
         if (file.exists()) {//移除原有的头像文件,以免获取头像失败后显示原有头像
+            //noinspection ResultOfMethodCallIgnored
             file.delete();
         }
         return preferences.edit().putString(USER, user).commit();
@@ -145,51 +149,31 @@ public class DaoManager {
      * 返回偏好设置中"移动网络下的预览图精度"
      */
     public String getPreviewImageQualityMobile() {
-        return preferences.getString(
-                resources.getString(R.string.settings_image_quality_preview_mobile),
-                resources.getString(R.string.settings_image_quality_normal));
-    }
-
-    public void setPreviewImageQualityMobile(String value) {
-        preferences.edit().putString(resources.getString(R.string.settings_image_quality_preview_mobile), value).apply();
+        return preferences.getString(PREVIEW_IMAGE_QUALITY_MOBILE, IMAGE_QUALITY_NORMAL);
     }
 
     /**
      * 返回偏好设置中"Wifi网络下的预览图精度"
      */
     public String getPreviewImageQualityWifi() {
-        return preferences.getString(
-                resources.getString(R.string.settings_image_quality_preview_wifi),
-                resources.getString(R.string.settings_image_quality_normal));
-    }
-
-    public void setPreviewImageQualityWifi(String value) {
-        preferences.edit().putString(resources.getString(R.string.settings_image_quality_preview_wifi), value).apply();
+        return preferences.getString(PREVIEW_IMAGE_QUALITY_WIFI, IMAGE_QUALITY_NORMAL);
     }
 
     /**
      * 返回偏好设置中"移动网络下的详情精度"
      */
     public String getDetailImageQualityMobile() {
-        return preferences.getString(
-                resources.getString(R.string.settings_image_quality_detail_mobile),
-                resources.getString(R.string.settings_image_quality_normal));
-    }
-
-    public void setDetailImageQualityMobile(String value) {
-        preferences.edit().putString(resources.getString(R.string.settings_image_quality_detail_mobile), value).apply();
+        return preferences.getString(DETAIL_IMAGE_QUALITY_MOBILE, IMAGE_QUALITY_NORMAL);
     }
 
     /**
      * 返回偏好设置中"Wifi网络下的详情精度"
      */
     public String getDetailImageQualityWifi() {
-        return preferences.getString(
-                resources.getString(R.string.settings_image_quality_detail_wifi),
-                resources.getString(R.string.settings_image_quality_normal));
+        return preferences.getString(DETAIL_IMAGE_QUALITY_WIFI, IMAGE_QUALITY_NORMAL);
     }
 
-    public void setDetailImageQualityWifi(String value) {
-        preferences.edit().putString(resources.getString(R.string.settings_image_quality_detail_wifi), value).apply();
+    public boolean putString(String key, String value) {
+        return preferences.edit().putString(key, value).commit();
     }
 }

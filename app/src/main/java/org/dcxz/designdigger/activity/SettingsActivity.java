@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.dcxz.designdigger.R;
 import org.dcxz.designdigger.app.App;
@@ -31,14 +30,6 @@ public class SettingsActivity extends BaseActivity {
 
     @BindView(R.id.activity_settings_toolBar)
     Toolbar toolbar;
-    @BindView(R.id.activity_settings_preview_mobile)
-    TextView previewMobile;
-    @BindView(R.id.activity_settings_preview_wifi)
-    TextView previewWifi;
-    @BindView(R.id.activity_settings_detail_mobile)
-    TextView detailMobile;
-    @BindView(R.id.activity_settings_detail_wifi)
-    TextView detailWifi;
     @BindView(R.id.activity_settings_sign_out)
     Button signOut;
     private DaoManager manager;
@@ -79,11 +70,70 @@ public class SettingsActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 设置移动网络下预览图的精度
+     */
     @OnClick(R.id.activity_settings_preview_mobile)
-    public void changePreviewMobile() {
-        new AlertDialog.Builder(this);// TODO: 2017/1/16 complete this
+    public void setPreviewImageQualityMobile() {
+        setImageQuality(DaoManager.PREVIEW_IMAGE_QUALITY_MOBILE, manager.getPreviewImageQualityMobile());
     }
 
+    /**
+     * 设置WIFI网络下预览图的精度
+     */
+    @OnClick(R.id.activity_settings_preview_wifi)
+    public void setPreviewImageQualityWifi() {
+        setImageQuality(DaoManager.PREVIEW_IMAGE_QUALITY_WIFI, manager.getPreviewImageQualityWifi());
+    }
+
+    /**
+     * 设置移动网络下详情图的精度
+     */
+    @OnClick(R.id.activity_settings_detail_mobile)
+    public void setDetailImageQualityMobile() {
+        setImageQuality(DaoManager.DETAIL_IMAGE_QUALITY_MOBILE, manager.getDetailImageQualityMobile());
+    }
+
+    /**
+     * 设置WIFI网络下详情图的精度
+     */
+    @OnClick(R.id.activity_settings_detail_wifi)
+    public void setDetailImageQualityWifi() {
+        setImageQuality(DaoManager.DETAIL_IMAGE_QUALITY_WIFI, manager.getDetailImageQualityWifi());
+    }
+
+    private void setImageQuality(final String key, String oldPreference) {
+        int checkedItem = 1;
+        switch (oldPreference) {
+            case DaoManager.IMAGE_QUALITY_LIGHT:
+                checkedItem = 0;
+                break;
+            case DaoManager.IMAGE_QUALITY_NORMAL:
+                checkedItem = 1;
+                break;
+            case DaoManager.IMAGE_QUALITY_LARGE:
+                checkedItem = 2;
+                break;
+        }
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(R.array.settings_imageQuality, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                manager.putString(key, DaoManager.IMAGE_QUALITY_LIGHT);
+                                break;
+                            case 1:
+                                manager.putString(key, DaoManager.IMAGE_QUALITY_NORMAL);
+                                break;
+                            case 2:
+                                manager.putString(key, DaoManager.IMAGE_QUALITY_LARGE);
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
 
     @OnClick(R.id.activity_settings_sign_out)
     public void signOut(final Button button) {
@@ -111,6 +161,7 @@ public class SettingsActivity extends BaseActivity {
      */
     private void disableSignOut(Button button) {
         button.setEnabled(false);
+        //noinspection deprecation
         button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
     }
 
