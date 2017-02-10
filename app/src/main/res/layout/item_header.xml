@@ -48,12 +48,19 @@
 
             <TextView
                 android:id="@+id/profile_shotsCount"
-                style="@style/Fragment.Player.TextView"
-                android:text="0" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="0"
+
+                android:textAlignment="center" />
 
             <TextView
-                style="@style/Fragment.Player.TextView"
-                android:text="Shots" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Shots"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,12 +71,18 @@
 
             <TextView
                 android:id="@+id/profile_bucketsCount"
-                style="@style/Fragment.Player.TextView"
-                android:text="0" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="0"
+                android:textAlignment="center" />
 
             <TextView
-                style="@style/Fragment.Player.TextView"
-                android:text="Buckets" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Buckets"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,12 +93,18 @@
 
             <TextView
                 android:id="@+id/profile_followersCount"
-                style="@style/Fragment.Player.TextView"
-                android:text="0" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="0"
+                android:textAlignment="center" />
 
             <TextView
-                style="@style/Fragment.Player.TextView"
-                android:text="Followers" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Followers"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -96,12 +115,18 @@
 
             <TextView
                 android:id="@+id/profile_followingCount"
-                style="@style/Fragment.Player.TextView"
-                android:text="0" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="0"
+                android:textAlignment="center" />
 
             <TextView
-                style="@style/Fragment.Player.TextView"
-                android:text="Following" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Following"
+                android:textAlignment="center" />
         </LinearLayout>
     </LinearLayout>
 

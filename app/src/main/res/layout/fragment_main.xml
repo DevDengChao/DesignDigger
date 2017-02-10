@@ -11,15 +11,21 @@
 
         <Spinner
             android:id="@+id/fragment_main_sort"
-            style="@style/Fragment.Visitor.Spinner" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/fragment_main_list"
-            style="@style/Fragment.Visitor.Spinner" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/fragment_main_timeFrame"
-            style="@style/Fragment.Visitor.Spinner" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
     <!--主要内容部分-->
