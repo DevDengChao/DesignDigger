@@ -179,7 +179,7 @@ public class API {
         /**
          * 获取当前用户的关注列表(指定页)
          */
-        public static final String FOLLOWING_PAGE = FOLLOWING + "/?page=%s";
+        public static final String FOLLOWING_PAGE = FOLLOWING + "/?page=%s";// TODO: 2017/2/10 关注着的用户 
         /**
          * 获取当前用户关注的对象的shots(第一页)
          */
