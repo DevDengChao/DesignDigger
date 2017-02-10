@@ -67,7 +67,6 @@ public class LoginActivity extends BaseActivity {
         CookieManager.getInstance().removeAllCookie();
         Log.i(TAG, "initView: Cookie cleared");
 
-        // TODO: 2016/12/22 优化:WebView+JS实现登录 http://www.jb51.net/article/84957.htm
         webView.setWebViewClient(
                 new WebViewClient() {
                     // https://dribbble.com/login?return_to=%2Foauth%2Fauthorize%3F
